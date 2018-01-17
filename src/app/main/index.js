@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
 import './index.css';
 
 class App extends Component {
+  static propTypes = {
+    startPolling: PropTypes.func.isRequired,
+  };
+
+  componentWillMount() {
+    this.props.startPolling();
+  }
+
   render() {
     return (
       <div className="app">
@@ -18,4 +29,9 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  null,
+  dispatch => ({
+    startPolling: () => dispatch(metamaskActions.startPolling()),
+  })
+)(App);
