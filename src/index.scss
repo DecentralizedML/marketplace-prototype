@@ -1,8 +1,11 @@
+@import './styles/variables.scss';
+
 html {
   font-size: 16px;
   font-family: Helvetica,Arial,sans-serif;
   font-weight: 200;
-  letter-spacing: 1px; }
+  letter-spacing: 1px;
+}
 
 body {
   margin: 0;
@@ -12,11 +15,13 @@ body {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background: #F9F9F9; }
+  background: $alabaster-gray;
+}
 
 #root {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  flex: 0 0 auto; }
+  flex: 0 0 auto;
+}

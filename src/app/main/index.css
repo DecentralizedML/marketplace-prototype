@@ -1,0 +1,41 @@
+.app {
+  height: 100vh;
+  width: 100vw;
+  flex: 0 0 auto;
+  display: flex;
+  flex-flow: column nowrap; }
+
+.app-logo {
+  height: 2.2rem; }
+
+.app-header {
+  background-color: #FFF;
+  padding: 0 2rem;
+  height: 4.2rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.05); }
+  .app-header__items {
+    flex: 1 1 auto;
+    width: 0;
+    padding: 0 4rem;
+    font-size: 11px;
+    font-family: Helvetica,Arial,sans-serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 4.2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center; }
+  .app-header__item {
+    text-decoration: none;
+    color: #000;
+    transition: 200ms ease-in-out;
+    padding: 0 1rem; }
+    .app-header__item:hover {
+      color: #FDCC52; }
+
+.app-intro {
+  font-size: large; }
