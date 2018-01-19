@@ -7,6 +7,7 @@ const initialState = {
   hasWeb3: false,
   accounts: [],
   isLocked: false,
+  network: null,
 };
 
 export const detect = createAction(DETECT);
@@ -29,6 +30,7 @@ export default handleActions({
     hasWeb3: Boolean(web3),
     accounts: web3 ? web3.eth.accounts : [],
     isLocked: web3 ? web3.eth.accounts < 1 : false,
+    network: web3 ? web3.version.network : null,
   }),
 
 }, initialState);

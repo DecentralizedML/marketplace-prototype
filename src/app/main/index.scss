@@ -40,7 +40,7 @@
     text-decoration: none;
     color: $black;
     transition: 200ms ease-in-out;
-    padding: 0 1rem;
+    padding: 1rem 1rem;
 
     &:hover {
       color: $golden-tainoi-orange;
@@ -48,6 +48,7 @@
   }
 }
 
-.app-intro {
-  font-size: large;
+.app-content {
+  flex: 1 1 auto;
+  height: 0;
 }

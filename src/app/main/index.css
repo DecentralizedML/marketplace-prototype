@@ -33,9 +33,10 @@
     text-decoration: none;
     color: #000;
     transition: 200ms ease-in-out;
-    padding: 0 1rem; }
+    padding: 1rem 1rem; }
     .app-header__item:hover {
       color: #FDCC52; }
 
-.app-intro {
-  font-size: large; }
+.app-content {
+  flex: 1 1 auto;
+  height: 0; }
