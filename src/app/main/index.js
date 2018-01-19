@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Route, Link, BrowserRouter as Router, } from 'react-router-dom';
 import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
+import loginImg from './metamask-login.png';
+import networkImg from './metamask-network.png';
 import './index.css';
 
 const Marketplace = () => <h1>Marketplace</h1>;
@@ -37,7 +39,8 @@ class App extends Component {
       return hasClickedInstallMetamask
         ? (
           <div className="app-content__message">
-            <p>Follow Metamask's instructions to finish the installation.</p>
+            <h1>You do not have MetaMask installed.</h1>
+            <p>Simply follow Metamask's instructions to finish the installation.</p>
             <button
               className="btn-primary"
               onClick={() => window.location.reload()}
@@ -48,6 +51,7 @@ class App extends Component {
         )
         : (
           <div className="app-content__message">
+            <h1>You do not have MetaMask installed.</h1>
             <p>You will need to install Metamask in order to access the marketplace.</p>
             <a
               href="https://metamask.io/"
@@ -65,15 +69,20 @@ class App extends Component {
     if (isLocked) {
       return (
         <div className="app-content__message">
-          <p>First make sure you created an account.</p>
-          <p>If you did, unlock it by simply clicking on the MetaMask extension and type your password.</p>
+          <h1>Your MetaMask is locked.</h1>
+          <p>Simply unlock it by clicking on the MetaMask extension and type your password.</p>
+          <img src={loginImg} className="metamask-login" alt="metamask-login" />
         </div>
       );
     }
 
     if (network !== '3') {
       return (
-        <div>Please switch to Ropsten</div>
+        <div className="app-content__message">
+          <h1>Oops, you’re on the wrong network.</h1>
+          <p>Simply open MetaMask and switch over to the Ropsten Network.</p>
+          <img src={networkImg} className="metamask-network" alt="metamask-network" />
+        </div>
       );
     }
 

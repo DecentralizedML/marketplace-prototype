@@ -109,5 +109,9 @@
     top: 0.395rem;
 
   }
+}
 
+.metamask-login, .metamask-network {
+  height: 25rem;
+  border: 3px solid rgba($black, .1);
 }
