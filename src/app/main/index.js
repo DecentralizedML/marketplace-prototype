@@ -17,22 +17,57 @@ class App extends Component {
     network: PropTypes.string,
   };
 
+  state = {
+    hasClickedInstallMetamask: false,
+  };
+
   componentWillMount() {
     this.props.startPolling();
   }
 
   renderContent() {
     const { hasWeb3, isLocked, network } = this.props;
+    const { hasClickedInstallMetamask } = this.state;
 
     if (!hasWeb3) {
-      return (
-        <div>Cannot detect Metamask. Please download</div>
-      );
+      if (hasClickedInstallMetamask) {
+
+      }
+
+      return hasClickedInstallMetamask
+        ? (
+          <div className="app-content__message">
+            <p>Follow Metamask's instructions to finish the installation.</p>
+            <button
+              className="btn-primary"
+              onClick={() => window.location.reload()}
+            >
+              I have installed Metamask
+            </button>
+          </div>
+        )
+        : (
+          <div className="app-content__message">
+            <p>You will need to install Metamask in order to access the marketplace.</p>
+            <a
+              href="https://metamask.io/"
+              className="btn-metamask"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => this.setState({ hasClickedInstallMetamask: true })}
+            >
+              Install Metamask
+            </a>
+          </div>
+        );
     }
 
     if (isLocked) {
       return (
-        <div>Please unlock metamask</div>
+        <div className="app-content__message">
+          <p>First make sure you created an account.</p>
+          <p>If you did, unlock it by simply clicking on the MetaMask extension and type your password.</p>
+        </div>
       );
     }
 
