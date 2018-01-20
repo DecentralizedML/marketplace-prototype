@@ -39,7 +39,9 @@
 
 .app-content {
   flex: 1 1 auto;
-  height: 0; }
+  height: 0;
+  display: flex;
+  flex-flow: column nowrap; }
   .app-content__message {
     display: flex;
     flex-flow: column nowrap;

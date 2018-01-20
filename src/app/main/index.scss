@@ -51,6 +51,8 @@
 .app-content {
   flex: 1 1 auto;
   height: 0;
+  display: flex;
+  flex-flow: column nowrap;
 
   &__message {
     display: flex;

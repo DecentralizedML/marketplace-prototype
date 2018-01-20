@@ -1,0 +1,75 @@
+.account {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: column nowrap; }
+
+.wallet-card {
+  width: 28rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.05);
+  margin: 2rem auto; }
+  .wallet-card__header {
+    padding: 1rem 2rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05); }
+  .wallet-card__title {
+    font-weight: 200;
+    flex: 1 0 auto; }
+  .wallet-card__wallet-selector {
+    font-size: .75rem;
+    color: #9c9c9c;
+    flex: 0 0 auto;
+    text-decoration: none; }
+    .wallet-card__wallet-selector:hover {
+      text-decoration: underline; }
+  .wallet-card__balances {
+    padding: 0 2rem;
+    display: flex;
+    flex-flow: column nowrap; }
+  .wallet-card__balance-row {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem 0;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+  .wallet-card__balance-header-text {
+    font-size: .6rem;
+    font-weight: 900;
+    margin-bottom: .5rem; }
+  .wallet-card__balance {
+    flex: 1 0 auto; }
+  .wallet-card__balance-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center; }
+  .wallet-card__balance-text {
+    font-size: 1.25rem; }
+  .wallet-card__balance-unit {
+    font-size: .75rem;
+    background-color: #9c9c9c;
+    color: #FFF;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    margin-left: .5rem; }
+    .wallet-card__balance-unit--dml {
+      background-color: #0076A3; }
+  .wallet-card__button {
+    background-color: #FFF;
+    border: none;
+    color: #0076A3;
+    border: 1px solid #0076A3;
+    cursor: pointer;
+    font-size: 0.5rem;
+    padding: .25rem .5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    position: relative;
+    text-decoration: none;
+    transition: 200ms linear; }
+    .wallet-card__button:hover {
+      background-color: rgba(0, 118, 163, 0.1); }
+    .wallet-card__button:active {
+      background-color: rgba(0, 118, 163, 0.3); }
