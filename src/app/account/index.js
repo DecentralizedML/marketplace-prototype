@@ -11,6 +11,20 @@ class Account extends Component {
     dmlBalance: PropTypes.string.isRequired,
   };
 
+  renderWarning() {
+    const { ethBalance, dmlBalance } = this.props;
+
+    if (!Number(ethBalance) || !Number(dmlBalance)) {
+      return (
+        <div className="wallet-card__warining-message">
+          You need Ether and DML to test out the marketplace. Simply click on the request buttons below to get test tokens from our faucet.
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     const { account, ethBalance, dmlBalance } = this.props;
 
@@ -29,6 +43,7 @@ class Account extends Component {
             </a>
           </div>
           <div className="wallet-card__content">
+            { this.renderWarning() }
             <div className="wallet-card__balances">
               <div className="wallet-card__balance-row">
                 <div className="wallet-card__balance">
@@ -65,7 +80,7 @@ class Account extends Component {
 export default connect(
   state => ({
     account: state.metamask.accounts[0] || '',
-    ethBalance: state.metamask.ethBalance.toFixed(3),
+    ethBalance: state.metamask.ethBalance.toFixed(5),
     dmlBalance: state.metamask.dmlBalance.toFixed(0),
   }),
   null

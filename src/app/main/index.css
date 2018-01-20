@@ -41,7 +41,8 @@
   flex: 1 1 auto;
   height: 0;
   display: flex;
-  flex-flow: column nowrap; }
+  flex-flow: column nowrap;
+  overflow-y: auto; }
   .app-content__message {
     display: flex;
     flex-flow: column nowrap;

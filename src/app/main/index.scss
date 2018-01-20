@@ -53,6 +53,7 @@
   height: 0;
   display: flex;
   flex-flow: column nowrap;
+  overflow-y: auto;
 
   &__message {
     display: flex;
