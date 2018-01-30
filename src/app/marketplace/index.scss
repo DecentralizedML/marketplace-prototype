@@ -1,0 +1,106 @@
+@import '../../styles/variables.scss';
+
+.marketplace {
+  display: flex;
+  flex-flow: column nowrap;
+
+  &__header {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, .05);
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    background-color: rgba(255, 255, 255, 0.8);
+    align-items: center;
+  }
+
+  &__input {
+    padding: .5rem;
+    border-radius: 2px;
+    border: 2px solid rgba(0,0,0,.05);
+    flex: 1 0 auto;
+    font-size: 1rem;
+    font-weight: 400;
+    color: $allports-blue;
+
+    &::placeholder {
+      color: rgba(0, 0, 0, .2);
+    }
+  }
+
+  &__selector {
+    border-radius: 2px;
+    border: 2px solid rgba($black, 0.05);
+    font-size: 1rem;
+    font-weight: 400;
+    color: $allports-blue;
+    background-color: $white;
+    height: 2.125rem;
+    box-sizing: content-box;
+    width: 10rem;
+    cursor: pointer;
+
+    &--category {
+      margin: 0 .5rem;
+    }
+  }
+
+  &__algos-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    max-width: 75rem;
+    margin: 0 auto;
+    overflow-y: auto;
+  }
+
+  &__algo-card {
+    box-shadow: $dark-box-shadow;
+    flex: 0 0 auto;
+    max-width: 16rem;
+    margin: .25rem;
+    height: 12rem;
+    padding: .75rem;
+    background-color: $white;
+    border-radius: 4px;
+    display: flex;
+    flex-flow: column nowrap;
+    transition: 250ms ease-in-out;
+    cursor: pointer;
+    flex: 0 1 24%;
+    box-sizing: border-box;
+
+    &:hover {
+      box-shadow: $dark-blue-shadow;
+    }
+
+    &__hero-image {
+      height: 9rem;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      box-shadow: 0 0 0 1px rgba($black, .25);
+    }
+
+    &__content {
+      flex: 1 0 auto;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      padding-top: .75rem;
+    }
+
+    &__title {
+      font-weight: 600;
+      font-size: 1rem;
+      padding-bottom: .1rem;
+    }
+
+    &__stars {
+      font-weight: 200;
+      font-size: .9rem;
+      color: $dusty-gray;
+    }
+  }
+
+}

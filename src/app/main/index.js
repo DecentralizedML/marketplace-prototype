@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import { Route, Link, BrowserRouter as Router, } from 'react-router-dom';
 
 import Account from '../account';
+import Marketplace from '../marketplace';
 import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
 import networkImg from './metamask-network.png';
 import './index.css';
-
-const Marketplace = () => <h1>Marketplace</h1>;
 
 class App extends Component {
   static propTypes = {

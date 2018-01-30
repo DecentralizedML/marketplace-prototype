@@ -1,0 +1,78 @@
+.marketplace {
+  display: flex;
+  flex-flow: column nowrap; }
+  .marketplace__header {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: rgba(255, 255, 255, 0.8);
+    align-items: center; }
+  .marketplace__input {
+    padding: .5rem;
+    border-radius: 2px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    flex: 1 0 auto;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #0076A3; }
+    .marketplace__input::placeholder {
+      color: rgba(0, 0, 0, 0.2); }
+  .marketplace__selector {
+    border-radius: 2px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    font-weight: 400;
+    color: #0076A3;
+    background-color: #FFF;
+    height: 2.125rem;
+    box-sizing: content-box;
+    width: 10rem;
+    cursor: pointer; }
+    .marketplace__selector--category {
+      margin: 0 .5rem; }
+  .marketplace__algos-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    max-width: 75rem;
+    margin: 0 auto;
+    overflow-y: auto; }
+  .marketplace__algo-card {
+    box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+    flex: 0 0 auto;
+    max-width: 16rem;
+    margin: .25rem;
+    height: 12rem;
+    padding: .75rem;
+    background-color: #FFF;
+    border-radius: 4px;
+    display: flex;
+    flex-flow: column nowrap;
+    transition: 250ms ease-in-out;
+    cursor: pointer;
+    flex: 0 1 24%;
+    box-sizing: border-box; }
+    .marketplace__algo-card:hover {
+      box-shadow: 0 0px 0px 4px rgba(0, 118, 163, 0.25); }
+    .marketplace__algo-card__hero-image {
+      height: 9rem;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25); }
+    .marketplace__algo-card__content {
+      flex: 1 0 auto;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      padding-top: .75rem; }
+    .marketplace__algo-card__title {
+      font-weight: 600;
+      font-size: 1rem;
+      padding-bottom: .1rem; }
+    .marketplace__algo-card__stars {
+      font-weight: 200;
+      font-size: .9rem;
+      color: #9c9c9c; }
