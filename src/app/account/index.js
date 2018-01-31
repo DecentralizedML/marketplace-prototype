@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { requestEther } from '../../ducks/faucets';
+
 import './index.css';
 
 class Account extends Component {
@@ -9,10 +11,21 @@ class Account extends Component {
     account: PropTypes.string.isRequired,
     ethBalance: PropTypes.string.isRequired,
     dmlBalance: PropTypes.string.isRequired,
+    etherFaucetError: PropTypes.string.isRequired,
+    isRequestingEther: PropTypes.bool.isRequired,
+    requestEther: PropTypes.func.isRequired,
   };
 
   renderWarning() {
-    const { ethBalance, dmlBalance } = this.props;
+    const { ethBalance, dmlBalance, etherFaucetError } = this.props;
+
+    if (etherFaucetError) {
+      return (
+        <div className="wallet-card__error-message">
+          {etherFaucetError}
+        </div>
+      );
+    }
 
     if (!Number(ethBalance) || !Number(dmlBalance)) {
       return (
@@ -26,7 +39,14 @@ class Account extends Component {
   }
 
   render() {
-    const { account, ethBalance, dmlBalance } = this.props;
+    const {
+      account,
+      ethBalance,
+      dmlBalance,
+      requestEther,
+      isRequestingEther,
+      etherFaucetError,
+    } = this.props;
 
     return (
       <div className="account">
@@ -54,7 +74,13 @@ class Account extends Component {
                   </div>
                 </div>
                 <div className="wallet-card__actions">
-                  <button className="wallet-card__button">Request</button>
+                  <button
+                    className="wallet-card__button"
+                    onClick={requestEther}
+                    disabled={Number(ethBalance) || isRequestingEther || Boolean(etherFaucetError)}
+                  >
+                    Request
+                  </button>
                 </div>
               </div>
               <div className="wallet-card__balance-row">
@@ -82,6 +108,10 @@ export default connect(
     account: state.metamask.accounts[0] || '',
     ethBalance: state.metamask.ethBalance.toFixed(5),
     dmlBalance: state.metamask.dmlBalance.toFixed(0),
+    etherFaucetError: state.faucets.etherFaucetError,
+    isRequestingEther: state.faucets.isRequestingEther,
   }),
-  null
+  dispatch => ({
+    requestEther: () => dispatch(requestEther()),
+  }),
 )(Account);

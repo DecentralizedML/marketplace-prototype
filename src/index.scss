@@ -25,3 +25,8 @@ body {
   flex-flow: column nowrap;
   flex: 0 0 auto;
 }
+
+button[disabled] {
+  opacity: .3;
+  cursor: not-allowed;
+}
