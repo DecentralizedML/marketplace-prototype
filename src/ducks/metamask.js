@@ -1,10 +1,12 @@
 import { createAction, handleActions } from 'redux-actions'
+import { TOKEN_ADDRESS, TOKEN_ABI } from './faucets';
 
 // Constants
 const ETH_DECIMALS = 18;
 const ETH_DENOMINATION = Math.pow(10, ETH_DECIMALS);
 const DETECT = 'app/metamask/detect';
 const UPDATE_ETH_BALANCE = 'app/metamask/updateEthBalance';
+const UPDATE_DML_BALANCE = 'app/metamask/updateDmlBalance';
 
 const initialState = {
   hasWeb3: false,
@@ -17,6 +19,7 @@ const initialState = {
 
 export const detect = createAction(DETECT);
 export const updateEthBalance = createAction(UPDATE_ETH_BALANCE);
+export const updateDmlBalance = createAction(UPDATE_DML_BALANCE);
 
 export const startPolling = () => (dispatch, getState) => {
   const { metamask: { isLocked } } = getState();
@@ -38,6 +41,15 @@ export const startPolling = () => (dispatch, getState) => {
 
         return dispatch(updateEthBalance(data.toString() / ETH_DENOMINATION));
       });
+
+      const contract = window.web3.eth.contract(TOKEN_ABI).at(TOKEN_ADDRESS);
+      contract.balanceOf(account, (err, data) => {
+        if (err) {
+          return dispatch(updateDmlBalance(err));
+        }
+
+        return dispatch(updateDmlBalance(data.c[0]/100000000));
+      })
     }
 
   }
@@ -58,6 +70,11 @@ export default handleActions({
   [UPDATE_ETH_BALANCE]: (state, { payload, error }) => ({
     ...state,
     ethBalance: error ? 0 : payload,
+  }),
+
+  [UPDATE_DML_BALANCE]: (state, { payload, error }) => ({
+    ...state,
+    dmlBalance: error ? 0 : payload,
   }),
 
 }, initialState);

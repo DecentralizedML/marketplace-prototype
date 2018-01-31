@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { requestEther } from '../../ducks/faucets';
+import { requestEther, requestDml } from '../../ducks/faucets';
 
 import './index.css';
 
@@ -11,13 +11,18 @@ class Account extends Component {
     account: PropTypes.string.isRequired,
     ethBalance: PropTypes.string.isRequired,
     dmlBalance: PropTypes.string.isRequired,
+    dmlFaucetTx: PropTypes.string.isRequired,
     etherFaucetError: PropTypes.string.isRequired,
+    dmlFaucetError: PropTypes.string.isRequired,
     isRequestingEther: PropTypes.bool.isRequired,
+    isRequestingDml: PropTypes.bool.isRequired,
+    hasRequestedDml: PropTypes.bool.isRequired,
     requestEther: PropTypes.func.isRequired,
+    requestDml: PropTypes.func.isRequired,
   };
 
   renderWarning() {
-    const { ethBalance, dmlBalance, etherFaucetError } = this.props;
+    const { ethBalance, dmlBalance, etherFaucetError, hasRequestedDml, dmlFaucetTx } = this.props;
 
     if (etherFaucetError) {
       return (
@@ -35,6 +40,21 @@ class Account extends Component {
       );
     }
 
+    if (hasRequestedDml && dmlFaucetTx) {
+      return (
+        <div className="wallet-card__warining-message">
+          DML will be deposited in your account in a few minutes.
+          <a
+            href={`https://ropsten.etherscan.io/tx/${dmlFaucetTx}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Transaction
+          </a>
+        </div>
+      );
+    }
+
     return null;
   }
 
@@ -44,8 +64,12 @@ class Account extends Component {
       ethBalance,
       dmlBalance,
       requestEther,
+      requestDml,
       isRequestingEther,
+      isRequestingDml,
+      hasRequestedDml,
       etherFaucetError,
+      dmlFaucetError,
     } = this.props;
 
     return (
@@ -92,7 +116,13 @@ class Account extends Component {
                   </div>
                 </div>
                 <div className="wallet-card__actions">
-                  <button className="wallet-card__button">Request</button>
+                  <button
+                    className="wallet-card__button"
+                    onClick={requestDml}
+                    disabled={!Number(ethBalance) || isRequestingDml || Boolean(dmlFaucetError) || hasRequestedDml}
+                  >
+                    Request
+                  </button>
                 </div>
               </div>
             </div>
@@ -110,8 +140,13 @@ export default connect(
     dmlBalance: state.metamask.dmlBalance.toFixed(0),
     etherFaucetError: state.faucets.etherFaucetError,
     isRequestingEther: state.faucets.isRequestingEther,
+    isRequestingDml: state.faucets.isRequestingDml,
+    dmlFaucetError: state.faucets.dmlFaucetError,
+    hasRequestedDml: state.faucets.hasRequestedDml,
+    dmlFaucetTx: state.faucets.dmlFaucetTx,
   }),
   dispatch => ({
     requestEther: () => dispatch(requestEther()),
+    requestDml: () => dispatch(requestDml()),
   }),
 )(Account);
