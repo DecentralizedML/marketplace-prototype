@@ -1,31 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import AlgoCard from './algo-card';
 
 import './index.css';
-
-function AlgoCard({ title, thumbnail, stars, description, downloads }) {
-  return (
-    <div className="marketplace__algo-card">
-      <div
-        className="marketplace__algo-card__hero-image"
-        style={{ backgroundImage: `url(${thumbnail})` }}
-      />
-      <div className="marketplace__algo-card__content">
-        <div className="marketplace__algo-card__title">{title}</div>
-        <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
-      </div>
-    </div>
-  );
-}
-
-AlgoCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  thumbnail: PropTypes.string.isRequired,
-  stars: PropTypes.number.isRequired,
-  description: PropTypes.string.isRequired,
-  downloads: PropTypes.number.isRequired,
-}
 
 class Marketplace extends Component {
   static propTypes = {
@@ -52,7 +30,7 @@ class Marketplace extends Component {
           </select>
         </div>
         <div className="marketplace__algos-container">
-          {order.map(id => AlgoCard(map[id]))}
+          {order.map(id => <AlgoCard key={id} { ...map[id] }/>)}
         </div>
       </div>
     );
@@ -63,4 +41,4 @@ export default connect(
   ({ algorithmns: { order, map } }) => ({
     order, map,
   }),
-)(Marketplace)
+)(Marketplace);

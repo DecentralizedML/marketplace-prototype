@@ -26,6 +26,10 @@ body {
   flex: 0 0 auto;
 }
 
+#full-modal:empty {
+  display: none;
+}
+
 button[disabled] {
   opacity: .3;
   cursor: not-allowed;
