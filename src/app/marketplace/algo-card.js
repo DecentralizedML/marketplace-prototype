@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from '../ui/modal';
+import ImageRecognition from './image-recognition';
 
 class AlgoCard extends Component {
 
@@ -31,29 +32,14 @@ class AlgoCard extends Component {
 
     return (
       <Modal onClose={this.closeModal}>
-        <div className="algo-modal" onClick={e => e.stopPropagation()}>
-          <div className="algo-modal__header">
-            <div
-              style={{ backgroundImage: `url(${thumbnail})` }}
-              className="algo-modal__image"
-            />
-            <div className="algo-modal__header-content">
-              <div className="algo-modal__header-title">{title}</div>
-              <div className="algo-modal__header-description">{description}</div>
-              <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
-            </div>
-            <div className="algo-modal__actions">
-              <button className="algo-modal__buy-btn">Buy</button>
-            </div>
-            <div
-              className="algo-modal__close"
-              onClick={this.closeModal}
-            />
-          </div>
-          <div className="algo-modal__content">
-
-          </div>
-        </div>
+        <ImageRecognition
+          onClose={this.closeModal}
+          title={title}
+          thumbnail={thumbnail}
+          stars={stars}
+          description={description}
+          downloads={downloads}
+        />
       </Modal>
     );
   }
