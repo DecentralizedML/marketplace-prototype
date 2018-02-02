@@ -59,6 +59,15 @@
     text-align: center;
   }
 
+  &__success-message {
+    margin: 1rem 2rem;
+    padding: 1rem;
+    background-color: $aero-blue;
+    font-size: .75rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+
   &__balances {
     padding: 0 2rem;
     display: flex;

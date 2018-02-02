@@ -55,7 +55,11 @@ class Account extends Component {
       );
     }
 
-    return null;
+    return (
+      <div className="wallet-card__success-message">
+        You are ready to try out our marketplace!
+      </div>
+    );
   }
 
   render() {
