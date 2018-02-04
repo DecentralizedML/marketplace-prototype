@@ -15,7 +15,8 @@ import './index.css';
 
 const store = createStore(
   reducer,
-  applyMiddleware(thunk, logger)
+  applyMiddleware(thunk),
+  // applyMiddleware(thunk, logger),
 );
 
 ReactDOM.render(

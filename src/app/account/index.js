@@ -24,6 +24,14 @@ class Account extends Component {
   renderWarning() {
     const { ethBalance, dmlBalance, etherFaucetError, hasRequestedDml, dmlFaucetTx } = this.props;
 
+    if (Number(ethBalance) && Number(dmlBalance)) {
+      return (
+        <div className="wallet-card__success-message">
+          You are ready to try out our marketplace!
+        </div>
+      );
+    }
+
     if (etherFaucetError) {
       return (
         <div className="wallet-card__error-message">
@@ -40,6 +48,7 @@ class Account extends Component {
       );
     }
 
+
     if (hasRequestedDml && dmlFaucetTx) {
       return (
         <div className="wallet-card__warining-message">
@@ -55,11 +64,7 @@ class Account extends Component {
       );
     }
 
-    return (
-      <div className="wallet-card__success-message">
-        You are ready to try out our marketplace!
-      </div>
-    );
+    return null;
   }
 
   render() {

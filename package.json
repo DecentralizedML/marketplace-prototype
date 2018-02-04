@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "blueimp-load-image": "^2.18.0",
+    "lodash": "^4.17.5",
+    "ndarray": "^1.0.18",
+    "ndarray-ops": "^1.2.2",
     "node-sass-chokidar": "^0.0.3",
     "npm-run-all": "^4.1.2",
     "prop-types": "^15.6.0",
