@@ -67,6 +67,8 @@ export default class ImageRecognition extends Component {
   analyze = async () => {
     const { file } = this.state;
     const canvas = document.createElement('canvas');
+    canvas.width = 299;
+    canvas.height = 299;
     const context = canvas.getContext('2d');
     const img = document.createElement('img');
 
