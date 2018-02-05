@@ -89,7 +89,6 @@ export default class ImageRecognition extends Component {
             context.drawImage(img, 0, 0);
             // model predict
             const imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-            document.body.appendChild(canvas);
 
             const { data, width, height } = imageData
             // data processing
@@ -152,9 +151,10 @@ export default class ImageRecognition extends Component {
 
     if (isAnalyzing) {
       return (
-        <div className="algo-modal__result">
+        <div className="algo-modal__results">
           <div className="algo-modal__has-image">
-            Analyzing...
+            <div className="algo-modal__spinner" />
+            <div className="algo-modal__loading-text">Analyzing...</div>
           </div>
         </div>
       );
@@ -162,7 +162,7 @@ export default class ImageRecognition extends Component {
 
     if (imageError) {
       return (
-        <div className="algo-modal__result">
+        <div className="algo-modal__results">
           <div className="algo-modal__has-image">
             {imageError}
             <button
@@ -178,16 +178,19 @@ export default class ImageRecognition extends Component {
 
     if (result) {
       return (
-        <div className="algo-modal__result">
+        <div className="algo-modal__results">
           <div className="algo-modal__has-image">
-            {result.map(({ id, name, probability }) => {
-              return (
-                <div key={id}>
-                  <div>{name}</div>
-                  <div>{`${(probability*100).toFixed(2)}%`}</div>
-                </div>
-              );
-            })}
+            <div className="algo-modal__result-wrapper">
+              {result.map(({ id, name, probability }) => {
+                return (
+                  <div className="algo-modal__result" key={id}>
+                    <div className="algo-modal__prob-bar" style={{ width: `${(probability*100).toFixed(2)}%` }} />
+                    <div className="algo-modal__result-probability">{`${(probability*100).toFixed(2)}%`}</div>
+                    <div className="algo-modal__result-name">{name}</div>
+                  </div>
+                );
+              })}
+            </div>
             <button
               className="algo-modal__btn-secondary"
               onClick={this.clear}
@@ -200,7 +203,7 @@ export default class ImageRecognition extends Component {
     }
     return file
       ? (
-        <div className="algo-modal__result">
+        <div className="algo-modal__results">
           <div className="algo-modal__has-image">
             <button
               className="algo-modal__btn-primary"
@@ -218,7 +221,7 @@ export default class ImageRecognition extends Component {
         </div>
       )
       : (
-        <div className="algo-modal__result">
+        <div className="algo-modal__results">
           <div className="algo-modal__no-image-text">
             Please upload an image on the left.
           </div>
