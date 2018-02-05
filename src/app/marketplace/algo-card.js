@@ -11,6 +11,8 @@ class AlgoCard extends Component {
     thumbnail: PropTypes.string.isRequired,
     stars: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    model: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
   };
 
@@ -28,20 +30,38 @@ class AlgoCard extends Component {
       return null;
     }
 
-    const { title, thumbnail, stars, description, downloads } = this.props;
+    const {
+      title,
+      thumbnail,
+      stars,
+      description,
+      downloads,
+      type,
+      model,
+    } = this.props;
 
-    return (
-      <Modal onClose={this.closeModal}>
-        <ImageRecognition
-          onClose={this.closeModal}
-          title={title}
-          thumbnail={thumbnail}
-          stars={stars}
-          description={description}
-          downloads={downloads}
-        />
-      </Modal>
-    );
+    if (type === 'image_recognition') {
+      return (
+        <Modal onClose={this.closeModal}>
+          <ImageRecognition
+            onClose={this.closeModal}
+            title={title}
+            thumbnail={thumbnail}
+            stars={stars}
+            description={description}
+            downloads={downloads}
+            model={model}
+          />
+        </Modal>
+      );
+    } else {
+      return (
+        <Modal onClose={this.closeModal}>
+          <div>Coming soon!</div>
+        </Modal>
+      );
+    }
+
   }
 
   render() {

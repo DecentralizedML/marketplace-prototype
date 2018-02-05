@@ -6,10 +6,7 @@ import loadImage from 'blueimp-load-image';
 import { imagenetClassesTopK } from '../../utils/imagenet';
 
 const KerasJS = window.KerasJS;
-const model = new KerasJS.Model({
-  filepath: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
-  gpu: KerasJS.GPU_SUPPORT,
-});
+
 
 export default class ImageRecognition extends Component {
   static propTypes = {
@@ -27,6 +24,14 @@ export default class ImageRecognition extends Component {
     result: null,
     isAnalyzing: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.model = new KerasJS.Model({
+      filepath: props.model,
+      gpu: KerasJS.GPU_SUPPORT,
+    });
+  }
 
   renderLeft() {
     const { file } = this.state;
@@ -103,12 +108,12 @@ export default class ImageRecognition extends Component {
             const preprocessedData = dataProcessedTensor.data;
 
             try {
-              await model.ready()
+              await this.model.ready()
               const inputData = {
                 input_1: preprocessedData
               }
-              const outputData = await model.predict(inputData);
-              const output = outputData[model.outputLayerNames[0]];
+              const outputData = await this.model.predict(inputData);
+              const output = outputData[this.model.outputLayerNames[0]];
               const result = imagenetClassesTopK(output, 5);
               this.setState({
                 result,
