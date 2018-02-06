@@ -308,6 +308,9 @@
     transition: none;
     background: transparent !important;
     box-sizing: border-box; }
+  .algo-modal__text-result {
+    font-weight: 500;
+    font-size: 2rem; }
 
 @-webkit-keyframes load6 {
   0% {

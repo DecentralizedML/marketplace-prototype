@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ndarray from 'ndarray';
-import ops from 'ndarray-ops';
 import _ from 'lodash';
 
 const KerasJS = window.KerasJS;
@@ -24,15 +22,13 @@ export default class TextAnalyzer extends Component {
 
 
   state = {
-    text: null,
     textError: null,
-    result: null,
+    result: .52456,
     isAnalyzing: false,
   };
 
   constructor(props) {
     super(props);
-    console.log(props.model)
     this.model = new KerasJS.Model({
       filepath: props.model,
       gpu: false,
@@ -51,29 +47,13 @@ export default class TextAnalyzer extends Component {
     );
   }
 
-  stepwiseCalc(value) {
-    const forwardHiddenStates = this.model.modelLayersMap.get('bidirectional_1').forwardLayer.hiddenStateSequence
-    const backwardHiddenStates = this.model.modelLayersMap.get('bidirectional_1').backwardLayer.hiddenStateSequence
-    const forwardDim = forwardHiddenStates.tensor.shape[1]
-    const backwardDim = backwardHiddenStates.tensor.shape[1]
-    const start = _.findIndex(value, idx => idx >= INDEX_FROM)
-    if (start === -1) return
-    const stepwiseOutput = []
-    const tempTensor = ndarray(new Float32Array(forwardDim + backwardDim), [forwardDim + backwardDim])
-    for (let i = start; i < MAXLEN; i++) {
-      ops.assign(tempTensor.hi(forwardDim).lo(0), forwardHiddenStates.tensor.pick(i, null))
-      ops.assign(
-        tempTensor.hi(forwardDim + backwardDim).lo(forwardDim),
-        backwardHiddenStates.tensor.pick(MAXLEN - i - 1, null)
-      )
-      stepwiseOutput.push(this.model.layerCall('dense_1', tempTensor).tensor.data[0])
-    }
-    return stepwiseOutput
-  }
-
   analyze = async text => {
     if (!text) {
-      return null;
+      return this.setState({
+        textError: null,
+        result: null,
+        isAnalyzing: false,
+      });
     }
 
     this.setState({
@@ -121,12 +101,16 @@ export default class TextAnalyzer extends Component {
     }
   }
 
-  clear = () => {
-    this.setState({
-      file: null,
-      textError: null,
-      result: null,
-    });
+  getResultColor(val) {
+    if (val < .4) {
+      return 'ff0000';
+    }
+
+    if (val > .6) {
+      return '#00ce30';
+    }
+
+    return '#ff9d00';
   }
 
   renderRight() {
@@ -153,10 +137,27 @@ export default class TextAnalyzer extends Component {
       );
     }
 
+    if (!result) {
+      return (
+        <div className="algo-modal__results">
+          <div className="algo-modal__no-image-text">
+            Enter text on the right
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="algo-modal__results">
         <div className="algo-modal__has-image">
-          <div>{result}</div>
+          <div
+            className="algo-modal__text-result"
+            style={{
+              color: this.getResultColor(result),
+            }}
+          >
+            {`${(result * 100).toFixed(2)}%`}
+          </div>
         </div>
       </div>
     );

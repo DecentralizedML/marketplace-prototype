@@ -405,6 +405,11 @@
     background: transparent !important;
     box-sizing: border-box;
   }
+
+  &__text-result {
+    font-weight: 500;
+    font-size: 2rem;
+  }
 }
 
 @-webkit-keyframes load6 {
