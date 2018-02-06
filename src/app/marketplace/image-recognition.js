@@ -7,9 +7,9 @@ import { imagenetClassesTopK } from '../../utils/imagenet';
 
 const KerasJS = window.KerasJS;
 
-
 export default class ImageRecognition extends Component {
   static propTypes = {
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     stars: PropTypes.number.isRequired,
@@ -25,14 +25,6 @@ export default class ImageRecognition extends Component {
     result: null,
     isAnalyzing: false,
   };
-
-  constructor(props) {
-    super(props);
-    this.model = new KerasJS.Model({
-      filepath: props.model,
-      gpu: KerasJS.GPU_SUPPORT,
-    });
-  }
 
   renderLeft() {
     const { file } = this.state;
@@ -80,6 +72,13 @@ export default class ImageRecognition extends Component {
 
     img.onload = async () => {
       this.setState({ isAnalyzing: true });
+
+      if (!this.model) {
+        this.model = new KerasJS.Model({
+          filepath: this.props.model,
+          gpu: KerasJS.GPU_SUPPORT,
+        });
+      }
 
       loadImage(
         file,
@@ -235,6 +234,10 @@ export default class ImageRecognition extends Component {
       );
   }
 
+  buy() {
+    const { id } = this.props;
+  }
+
   render() {
     const { title, thumbnail, stars, description, downloads, onClose, isPurchased } = this.props;
 
@@ -251,7 +254,12 @@ export default class ImageRecognition extends Component {
             <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
           </div>
           <div className="algo-modal__actions">
-            <button className="algo-modal__buy-btn">Buy</button>
+            <button
+              className="algo-modal__buy-btn"
+              disabled={isPurchased}
+            >
+              {isPurchased ? 'Purchased' : 'Buy' }
+            </button>
           </div>
           <div
             className="algo-modal__close"

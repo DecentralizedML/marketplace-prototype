@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 const KerasJS = window.KerasJS;
 const START_WORD_INDEX = 1;
@@ -28,14 +27,6 @@ export default class TextAnalyzer extends Component {
     isAnalyzing: false,
   };
 
-  constructor(props) {
-    super(props);
-    this.model = new KerasJS.Model({
-      filepath: props.model,
-      gpu: false,
-    });
-  }
-
   renderLeft() {
     return (
       <div className="algo-modal__image-upload">
@@ -62,6 +53,13 @@ export default class TextAnalyzer extends Component {
       result: null,
       isAnalyzing: true,
     });
+
+    if (!this.model) {
+      this.model = new KerasJS.Model({
+        filepath: this.props.model,
+        gpu: false,
+      });
+    }
 
     const value = new Float32Array(MAXLEN);
 
@@ -180,7 +178,12 @@ export default class TextAnalyzer extends Component {
             <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
           </div>
           <div className="algo-modal__actions">
-            <button className="algo-modal__buy-btn">Buy</button>
+            <button
+              className="algo-modal__buy-btn"
+              disabled={isPurchased}
+            >
+              {isPurchased ? 'Purchased' : 'Buy' }
+            </button>
           </div>
           <div
             className="algo-modal__close"

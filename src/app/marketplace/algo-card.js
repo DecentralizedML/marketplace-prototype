@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Modal from '../ui/modal';
 import ImageRecognition from './image-recognition';
 import TextAnalyzer from './text-analyzer';
+import { getPurchasedState } from '../../ducks/algorithmns';
 
 class AlgoCard extends Component {
 
@@ -17,11 +18,17 @@ class AlgoCard extends Component {
     model: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
     isPurchased: PropTypes.bool.isRequired,
+    getPurchasedState: PropTypes.func.isRequired,
   };
 
   state = {
     isShowingModal: false,
   };
+
+  componentWillMount() {
+    const { getPurchasedState, id } = this.props;
+    getPurchasedState(id);
+  }
 
   closeModal = e => {
     e.stopPropagation();
@@ -34,6 +41,7 @@ class AlgoCard extends Component {
     }
 
     const {
+      id,
       title,
       thumbnail,
       stars,
@@ -49,6 +57,7 @@ class AlgoCard extends Component {
         return (
           <Modal onClose={this.closeModal}>
             <ImageRecognition
+              id={id}
               onClose={this.closeModal}
               title={title}
               thumbnail={thumbnail}
@@ -64,6 +73,7 @@ class AlgoCard extends Component {
         return (
           <Modal onClose={this.closeModal}>
             <TextAnalyzer
+              id={id}
               onClose={this.closeModal}
               title={title}
               thumbnail={thumbnail}
@@ -110,5 +120,8 @@ class AlgoCard extends Component {
 export default connect(
   ({ algorithmns }, { id }) => ({
     isPurchased: Boolean(algorithmns.purchased[id]),
-  })
+  }),
+  dispatch => ({
+    getPurchasedState: id => dispatch(getPurchasedState(id)),
+  }),
 )(AlgoCard);
