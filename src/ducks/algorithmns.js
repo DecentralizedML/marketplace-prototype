@@ -1,10 +1,12 @@
 import { createAction, handleActions } from 'redux-actions'
 
 // constant
-const STATE_API = [{"constant":false,"inputs":[{"name":"algoId","type":"uint256"}],"name":"buyAlgo","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"mainState","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"}];
-const STATE_CONTRACT = '0xae73165758B5E43aE4cbaea3cf5D36a7A5ADa976';
+const STATE_API = [{"constant":false,"inputs":[{"name":"amounts","type":"uint256[]"}],"name":"sum","outputs":[{"name":"totalAmount","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"minter","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_amount","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"addresses","type":"address[]"},{"name":"amounts","type":"uint256[]"}],"name":"mintMultiples","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"request","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"},{"name":"amount","type":"uint256"}],"name":"mint","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"addresses","type":"address[]"},{"name":"amounts","type":"uint256[]"}],"name":"transferMulitples","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"algoId","type":"uint256"}],"name":"buyAlgo","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"uint256"}],"name":"mainState","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}];
+const STATE_CONTRACT = '0x80eAc850A1D6A4Bb75cFDdF834ad6ECC327c7AD8';
 const GET_PURCHASED_STATE_REQUEST = 'app/algorithmns/getPurchasedStateRequest';
 const GET_PURCHASED_STATE_RESPONSE = 'app/algorithmns/getPurchasedStateResponse';
+const BUY_ALGO_REQUEST = 'app/algorithmns/buyAlgoRequest';
+const BUY_ALGO_RESPONSE = 'app/algorithmns/buyAlgoResponse';
 
 const initialState = {
   order: ['1', '2', '3', '4'],
@@ -48,11 +50,11 @@ const initialState = {
   },
   purchased: {},
   isRequestingPurchasedState: false,
+  isBuyingAlgo: false,
 };
 
 export const getPurchasedStateRequest = createAction(GET_PURCHASED_STATE_REQUEST);
 export const getPurchasedStateResponse = createAction(GET_PURCHASED_STATE_RESPONSE);
-
 export const getPurchasedState = algoId => async (dispatch, getState) => {
   const { metamask: { isLocked, hasWeb3, accounts } } = getState();
 
@@ -76,6 +78,27 @@ export const getPurchasedState = algoId => async (dispatch, getState) => {
   });
 }
 
+export const buyAlgoRequest = createAction(BUY_ALGO_REQUEST);
+export const buyAlgoResponse = createAction(BUY_ALGO_RESPONSE);
+export const buyAlgo = algoId => async (dispatch, getState) => {
+  const { metamask: { isLocked, hasWeb3 } } = getState();
+
+  if (!hasWeb3 || isLocked) {
+    return null;
+  }
+
+  dispatch(buyAlgoRequest());
+  const contract = window.web3.eth.contract(STATE_API).at(STATE_CONTRACT);
+  contract.buyAlgo(algoId, (err, resp) => {
+    if (err) {
+      return dispatch(buyAlgoRequest(err));
+    }
+
+    return dispatch(buyAlgoResponse({ txHash: resp, id: algoId }));
+  });
+
+}
+
 export default handleActions({
 
   [GET_PURCHASED_STATE_REQUEST]: state => ({
@@ -91,6 +114,22 @@ export default handleActions({
       : {
         ...state.purchased,
         [payload.id]: payload.isPurchased,
+      },
+  }),
+
+  [BUY_ALGO_REQUEST]: state => ({
+    ...state,
+    isBuyingAlgo: true,
+  }),
+
+  [BUY_ALGO_RESPONSE]: (state, { payload, error }) => ({
+    ...state,
+    isBuyingAlgo: false,
+    purchased: error
+      ? state.purchased
+      : {
+        ...state.purchased,
+        [payload.id]: payload.txHash,
       },
   }),
 

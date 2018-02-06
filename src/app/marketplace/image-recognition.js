@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
 import { imagenetClassesTopK } from '../../utils/imagenet';
+import { buyAlgo } from '../../ducks/algorithmns';
+
 
 const KerasJS = window.KerasJS;
 
-export default class ImageRecognition extends Component {
+class ImageRecognition extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -234,12 +237,22 @@ export default class ImageRecognition extends Component {
       );
   }
 
-  buy() {
-    const { id } = this.props;
+  getBuyButtonText() {
+    const { isPurchased, isPurchasePending } = this.props;
+
+    if (isPurchasePending) {
+      return 'Pending Purchase';
+    }
+
+    if (isPurchased) {
+      return 'Purchased';
+    }
+
+    return 'Buy';
   }
 
   render() {
-    const { title, thumbnail, stars, description, downloads, onClose, isPurchased } = this.props;
+    const { title, thumbnail, stars, description, downloads, onClose, isPurchased, isPurchasePending  } = this.props;
 
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
@@ -256,9 +269,13 @@ export default class ImageRecognition extends Component {
           <div className="algo-modal__actions">
             <button
               className="algo-modal__buy-btn"
-              disabled={isPurchased}
+              disabled={isPurchased || isPurchasePending}
+              onClick={() => {
+                const { id, buyAlgo } = this.props;
+                buyAlgo(Number(id));
+              }}
             >
-              {isPurchased ? 'Purchased' : 'Buy' }
+              {this.getBuyButtonText()}
             </button>
           </div>
           <div
@@ -276,3 +293,15 @@ export default class ImageRecognition extends Component {
     );
   }
 }
+
+export default connect(
+  ({ algorithmns }, { id }) => ({
+    isPurchased: typeof algorithmns.purchased[id] === 'string'
+      ? false
+      : Boolean(algorithmns.purchased[id]),
+    isPurchasePending: typeof algorithmns.purchased[id] === 'string',
+  }),
+  dispatch => ({
+    buyAlgo: id => dispatch(buyAlgo(id)),
+  }),
+)(ImageRecognition);

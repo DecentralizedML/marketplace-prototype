@@ -119,7 +119,10 @@ class AlgoCard extends Component {
 
 export default connect(
   ({ algorithmns }, { id }) => ({
-    isPurchased: Boolean(algorithmns.purchased[id]),
+    isPurchased: typeof algorithmns.purchased[id] === 'string'
+      ? false
+      : Boolean(algorithmns.purchased[id]),
+    isPurchasePending: typeof algorithmns.purchased[id] === 'string',
   }),
   dispatch => ({
     getPurchasedState: id => dispatch(getPurchasedState(id)),
