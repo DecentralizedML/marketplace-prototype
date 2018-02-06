@@ -42,6 +42,7 @@ const initialState = {
       model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
     },
   },
+  purchased: ['aa', 'ab'],
 };
 
 export default handleActions({

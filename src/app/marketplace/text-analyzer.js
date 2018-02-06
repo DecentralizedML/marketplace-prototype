@@ -23,7 +23,7 @@ export default class TextAnalyzer extends Component {
 
   state = {
     textError: null,
-    result: .52456,
+    result: null,
     isAnalyzing: false,
   };
 
@@ -103,7 +103,7 @@ export default class TextAnalyzer extends Component {
 
   getResultColor(val) {
     if (val < .4) {
-      return 'ff0000';
+      return '#ff0000';
     }
 
     if (val > .6) {
