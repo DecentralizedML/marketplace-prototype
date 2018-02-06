@@ -30,7 +30,7 @@ class Marketplace extends Component {
           </select>
         </div>
         <div className="marketplace__algos-container">
-          {order.map(id => <AlgoCard key={id} { ...map[id] }/>)}
+          {order.map(id => <AlgoCard key={id} id={id} { ...map[id] }/>)}
         </div>
       </div>
     );

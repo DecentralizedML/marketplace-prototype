@@ -8,6 +8,7 @@ import TextAnalyzer from './text-analyzer';
 class AlgoCard extends Component {
 
   static propTypes = {
+    id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     stars: PropTypes.number.isRequired,
@@ -15,6 +16,7 @@ class AlgoCard extends Component {
     type: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
+    isPurchased: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -39,6 +41,7 @@ class AlgoCard extends Component {
       downloads,
       type,
       model,
+      isPurchased,
     } = this.props;
 
     switch (type) {
@@ -53,6 +56,7 @@ class AlgoCard extends Component {
               description={description}
               downloads={downloads}
               model={model}
+              isPurchased={isPurchased}
             />
           </Modal>
         );
@@ -67,6 +71,7 @@ class AlgoCard extends Component {
               description={description}
               downloads={downloads}
               model={model}
+              isPurchased={isPurchased}
             />
           </Modal>
         );
@@ -102,4 +107,8 @@ class AlgoCard extends Component {
   }
 }
 
-export default connect()(AlgoCard);
+export default connect(
+  ({ algorithmns }, { id }) => ({
+    isPurchased: Boolean(algorithmns.purchased[id]),
+  })
+)(AlgoCard);

@@ -16,6 +16,7 @@ export default class ImageRecognition extends Component {
     description: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,
+    isPurchased: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -235,7 +236,7 @@ export default class ImageRecognition extends Component {
   }
 
   render() {
-    const { title, thumbnail, stars, description, downloads, onClose } = this.props;
+    const { title, thumbnail, stars, description, downloads, onClose, isPurchased } = this.props;
 
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
@@ -259,8 +260,8 @@ export default class ImageRecognition extends Component {
         </div>
         <div className="algo-modal__content">
           <div className="algo-modal__image-recognition">
-            { this.renderLeft() }
-            { this.renderRight() }
+            { isPurchased && this.renderLeft() }
+            { isPurchased && this.renderRight() }
           </div>
         </div>
       </div>
