@@ -9,7 +9,7 @@ const initialState = {
       title: 'Sentiment Analyzer',
       thumbnail: 'http://www.polyvista.com/blog/wp-content/uploads/2015/06/sentiment-customer-exp-large.png',
       type: 'text',
-      model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
+      model: 'https://transcranial.github.io/keras-js-demos-data/imdb_bidirectional_lstm/imdb_bidirectional_lstm.bin',
       stars: 4,
       description: 'Determine sentiment from texts.',
       downloads: 438,
