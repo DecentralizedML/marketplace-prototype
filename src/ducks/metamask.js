@@ -1,5 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import { TOKEN_ADDRESS, TOKEN_ABI } from './faucets';
+import socket from '../utils/io';
 
 // Constants
 const ETH_DECIMALS = 18;
@@ -21,6 +22,8 @@ export const detect = createAction(DETECT);
 export const updateEthBalance = createAction(UPDATE_ETH_BALANCE);
 export const updateDmlBalance = createAction(UPDATE_DML_BALANCE);
 
+let hasConnectedToSocket = false;
+
 export const startPolling = () => (dispatch, getState) => {
   const { metamask: { isLocked } } = getState();
   const timeout = isLocked ? 1000 : 5000;
@@ -34,6 +37,13 @@ export const startPolling = () => (dispatch, getState) => {
     dispatch(detect(web3));
 
     if (account) {
+      if (!hasConnectedToSocket) {
+        hasConnectedToSocket = true;
+        socket.emit('add corporate user', {
+          account,
+        });
+      }
+
       web3.eth.getBalance(account, (err, data) => {
         if (err) {
           return dispatch(updateEthBalance(err));

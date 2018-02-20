@@ -13,9 +13,6 @@ import Main from './app/main';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
-// eslint-disable-next-line no-undef
-const socket = io(); 
-
 const store = createStore(
   reducer,
   applyMiddleware(thunk),
