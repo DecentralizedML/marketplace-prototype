@@ -5,10 +5,13 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "blueimp-load-image": "^2.18.0",
+    "concurrently": "^3.5.1",
+    "express": "^4.16.2",
     "lodash": "^4.17.5",
     "ndarray": "^1.0.18",
     "ndarray-ops": "^1.2.2",
     "node-sass-chokidar": "^0.0.3",
+    "nodemon": "^1.15.1",
     "npm-run-all": "^4.1.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
@@ -22,16 +25,19 @@
     "redux-actions": "^2.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "socket.io": "^2.0.4",
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
+    "server": "nodemon server/app.js",
+    "start": "npm-run-all -p watch-css start-js server",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:5000/"
 }
