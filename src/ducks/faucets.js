@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions'
-import socket from '../utils/io';
+// import socket from '../utils/io';
 
 // Constant
 const FAUCET_API = 'https://cors-anywhere.herokuapp.com/http://faucet.ropsten.be:3001/donate';
