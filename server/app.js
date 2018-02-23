@@ -1,132 +1,138 @@
 const express = require('express');
 const uuid = require('uuid4');
+var ObjectId = require('mongodb').ObjectId;
 const app = express();
 const server = require('http').createServer(app);
 const path = require('path');
 const port = process.env.PORT || 8881;
-const io = require('socket.io')(server);
+const bodyParser = require('body-parser');
+const { insertJob, getActiveJob, getCompletedJobs, ready } = require('./mongo');
 
-const marketers = {};
-const marketersByKey = {};
-const users = {};
-const usersByKey = {};
-const jobs = {};
+const jsonParser = bodyParser.json()
 
-io.on('connection', socket => {
-  const { id } = socket;
+const algos = {
+  'd766f147-1d61-49a8-9955-30432d94f51f': {
+    title: 'IMDB Sentiment Analyzer',
+    thumbnail: 'http://www.polyvista.com/blog/wp-content/uploads/2015/06/sentiment-customer-exp-large.png',
+    type: 'text',
+    model: 'https://transcranial.github.io/keras-js-demos-data/imdb_bidirectional_lstm/imdb_bidirectional_lstm.bin',
+    stars: 4.8,
+    description: 'Determine sentiment from movie reviews.',
+    downloads: 438,
+  },
+  '34285451-7afc-476a-8f6a-35722f379e49': {
+    title: 'Animal\'s Breed Identifier',
+    thumbnail: 'https://images.wagwalkingweb.com/media/articles/dog/pancreatic-exocrine-neoplasia/pancreatic-exocrine-neoplasia.jpg',
+    stars: 3.74,
+    description: 'Identify animal\'s breeds in your picture.',
+    downloads: 7629,
+    type: 'image_recognition',
+    model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
+  },
+  'e065b40c-287b-4c2d-af2a-25be8df2f186': {
+    title: 'Tools Identifier',
+    thumbnail: 'https://cimg2.ibsrv.net/cimg/www.doityourself.com/660x300_100-1/514/Tools-199514.jpg',
+    stars: 3.91,
+    description: 'Identify tools in your picture.',
+    downloads: 602,
+    type: 'image_recognition',
+    model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
+  },
+  '551ac129-ae81-445c-979e-b18adc6c831a': {
+    title: 'Fashion Items Scanner',
+    thumbnail: 'https://d2ot5om1nw85sh.cloudfront.net/image/home/couple.jpg',
+    stars: 4.76,
+    description: 'Identify fashion items from image',
+    downloads: 12901,
+    type: 'image_recognition',
+    model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
+  },
+};
 
-  socket.on('add corporate user', ({ account }) => {
-    console.log(`New corporate user joined: ${id}`);
-    marketers[id] = {
-      account
-    };
-    marketersByKey[account] = id;
-    Object.entries(marketers)
-      .forEach(([userId, user]) => {
-        const userSocket = io.sockets.sockets[userId];
-        userSocket.emit('hello', { hi: 1 })
-      });
-  });
+app.post('/createJob', jsonParser, async (req, res) => {
+  const { body } = req;
 
+  if (!body) {
+    return res.sendStatus(400);
+  }
 
-  socket.on('add mobile user', ({ account }) => {
-    console.log(`New mobile user joined: ${id}`);
-    users[id] = {
-      account
-    };
-    usersByKey[account] = id;
-  });
+  const { reward, algo_id, requestor } = body;
 
-  socket.on('receive result', ({ jobId, result }) => {
-    const job = jobs[jobId];
+  const algo = algos[algo_id];
 
-    if (!job) {
-      return;
-    }
+  if (!algo) return res.status(400).send({ error: true, payload: `Cannot find algorithmn by id: ${algo_id}` });
+  if (!requestor || typeof requestor !== 'string') return res.status(400).send({ error: true, payload: 'requestor must be string' });
+  if (reward <= 0 || typeof reward !== 'number') return res.status(400).send({ error: true, payload: 'reward must be number' });
+  if (!algo || !requestor || !reward || typeof requestor !== 'string' || typeof reward !== 'number') {
+    return res.sendStatus(400);
+  }
 
-    const user = users[id] || {};
-    const account = user.account;
+  const job = {
+    reward,
+    requestor,
+    algo_id,
+    completed: {},
+  };
 
-    if (!account) {
-      return;
-    }
+  try {
+    const result = await insertJob(job)
+    res.send({ error: false, payload: result })
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err })
+  }
 
-    job.results[account] = result;
-
-    if (job.needed <= Object.keys(marketers).length) {
-      const marketerSocket = io.sockets.sockets[job.requestor];
-
-      if (!marketerSocket) return;
-      
-      marketerSocket.emit('job completed', job);
-    }
-
-  });
-
-  socket.on('add job', ({ algo }) => {
-    const jobId = uuid();
-    console.log(`Added new job: ${jobId}`);
-
-    jobs[jobId] = {
-      algo,
-      results: {},
-      needed: Object.keys(marketers).length,
-    };
-
-    Object.entries(users)
-      .forEach(([userId, user]) => {
-        const userSocket = io.sockets.sockets[userId];
-        userSocket.emit('run job', {
-          algo,
-        });
-      });
-  });
-
-
-  socket.on('disconnect', () => {
-    console.log(`Bye ${id}`);
-    const { account } = marketers[id] || {};
-    const { account: userAccount } = users[id] || {};
-    
-    if (account) {
-      delete marketers[id];
-    }
-
-    if (marketersByKey[account]) {
-      delete marketersByKey[account];
-    }
-
-    if (userAccount) {
-      delete users[id];
-    }
-
-    if (usersByKey[userAccount]) {
-      delete usersByKey[userAccount];
-    }
-
-  })
 });
 
-app.get('/jobs', (req, res) => {
+app.get('/algorithmns', (req, res) => {
   res.send({
-    jobs: [
-      {
-        jobId: 'abc',
-        algo: 'fashion',
-        reward: 100,
-        name: 'Fashion Items Scanner',
-        description: 'Identify fashion items from image',
-      },
-      {
-        jobId: 'def',
-        algo: 'dog',
-        reward: 100,
-        name: 'Dog Scanner',
-        description: 'Identify dogs from image',
-      },
-    ],
+    algos: Object.entries(algos)
+      .map(([ key, value ]) => ({
+        algo_id: key,
+        ...value
+      })),
   });
 });
+
+app.post('/get_active_job', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.sendStatus(400);
+  }
+
+  const { user_public_key } = body;
+
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+
+  try {
+    const result = await getActiveJob(user_public_key)
+    res.send({ error: false, payload: result })
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err })
+  }
+
+});
+
+app.post('/get_completed_jobs', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.sendStatus(400);
+  }
+
+  const { user_public_key } = body;
+
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+
+  try {
+    const result = await getCompletedJobs(user_public_key)
+    res.send({ error: false, payload: result })
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err })
+  }
+
+});
+
 
 app.use(express.static(path.join(__dirname, '../build')));
 
