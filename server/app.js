@@ -6,7 +6,7 @@ const server = require('http').createServer(app);
 const path = require('path');
 const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
-const { insertJob, getActiveJob, getCompletedJobs, ready } = require('./mongo');
+const { insertJob, getActiveJob, getCompletedJobs, postJobResult, ready } = require('./mongo');
 
 const jsonParser = bodyParser.json()
 
@@ -53,7 +53,7 @@ app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;
 
   if (!body) {
-    return res.sendStatus(400);
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
   }
 
   const { reward, algo_id, requestor } = body;
@@ -78,7 +78,7 @@ app.post('/createJob', jsonParser, async (req, res) => {
     const result = await insertJob(job)
     res.send({ error: false, payload: result })
   } catch (err) {
-    res.status(500).send({ error: true, payload: err })
+    res.status(500).send({ error: true, payload: err.message })
   }
 
 });
@@ -97,7 +97,7 @@ app.post('/get_active_job', jsonParser, async (req, res) => {
   const { body } = req;
 
   if (!body) {
-    return res.sendStatus(400);
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
   }
 
   const { user_public_key } = body;
@@ -108,7 +108,7 @@ app.post('/get_active_job', jsonParser, async (req, res) => {
     const result = await getActiveJob(user_public_key)
     res.send({ error: false, payload: result })
   } catch (err) {
-    res.status(500).send({ error: true, payload: err })
+    res.status(500).send({ error: true, payload: err.message })
   }
 
 });
@@ -117,7 +117,7 @@ app.post('/get_completed_jobs', jsonParser, async (req, res) => {
   const { body } = req;
 
   if (!body) {
-    return res.sendStatus(400);
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
   }
 
   const { user_public_key } = body;
@@ -128,7 +128,32 @@ app.post('/get_completed_jobs', jsonParser, async (req, res) => {
     const result = await getCompletedJobs(user_public_key)
     res.send({ error: false, payload: result })
   } catch (err) {
-    res.status(500).send({ error: true, payload: err })
+    res.status(500).send({ error: true, payload: err.message })
+  }
+
+});
+
+app.post('/job_result', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const {
+    job_id,
+    user_public_key,
+    results,
+  } = body;
+
+  if (!results || !results.length) return res.status(400).send({ error: true, payload: 'results must not be empty' });
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+  
+  try {
+    const result = await postJobResult({ job_id, user_public_key, results })
+    res.send({ error: false, payload: result })
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err.message })
   }
 
 });

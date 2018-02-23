@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-
+const ObjectId = require('mongodb').ObjectId;
 
 // @5#6&tZ63aX@
 const url = 'mongodb://dev2:wCcdAoaTD67G@ds059365.mlab.com:59365/dml-proto';
@@ -67,7 +67,7 @@ const getCompletedJobs = user_public_key => {
     .then(client => {
       const jobs = client.db('dml-proto').collection('jobs');
       const query = {
-        [`completed.${user_public_key}`]: { $eq: true }
+        [`completed.${user_public_key}`]: { $eq: true },
       };
 
       return new Promise((resolve, reject) => {
@@ -85,9 +85,53 @@ const getCompletedJobs = user_public_key => {
     })
 }
 
+const postJobResult = jobResult => {
+  return ready()
+    .then(client => {
+      const jobs = client.db('dml-proto').collection('jobs');
+      const resultsCol = client.db('dml-proto').collection('results');
+      const query = { _id: ObjectId(jobResult.job_id) };
+      const resultQuery = { job_id: jobResult.job_id, user_public_key: jobResult.user_public_key };
+
+      return new Promise((resolve, reject) => {
+
+        jobs.findOne(query, (findJobError, result) => {
+          if (findJobError) {
+            reject(findJobError);
+          } else {
+            if (!result) {
+              return reject(new Error(`Cannot find job by id: ${jobResult.job_id}`));
+            }
+
+            resultsCol.findOne(resultQuery, (findResultError, data) => {
+              if (findResultError) {
+                return reject(findResultError);
+              }
+
+              if (data) {
+                return reject(new Error(`Cannot post result twice for job_id: ${jobResult.job_id}`));
+              }
+
+              resultsCol.insert(jobResult, (insertError, data) => {
+                if (insertError) {
+                  reject(insertError);
+                } else {
+                  resolve(data.ops);
+                }
+              });
+            })
+
+          }
+        });
+      });
+      
+    })
+}
+
 module.exports = {
   ready,
   insertJob,
   getActiveJob,
   getCompletedJobs,
+  postJobResult,
 };
