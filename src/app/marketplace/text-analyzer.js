@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { buyAlgo } from '../../ducks/algorithmns';
 
@@ -29,6 +30,7 @@ class TextAnalyzer extends Component {
     textError: null,
     result: null,
     isAnalyzing: false,
+    activeTab: 0,
   };
 
   renderLeft() {
@@ -213,6 +215,24 @@ class TextAnalyzer extends Component {
           />
         </div>
         <div className="algo-modal__content">
+          <div className="algo-modal__content-header">
+            <div
+              className={classnames('algo-modal__content-header-item', {
+                'algo-modal__content-header-item--active': this.state.activeTab === 0,
+              })}
+              onClick={() => this.setState({ activeTab: 0 })}
+            >
+              Demo
+            </div>
+            <div
+              className={classnames('algo-modal__content-header-item', {
+                'algo-modal__content-header-item--active': this.state.activeTab === 1,
+              })}
+              onClick={() => this.setState({ activeTab: 1 })}
+            >
+              Create Job
+            </div>
+          </div>
           <div className="algo-modal__image-recognition">
             { isPurchased && this.renderLeft() }
             { isPurchased &&  this.renderRight() }

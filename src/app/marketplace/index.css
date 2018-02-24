@@ -148,10 +148,33 @@
     background-color: rgba(0, 0, 0, 0.1);
     display: flex;
     flex-flow: column nowrap; }
+  .algo-modal__content-header {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem;
+    background-color: #FFF;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2); }
+  .algo-modal__content-header-item {
+    padding: 0 1rem;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    cursor: pointer; }
+    .algo-modal__content-header-item:hover {
+      color: rgba(0, 0, 0, 0.4); }
+    .algo-modal__content-header-item:active {
+      color: rgba(0, 0, 0, 0.5); }
+    .algo-modal__content-header-item--active {
+      color: rgba(0, 118, 163, 0.8) !important; }
   .algo-modal__image-recognition {
     display: flex;
     flex-flow: row nowrap;
     flex: 1 0 auto; }
+  .algo-modal__create-job {
+    margin: 1rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 4px; }
   .algo-modal__image-upload, .algo-modal__results {
     width: 50%;
     margin: 1rem 0;

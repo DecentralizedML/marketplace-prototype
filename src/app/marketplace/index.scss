@@ -197,10 +197,45 @@
     flex-flow: column nowrap;
   }
 
+  &__content-header {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 1rem;
+    background-color: $white;
+    box-shadow: 0 1px 2px 0 rgba($black, 0.1);
+    border-bottom: 1px solid rgba($black, 0.2);
+  }
+
+  &__content-header-item {
+    padding: 0 1rem;
+    color: rgba($black, .3);
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      color: rgba($black, .4);
+    }
+
+    &:active {
+      color: rgba($black, .5);
+    }
+
+    &--active {
+      color: rgba($allports-blue, .8) !important;
+    }
+  }
+
   &__image-recognition {
     display: flex;
     flex-flow: row nowrap;
     flex: 1 0 auto;
+  }
+
+  &__create-job {
+    margin: 1rem;
+    border: 2px solid rgba($black, .1);
+    background-color: rgba($white, .4);
+    border-radius: 4px;
   }
 
   &__image-upload,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Route, Link, BrowserRouter as Router, } from 'react-router-dom';
+import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom';
 
 import Account from '../account';
 import Marketplace from '../marketplace';
@@ -88,8 +88,11 @@ class App extends Component {
 
     return (
       <div className="app-content">
-        <Route path="/marketplace" component={Marketplace} />
-        <Route path="/account" component={Account} />
+        <Switch>
+          <Route path="/marketplace" component={Marketplace} />
+          <Route path="/account" component={Account} />
+          <Route component={Marketplace}/>
+        </Switch>
       </div>
     );
   }

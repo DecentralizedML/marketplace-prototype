@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
@@ -27,6 +28,7 @@ class ImageRecognition extends Component {
     imageError: null,
     result: null,
     isAnalyzing: false,
+    activeTab: 0,
   };
 
   renderLeft() {
@@ -251,8 +253,37 @@ class ImageRecognition extends Component {
     return 'Buy';
   }
 
+  renderContent() {
+    switch (this.state.activeTab) {
+      case 0:
+        return (
+          <div className="algo-modal__image-recognition">
+            { this.renderLeft() }
+            { this.renderRight() }
+          </div>
+        );
+      case 1:
+        return (
+          <div className="algo-modal__create-job">
+            
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
   render() {
-    const { title, thumbnail, stars, description, downloads, onClose, isPurchased, isPurchasePending  } = this.props;
+    const {
+      title,
+      thumbnail,
+      stars,
+      description,
+      downloads,
+      onClose,
+      isPurchased,
+      isPurchasePending
+    } = this.props;
 
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
@@ -284,10 +315,25 @@ class ImageRecognition extends Component {
           />
         </div>
         <div className="algo-modal__content">
-          <div className="algo-modal__image-recognition">
-            { isPurchased && this.renderLeft() }
-            { isPurchased && this.renderRight() }
+          <div className="algo-modal__content-header">
+            <div
+              className={classnames('algo-modal__content-header-item', {
+                'algo-modal__content-header-item--active': this.state.activeTab === 0,
+              })}
+              onClick={() => this.setState({ activeTab: 0 })}
+            >
+              Demo
+            </div>
+            <div
+              className={classnames('algo-modal__content-header-item', {
+                'algo-modal__content-header-item--active': this.state.activeTab === 1,
+              })}
+              onClick={() => this.setState({ activeTab: 1 })}
+            >
+              Create Job
+            </div>
           </div>
+          { this.renderContent() }
         </div>
       </div>
     );
