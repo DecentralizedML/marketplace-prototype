@@ -90,8 +90,9 @@ const postJobResult = jobResult => {
     .then(client => {
       const jobs = client.db('dml-proto').collection('jobs');
       const resultsCol = client.db('dml-proto').collection('results');
-      const query = { _id: ObjectId(jobResult.job_id) };
-      const resultQuery = { job_id: jobResult.job_id, user_public_key: jobResult.user_public_key };
+      const { job_id, user_public_key } = jobResult;
+      const query = { _id: ObjectId(job_id) };
+      const resultQuery = { job_id: job_id, user_public_key: user_public_key };
 
       return new Promise((resolve, reject) => {
 
@@ -100,7 +101,7 @@ const postJobResult = jobResult => {
             reject(findJobError);
           } else {
             if (!result) {
-              return reject(new Error(`Cannot find job by id: ${jobResult.job_id}`));
+              return reject(new Error(`Cannot find job by id: ${job_id}`));
             }
 
             resultsCol.findOne(resultQuery, (findResultError, data) => {
@@ -109,14 +110,26 @@ const postJobResult = jobResult => {
               }
 
               if (data) {
-                return reject(new Error(`Cannot post result twice for job_id: ${jobResult.job_id}`));
+                return reject(new Error(`Cannot post result twice for job_id: ${job_id}`));
               }
 
               resultsCol.insert(jobResult, (insertError, data) => {
                 if (insertError) {
                   reject(insertError);
                 } else {
-                  resolve(data.ops);
+                  jobs.findOneAndUpdate(query, { $set: { [`completed.${user_public_key}`]: true } }, (updateError, result) => {
+                    if (updateError) {
+                      console.log(updateError)
+                      resultsCol.deleteOne({ _id: ObjectId(data.ops[0]._id) }, (deleteError, deleteData) => {
+                        console.log(deleteError)
+                        if (deleteError) return reject(deleteError);
+                        return reject(updateError);
+                      })
+                      return;
+                    }
+
+                    resolve(data.ops);
+                  })
                 }
               });
             })
