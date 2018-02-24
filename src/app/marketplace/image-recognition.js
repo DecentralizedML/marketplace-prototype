@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
+import CreateJob from './create-job';
 import { imagenetClassesTopK } from '../../utils/imagenet';
 import { buyAlgo } from '../../ducks/algorithmns';
 
@@ -253,6 +254,7 @@ class ImageRecognition extends Component {
     return 'Buy';
   }
 
+
   renderContent() {
     switch (this.state.activeTab) {
       case 0:
@@ -264,9 +266,7 @@ class ImageRecognition extends Component {
         );
       case 1:
         return (
-          <div className="algo-modal__create-job">
-            
-          </div>
+          <CreateJob />
         );
       default:
         return null;
@@ -284,7 +284,7 @@ class ImageRecognition extends Component {
       isPurchased,
       isPurchasePending
     } = this.props;
-
+    console.log(this.props)
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
         <div className="algo-modal__header">
@@ -303,7 +303,7 @@ class ImageRecognition extends Component {
               disabled={isPurchased || isPurchasePending}
               onClick={() => {
                 const { id, buyAlgo } = this.props;
-                buyAlgo(Number(id));
+                buyAlgo(id);
               }}
             >
               {this.getBuyButtonText()}

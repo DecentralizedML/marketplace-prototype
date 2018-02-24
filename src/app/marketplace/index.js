@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { fetchAllAlgos } from '../../ducks/algorithmns';
 import AlgoCard from './algo-card';
 
 import './index.css';
@@ -9,7 +10,12 @@ class Marketplace extends Component {
   static propTypes = {
     order: PropTypes.array.isRequired,
     map: PropTypes.object.isRequired,
+    fetchAllAlgos: PropTypes.func.isRequired,
   };
+
+  componentWillMount() {
+    this.props.fetchAllAlgos();
+  }
 
   render() {
     const { order, map } = this.props;
@@ -40,5 +46,8 @@ class Marketplace extends Component {
 export default connect(
   ({ algorithmns: { order, map } }) => ({
     order, map,
+  }),
+  dispatch => ({
+    fetchAllAlgos: () => dispatch(fetchAllAlgos()),
   }),
 )(Marketplace);

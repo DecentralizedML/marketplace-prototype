@@ -203,7 +203,7 @@ class TextAnalyzer extends Component {
               disabled={isPurchased || isPurchasePending}
               onClick={() => {
                 const { id, buyAlgo } = this.props;
-                buyAlgo(Number(id));
+                buyAlgo(id);
               }}
             >
               {this.getBuyButtonText()}
