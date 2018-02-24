@@ -7,29 +7,31 @@ import * as actions from '../../ducks/jobs';
 class JobsHistory extends Component {
   static propTypes = {
     algoId: PropTypes.string.isRequired,
-    jobs: PropTypes.array.isRequired,
+    jobs: PropTypes.object.isRequired,
+    algorithmns: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
-    jobs: [],
+    jobs: {},
   };
 
   componentWillMount() {
     this.props.getJobHistoryByAlgo();
   }
 
-  renderJob = (job, i) => {
+  renderJob = ([ jobId, job ], i) => {
+    const algo = this.props.algorithmns[job.algo_id] || {}
     return (
       <div
-        key={job._id}
+        key={jobId}
         className="algo-modal__job-history__job"
       >
         <div
           className="algo-modal__job-history__job__thumbnail"
-          style={{ backgroundImage: `url(${job.thumbnail})`}}
+          style={{ backgroundImage: `url(${algo.thumbnail})`}}
         />
         <div className="algo-modal__job-history__job__title">
-          {job.title}
+          {algo.title}
         </div>
         <div className="algo-modal__job-history__job__results">
           {`${job.results.length} results`}
@@ -38,32 +40,32 @@ class JobsHistory extends Component {
     );
   }
 
+  renderJobs() {
+    const { jobs } = this.props;
+
+    if (!Object.keys(jobs).length) {
+      return 'You have not created any job for this algorithm.';
+    }
+
+    return Object.entries(this.props.jobs).map(this.renderJob);
+  }
+
   render() {
     return (
       <div className="algo-modal__job-history">
-        {this.props.jobs.map(this.renderJob)}
+        {this.renderJobs()}
       </div>
     );
   }
 };
 
 export default connect(
-  state => ({
-    jobs: [
-      {
-        id: '12312312312',
-        title: 'Hey yo',
-        thumbnail: 'http://www.polyvista.com/blog/wp-content/uploads/2015/06/sentiment-customer-exp-large.png',
-        results: [1,2,3,4,5,6,7]
-      },
-      {
-        id: '12312312312111',
-        title: 'Hey yo',
-        thumbnail: 'http://www.polyvista.com/blog/wp-content/uploads/2015/06/sentiment-customer-exp-large.png',
-        results: [1,2,3,4,5,6,7]
-      },
-    ]
-  }),
+  (state, { algoId }) => {
+    return {
+      jobs: state.jobs.byAlgo[algoId],
+      algorithmns: state.algorithmns.map,
+    };
+  },
   (dispatch, { algoId }) => ({
     getJobHistoryByAlgo: () => dispatch(actions.getJobHistoryByAlgo(algoId)),
   }),
