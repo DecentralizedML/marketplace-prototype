@@ -119,6 +119,10 @@ const getJobs = ({ job_id, requestor, algo_id }) => {
           if (error) {
             reject(error);
           } else {
+            if (!data.length) {
+              resolve([]);
+            }
+
             let jobProcessed = 0;
             data.forEach(async result => {
               const userResults = []

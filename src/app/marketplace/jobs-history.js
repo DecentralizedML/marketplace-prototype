@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import * as actions from '../../ducks/jobs';
 
 class JobsHistory extends Component {
   static propTypes = {
@@ -12,6 +13,10 @@ class JobsHistory extends Component {
   static defaultProps = {
     jobs: [],
   };
+
+  componentWillMount() {
+    this.props.getJobHistoryByAlgo();
+  }
 
   renderJob = (job, i) => {
     return (
@@ -58,5 +63,8 @@ export default connect(
         results: [1,2,3,4,5,6,7]
       },
     ]
+  }),
+  (dispatch, { algoId }) => ({
+    getJobHistoryByAlgo: () => dispatch(actions.getJobHistoryByAlgo(algoId)),
   }),
 )(JobsHistory);
