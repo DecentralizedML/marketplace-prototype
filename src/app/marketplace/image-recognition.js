@@ -6,6 +6,8 @@ import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
 import CreateJob from './create-job';
+import AlgoTabs from './algo-tabs';
+import JobsHistory from './jobs-history';
 import { imagenetClassesTopK } from '../../utils/imagenet';
 import { buyAlgo } from '../../ducks/algorithmns';
 
@@ -256,6 +258,8 @@ class ImageRecognition extends Component {
 
 
   renderContent() {
+    const { isPurchased, id } = this.props;
+
     switch (this.state.activeTab) {
       case 0:
         return (
@@ -265,9 +269,25 @@ class ImageRecognition extends Component {
           </div>
         );
       case 1:
-        return (
-          <CreateJob />
-        );
+        return isPurchased
+          ? (
+            <CreateJob algoId={id} />
+          )
+          : (
+            <div className="algo-modal__create-job--no-purchase">
+              Please purchase algo first.
+            </div>
+          );
+      case 2:
+        return isPurchased
+          ? (
+            <JobsHistory algoId={id} />
+          )
+          : (
+            <div className="algo-modal__create-job--no-purchase">
+              Please purchase algo first.
+            </div>
+          );
       default:
         return null;
     }
@@ -284,7 +304,7 @@ class ImageRecognition extends Component {
       isPurchased,
       isPurchasePending
     } = this.props;
-    console.log(this.props)
+
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
         <div className="algo-modal__header">
@@ -315,24 +335,7 @@ class ImageRecognition extends Component {
           />
         </div>
         <div className="algo-modal__content">
-          <div className="algo-modal__content-header">
-            <div
-              className={classnames('algo-modal__content-header-item', {
-                'algo-modal__content-header-item--active': this.state.activeTab === 0,
-              })}
-              onClick={() => this.setState({ activeTab: 0 })}
-            >
-              Demo
-            </div>
-            <div
-              className={classnames('algo-modal__content-header-item', {
-                'algo-modal__content-header-item--active': this.state.activeTab === 1,
-              })}
-              onClick={() => this.setState({ activeTab: 1 })}
-            >
-              Create Job
-            </div>
-          </div>
+          <AlgoTabs onChange={activeTab => this.setState({ activeTab })} />
           { this.renderContent() }
         </div>
       </div>

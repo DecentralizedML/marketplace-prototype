@@ -85,6 +85,63 @@ const getCompletedJobs = user_public_key => {
     })
 }
 
+const getJobResults = job_id => {
+  return ready()
+    .then(client => {
+      const results = client.db('dml-proto').collection('results');
+      const query = { job_id: job_id.toString() };
+      return new Promise((resolve, reject) => {
+        results.find(query).toArray((error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        })
+      });
+
+    })
+}
+
+const getJobs = ({ job_id, requestor, algo_id }) => {
+  return ready()
+    .then(client => {
+      const jobs = client.db('dml-proto').collection('jobs');
+      // const results = client.db('dml-proto').collection('results');
+      const query = { requestor, algo_id };
+
+      if (job_id) {
+        query._id = ObjectId(job_id);
+      }
+
+      return new Promise((resolve, reject) => {
+        jobs.find(query).toArray((error, data) => {
+          if (error) {
+            reject(error);
+          } else {
+            let jobProcessed = 0;
+            data.forEach(async result => {
+              const userResults = []
+              const jobResults = await getJobResults(result._id);
+              
+              jobResults.forEach(dataByUser => {
+                dataByUser.results.forEach(resultByuser => userResults.push(resultByuser))
+              });
+              
+              jobProcessed++;
+              result.results = userResults;
+
+              if (jobProcessed === data.length) {
+                resolve(data)
+              }
+            })
+          }
+        })
+      });
+
+    });
+}
+
 const postJobResult = jobResult => {
   return ready()
     .then(client => {
@@ -92,7 +149,7 @@ const postJobResult = jobResult => {
       const resultsCol = client.db('dml-proto').collection('results');
       const { job_id, user_public_key } = jobResult;
       const query = { _id: ObjectId(job_id) };
-      const resultQuery = { job_id: job_id, user_public_key: user_public_key };
+      const resultQuery = { job_id, user_public_key };
 
       return new Promise((resolve, reject) => {
 
@@ -147,4 +204,5 @@ module.exports = {
   getActiveJob,
   getCompletedJobs,
   postJobResult,
+  getJobs,
 };

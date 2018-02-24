@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import CreateJob from './create-job';
+import AlgoTabs from './algo-tabs';
+import JobsHistory from './jobs-history';
 import { buyAlgo } from '../../ducks/algorithmns';
 
 const KerasJS = window.KerasJS;
@@ -182,6 +185,42 @@ class TextAnalyzer extends Component {
     return 'Buy';
   }
 
+  renderContent() {
+    const { isPurchased, id } = this.props;
+
+    switch (this.state.activeTab) {
+      case 0:
+        return (
+          <div className="algo-modal__image-recognition">
+            { this.renderLeft() }
+            { this.renderRight() }
+          </div>
+        );
+      case 1:
+        return isPurchased
+          ? (
+            <CreateJob algoId={id} />
+          )
+          : (
+            <div className="algo-modal__create-job--no-purchase">
+              Please purchase algo first.
+            </div>
+          );
+      case 2:
+        return isPurchased
+          ? (
+            <JobsHistory algoId={id} />
+          )
+          : (
+            <div className="algo-modal__create-job--no-purchase">
+              Please purchase algo first.
+            </div>
+          );
+      default:
+        return null;
+    }
+  }
+
   render() {
     const { title, thumbnail, stars, description, downloads, onClose, isPurchased, isPurchasePending } = this.props;
 
@@ -215,28 +254,8 @@ class TextAnalyzer extends Component {
           />
         </div>
         <div className="algo-modal__content">
-          <div className="algo-modal__content-header">
-            <div
-              className={classnames('algo-modal__content-header-item', {
-                'algo-modal__content-header-item--active': this.state.activeTab === 0,
-              })}
-              onClick={() => this.setState({ activeTab: 0 })}
-            >
-              Demo
-            </div>
-            <div
-              className={classnames('algo-modal__content-header-item', {
-                'algo-modal__content-header-item--active': this.state.activeTab === 1,
-              })}
-              onClick={() => this.setState({ activeTab: 1 })}
-            >
-              Create Job
-            </div>
-          </div>
-          <div className="algo-modal__image-recognition">
-            { isPurchased && this.renderLeft() }
-            { isPurchased &&  this.renderRight() }
-          </div>
+          <AlgoTabs onChange={activeTab => this.setState({ activeTab })} />
+          {this.renderContent()}
         </div>
       </div>
     );

@@ -6,7 +6,7 @@ const server = require('http').createServer(app);
 const path = require('path');
 const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
-const { insertJob, getActiveJob, getCompletedJobs, postJobResult, ready } = require('./mongo');
+const { insertJob, getActiveJob, getCompletedJobs, postJobResult, getJobs, ready } = require('./mongo');
 
 const jsonParser = bodyParser.json()
 
@@ -156,6 +156,29 @@ app.post('/job_result', jsonParser, async (req, res) => {
     res.status(500).send({ error: true, payload: err.message })
   }
 
+});
+
+app.post('/get_job_history_by_algo', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const {
+    algo_id,
+    requestor,
+  } = body;
+
+  if (!algo_id || typeof algo_id !== 'string') return res.status(400).send({ error: true, payload: `Invalid algo_id: ${algo_id}`});
+  if (!requestor || typeof requestor !== 'string') return res.status(400).send({ error: true, payload: `Invalid requestor: ${requestor}`});
+
+  try {
+    const result = await getJobs({ algo_id, requestor });
+    res.send({ error: false, payload: result });
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err.message })
+  }
 });
 
 

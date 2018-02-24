@@ -181,6 +181,17 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center; }
+    .algo-modal__create-job--no-purchase {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      flex: 1 0 auto; }
+    .algo-modal__create-job--error-message {
+      line-height: 1rem;
+      font-size: 1rem;
+      height: 1rem;
+      color: #FF0000; }
   .algo-modal__create-job-row {
     display: flex;
     flex-flow: row nowrap;
@@ -374,6 +385,36 @@
   .algo-modal__text-result {
     font-weight: 500;
     font-size: 2rem; }
+  .algo-modal__job-history {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 1rem; }
+    .algo-modal__job-history__job {
+      display: flex;
+      flex-flow: row nowrap;
+      background-color: white;
+      border-radius: 4px;
+      margin: .25rem 0;
+      padding: 1rem;
+      align-items: center;
+      cursor: pointer; }
+      .algo-modal__job-history__job:hover {
+        box-shadow: 0 0 0px 2px rgba(0, 118, 163, 0.4);
+        background-color: rgba(0, 118, 163, 0.1); }
+      .algo-modal__job-history__job__thumbnail {
+        height: 2rem;
+        width: 3rem;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        flex: 0 0 auto; }
+      .algo-modal__job-history__job__title {
+        padding: 0 2rem;
+        flex: 1 0 auto;
+        font-weight: 700; }
+      .algo-modal__job-history__job__results {
+        color: rgba(0, 0, 0, 0.5);
+        font-size: .8rem; }
 
 @-webkit-keyframes load6 {
   0% {

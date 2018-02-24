@@ -242,6 +242,21 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
+
+    &--no-purchase {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      flex: 1 0 auto;
+    }
+
+    &--error-message {
+      line-height: 1rem;
+      font-size: 1rem;
+      height: 1rem;
+      color: $red;
+    }
   }
 
   &__create-job-row {
@@ -496,6 +511,48 @@
   &__text-result {
     font-weight: 500;
     font-size: 2rem;
+  }
+
+  &__job-history {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 1rem;
+
+    &__job {
+      display: flex;
+      flex-flow: row nowrap;
+      background-color: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      margin: .25rem 0;
+      padding: 1rem;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0 0 0px 2px rgba($allports-blue, .4);
+        background-color: rgba($allports-blue, .1);
+      }
+
+      &__thumbnail {
+        height: 2rem;
+        width: 3rem;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        flex: 0 0 auto;
+      }
+
+      &__title {
+        padding: 0 2rem;
+        flex: 1 0 auto;
+        font-weight: 700;
+      }
+
+      &__results {
+        color: rgba(0, 0, 0, .5);
+        font-size: .8rem;
+      }
+    }
   }
 }
 
