@@ -415,6 +415,35 @@
       .algo-modal__job-history__job__results {
         color: rgba(0, 0, 0, 0.5);
         font-size: .8rem; }
+  .algo-modal__job-results-container {
+    display: flex;
+    flex-flow: column nowrap; }
+  .algo-modal__job-results {
+    background: white;
+    padding-top: 2rem;
+    border-radius: 4px; }
+    .algo-modal__job-results__back-btn {
+      color: #FFF;
+      border: none;
+      background-color: rgba(0, 118, 163, 0.9);
+      box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: .5rem 1rem;
+      border-radius: 2px;
+      text-transform: uppercase;
+      position: relative;
+      text-decoration: none;
+      transition: 200ms linear;
+      font-weight: 500;
+      margin: 1rem auto;
+      left: 0;
+      right: 0;
+      position: relative; }
+      .algo-modal__job-results__back-btn:hover {
+        background-color: rgba(0, 118, 163, 0.8); }
+      .algo-modal__job-results__back-btn:active {
+        background-color: #0076A3; }
 
 @-webkit-keyframes load6 {
   0% {

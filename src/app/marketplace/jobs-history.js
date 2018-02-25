@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
+import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar,
+} from 'recharts';
+
 import * as actions from '../../ducks/jobs';
 
 class JobsHistory extends Component {
@@ -15,8 +25,20 @@ class JobsHistory extends Component {
     jobs: {},
   };
 
+  state = {
+    isShowingJobResults: false,
+    jobId: '',
+  }
+
   componentWillMount() {
     this.props.getJobHistoryByAlgo();
+  }
+
+  openJobResults(jobId) {
+    this.setState({
+      isShowingJobResults: true,
+      jobId,
+    });
   }
 
   renderJob = ([ jobId, job ], i) => {
@@ -25,6 +47,7 @@ class JobsHistory extends Component {
       <div
         key={jobId}
         className="algo-modal__job-history__job"
+        onClick={() => this.openJobResults(jobId)}
       >
         <div
           className="algo-modal__job-history__job__thumbnail"
@@ -50,10 +73,59 @@ class JobsHistory extends Component {
     return Object.entries(this.props.jobs).map(this.renderJob);
   }
 
+  renderJobResults() {
+    const { jobId } = this.state;
+    const { jobs } = this.props;
+    const job = jobs[jobId];
+    console.log(job.results);
+
+
+    const processed = job.results.reduce((list, userResults) => {
+      return [
+        ...list,
+        ...userResults.data,
+      ];
+    }, [])
+
+
+    const cats = processed.reduce((categories, data) => {
+      categories[data.name] = categories[data.name] || 0;
+      categories[data.name]++;
+      return categories;
+    }, {});
+
+    const data = Object.entries(cats).map(([ name, count ]) => ({ name, count }));
+
+    return (
+      <div className="algo-modal__job-results-container">
+        <div className="algo-modal__job-results">
+          <BarChart width={730} height={250} data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" allowDataOverflow/>
+            <YAxis dataKey="count" />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="count" fill="#8884d8" />
+          </BarChart>
+        </div>
+        <button
+          className="algo-modal__job-results__back-btn"
+          onClick={() => this.setState({ isShowingJobResults: false, jobId: '' })}
+        >
+          Back
+        </button>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="algo-modal__job-history">
-        {this.renderJobs()}
+        {
+          this.state.isShowingJobResults
+            ? this.renderJobResults()
+            : this.renderJobs()
+        }
       </div>
     );
   }
