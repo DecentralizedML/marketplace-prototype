@@ -442,7 +442,7 @@ export const fetchAllAlgos = () => async dispatch => {
   dispatch(fetchAllAlgosRequest());
 
   try {
-    const response = await fetch('/algorithmns');
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns');
     const { algos } = await response.json();
     return dispatch(fetchAllAlgosResponse(algos));
   } catch (err) {

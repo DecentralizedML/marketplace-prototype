@@ -77,8 +77,6 @@ class JobsHistory extends Component {
     const { jobId } = this.state;
     const { jobs } = this.props;
     const job = jobs[jobId];
-    console.log(job.results);
-
 
     const processed = job.results.reduce((list, userResults) => {
       return [

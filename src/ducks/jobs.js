@@ -21,7 +21,7 @@ export const createJob = ({ maxDevice, rewardsPerDevice, algoId }) => async (dis
       requestor: account,
     };
 
-    const response = await fetch('/createJob', {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/createJob', {
       body: JSON.stringify(body),
       headers: {
         'content-type': 'application/json',
@@ -59,7 +59,7 @@ export const getJobHistoryByAlgo = algoId => async (dispatch, getState) => {
       requestor: account,
     };
 
-    const response = await fetch('/get_job_history_by_algo', {
+    const response = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/get_job_history_by_algo', {
       body: JSON.stringify(body),
       headers: { 'content-type': 'application/json' },
       method: 'POST',
