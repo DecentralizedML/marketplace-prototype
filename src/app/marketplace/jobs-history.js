@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import {
-  LineChart,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
   Tooltip,
-  Line,
-  Legend,
-  Bar,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
+import randomColor from 'randomcolor';
 
 import * as actions from '../../ducks/jobs';
 
@@ -30,7 +26,6 @@ class JobsHistory extends Component {
   state = {
     isShowingJobResults: false,
     jobId: '',
-    selectedCategory: '',
   }
 
   componentWillMount() {
@@ -77,7 +72,7 @@ class JobsHistory extends Component {
   }
 
   renderJobResults() {
-    const { jobId, selectedCategory } = this.state;
+    const { jobId } = this.state;
     const { jobs } = this.props;
     const nameMap = {};
 
@@ -103,65 +98,44 @@ class JobsHistory extends Component {
         acc.push({
           name: data.name,
           date: date.toISOString().split('T')[0],
-        })
+        });
         nameMap[data.name] = 0;
         return acc;
       }, [])
       .reduce((acc, { date, name }) => {
-        acc[date] = acc[date] || {};
-        acc[date][name] = acc[date][name] || 0;
-        acc[date][name]++
+        acc[name] = acc[name] || 0;
+        acc[name]++
         return acc;
-      }, {})
-
-    const processedData = Object.entries(processed)
-      .reduce((acc, [ date, names ]) => {
-        Object.keys(names).forEach(name => {
-          acc.push({
-            date,
-            [`${name}_count`]: names[name],
-          });
-        });
-        return acc;
-      }, [])
-      .sort((a, b) => {
-        if (a.date > b.date) return 1;
-        if (a.date < b.date) return -1;
-        return 0;
-      });
-
-    const options = Object.keys(nameMap);
+      }, {});
 
     return (
       <div className="algo-modal__job-results-container">
-        <select
-          onChange={e => this.setState({ selectedCategory: e.target.value })}
-          defaultValue={selectedCategory || options[0]}
-        >
-          {options.map(name => (
-            <option key={name} value={name}>{name}</option>
-          ))}
-        </select>
         <div className="algo-modal__job-results">
-          <LineChart
-            width={730}
-            height={250}
-            data={processedData.filter(data => {
-              const cat = selectedCategory || options[0];
-              return data[`${cat}_count`] >= 0;
-            })}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis type="number" dataKey={`${selectedCategory || options[0]}_count`} />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone" 
-              dataKey={`${selectedCategory || options[0]}_count`}
+          <PieChart width={780} height={500}>
+            <Pie
+              data={Object.entries(processed).reduce((acc, [name, count]) => {
+                acc.push({ name, count });
+                return acc;
+              }, [])}
+              dataKey="count"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={80}
+              outerRadius={100}
+              paddingAngle={5}
+              lum
               fill="#8884d8"
-            />
-          </LineChart>
+              label={(name, value) => {
+                return name.name;
+              }}
+            >
+              {Object.keys(processed).map((_, i) => (
+                <Cell key={i} fill={randomColor({ luminosity: 'dark' })} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
         </div>
         <button
           className="algo-modal__job-results__back-btn"
