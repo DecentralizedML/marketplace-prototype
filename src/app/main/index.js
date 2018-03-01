@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import Account from '../account';
 import Marketplace from '../marketplace';
 import Upload from '../upload';
+import Request from '../request';
 import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
@@ -93,6 +94,7 @@ class App extends Component {
           <Route path="/marketplace" component={Marketplace} />
           <Route path="/account" component={Account} />
           <Route path="/upload" component={Upload} />
+          <Route path="/request" component={Request} />
           <Route component={Marketplace}/>
         </Switch>
       </div>

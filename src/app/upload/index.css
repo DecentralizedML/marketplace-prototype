@@ -74,7 +74,7 @@
     align-items: center;
     font-weight: 600; }
   .upload__jobs-header-name {
-    flex: 0 0 30%;
+    flex: 0 0 60%;
     border-right: 1px solid rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding-top: 1rem;
@@ -91,7 +91,7 @@
     flex-flow: row nowrap;
     align-items: center; }
   .upload__jobs-name {
-    flex: 0 0 30%;
+    flex: 0 0 60%;
     border-right: 1px solid rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding: 1rem 0 1rem 1rem;

@@ -1,0 +1,23 @@
+.upload__textbox-row {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem; }
+
+.upload__textbox-label {
+  font-weight: 600; }
+
+.upload__textbox-wrapper {
+  width: 100%;
+  padding: 1rem 0;
+  display: flex;
+  flex-flow: row nowrap; }
+  .upload__textbox-wrapper textarea {
+    flex: 1 0 auto;
+    height: 10rem;
+    font-size: 1rem;
+    padding: .5rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    outline: none; }
+    .upload__textbox-wrapper textarea::placeholder {
+      color: rgba(0, 0, 0, 0.3); }
