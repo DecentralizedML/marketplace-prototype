@@ -11,13 +11,33 @@ const { insertJob, getActiveJob, getCompletedJobs, postJobResult, getJobs, ready
 const jsonParser = bodyParser.json()
 
 const algos = {
+  '551ac129-ae81-445c-979e-b18adc6c831a': {
+    title: 'Fashion Items Scanner',
+    thumbnail: 'https://d2ot5om1nw85sh.cloudfront.net/image/home/couple.jpg',
+    stars: 4.76,
+    description: 'Identify fashion items from image',
+    downloads: 12901,
+    type: 'image_recognition',
+    model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
+    isActive: true,
+  },
   '7653c938-808b-42ac-abf2-1198342e36a6': {
     title: 'Twitter Text Analysis',
-    thumbnail: 'http://www.infinitdatum.com/wp-content/uploads/2015/06/Twitter-Analytics.jpg',
+    thumbnail: 'https://simplymeasured.com/wp-content/uploads/2013/01/twitter-stats.png',
     type: 'twitter',
     model: '',
     stars: ' - ',
     description: 'Analyse a text to provide the main sentiment (%) expressed in tweets',
+    downloads: 0,
+    isActive: false,
+  },
+  '2766eb9d-2e35-4911-9615-2dfe38a2fe6a': {
+    title: 'Landmark Scanner',
+    thumbnail: 'https://us.123rf.com/450wm/tomas1111/tomas11111505/tomas1111150500187/40392330-wide-shot-of-eiffel-tower-with-dramatic-sky-paris-france.jpg?ver=6',
+    type: 'twitter',
+    model: '',
+    stars: ' - ',
+    description: 'Detect and identify if any worldwide famous landmark (eiffel tower, big ben, taj mahal, etc...)',
     downloads: 0,
     isActive: false,
   },
@@ -50,16 +70,6 @@ const algos = {
     type: 'image_recognition',
     model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
     isActive: false,
-  },
-  '551ac129-ae81-445c-979e-b18adc6c831a': {
-    title: 'Fashion Items Scanner',
-    thumbnail: 'https://d2ot5om1nw85sh.cloudfront.net/image/home/couple.jpg',
-    stars: 4.76,
-    description: 'Identify fashion items from image',
-    downloads: 12901,
-    type: 'image_recognition',
-    model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
-    isActive: true,
   },
 };
 
