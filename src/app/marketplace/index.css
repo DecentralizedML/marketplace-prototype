@@ -95,7 +95,8 @@
     flex-flow: row nowrap;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-    padding: 1rem; }
+    padding: 1rem;
+    flex: 0 0 auto; }
   .algo-modal__image {
     height: 7rem;
     width: 12rem;
@@ -147,7 +148,8 @@
     flex: 1 0 auto;
     background-color: rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-flow: column nowrap; }
+    flex-flow: column nowrap;
+    flex: 1 1 auto; }
   .algo-modal__content-header {
     display: flex;
     flex-flow: row nowrap;
@@ -176,11 +178,12 @@
     border: 2px solid rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 4px;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: center; }
+    justify-content: center;
+    overflow-y: auto; }
     .algo-modal__create-job--no-purchase {
       display: flex;
       flex-flow: row nowrap;
@@ -192,12 +195,26 @@
       font-size: 1rem;
       height: 1rem;
       color: #FF0000; }
+  .algo-modal__create-job-rows {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 0;
+    flex: 1 0 auto; }
   .algo-modal__create-job-row {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     width: 50%;
     margin-bottom: 1rem; }
+    .algo-modal__create-job-row--total {
+      font-weight: 600;
+      border-top: 2px solid #000;
+      padding: 1rem; }
+      .algo-modal__create-job-row--total .algo-modal__create-job-row__label {
+        font-weight: 600; }
     .algo-modal__create-job-row__label {
       font-weight: 500;
       font-size: 1rem;
@@ -206,7 +223,14 @@
       padding: .5rem;
       border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 4px;
-      flex: 1 0 50%; }
+      flex: 1 0 50%;
+      font-size: .7rem;
+      width: 206px;
+      background-color: white;
+      padding: .5rem;
+      appearance: none; }
+      .algo-modal__create-job-row__input::placeholder {
+        color: rgba(0, 0, 0, 0.3); }
   .algo-modal__create-job-btn {
     color: #FFF;
     border: none;
