@@ -21,6 +21,10 @@
   align-items: center;
   box-shadow: $standard-box-shadow;
 
+  img {
+    width: 155px;
+  }
+
   &__items {
     flex: 1 1 auto;
     width: 0;
