@@ -558,12 +558,25 @@
   &__job-results-container {
     display: flex;
     flex-flow: column nowrap;
+
+    select {
+      width: 696px;
+      margin: 0 auto 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
   }
 
   &__job-results {
     background: white;
     padding-top: 2rem;
     border-radius: 4px;
+    margin: 0 auto;
+    padding: 3rem;
+
+    .recharts-legend-item {
+      cursor: pointer;
+    }
 
     &__back-btn {
       color: $white;

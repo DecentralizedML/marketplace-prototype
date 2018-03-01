@@ -10,6 +10,7 @@
     "concurrently": "^3.5.1",
     "express": "^4.16.2",
     "lodash": "^4.17.5",
+    "moment": "^2.20.1",
     "mongodb": "^3.0.2",
     "ndarray": "^1.0.18",
     "ndarray-ops": "^1.2.2",

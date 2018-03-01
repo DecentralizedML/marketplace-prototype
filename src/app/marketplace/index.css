@@ -418,10 +418,19 @@
   .algo-modal__job-results-container {
     display: flex;
     flex-flow: column nowrap; }
+    .algo-modal__job-results-container select {
+      width: 696px;
+      margin: 0 auto 1rem;
+      font-size: 1rem;
+      cursor: pointer; }
   .algo-modal__job-results {
     background: white;
     padding-top: 2rem;
-    border-radius: 4px; }
+    border-radius: 4px;
+    margin: 0 auto;
+    padding: 3rem; }
+    .algo-modal__job-results .recharts-legend-item {
+      cursor: pointer; }
     .algo-modal__job-results__back-btn {
       color: #FFF;
       border: none;

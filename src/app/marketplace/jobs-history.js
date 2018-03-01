@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import {
   Tooltip,
   PieChart,
   Pie,
   Cell,
+  LineChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Legend,
+  Line,
 } from 'recharts';
 import randomColor from 'randomcolor';
 
 import * as actions from '../../ducks/jobs';
+import { processDataForTimeSeries, processDataForPie } from '../../utils/results';
+
+const GRAPH_TYPES = {
+  TIME_SERIES: 'time_series',
+  PIE: 'pie',
+};
 
 class JobsHistory extends Component {
   static propTypes = {
@@ -23,10 +36,19 @@ class JobsHistory extends Component {
     jobs: {},
   };
 
-  state = {
-    isShowingJobResults: false,
-    jobId: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShowingJobResults: false,
+      graphType: GRAPH_TYPES.PIE,
+      selectedName: '',
+      jobId: '',
+    };
+    
+    this.processDataForTimeSeries = _.memoize(this.processDataForTimeSeries);
+    this.processDataForPie = _.memoize(this.processDataForPie);
   }
+
 
   componentWillMount() {
     this.props.getJobHistoryByAlgo();
@@ -37,6 +59,29 @@ class JobsHistory extends Component {
       isShowingJobResults: true,
       jobId,
     });
+  }
+
+  processDataForPie = jobId => {
+    const { jobs } = this.props;
+    const job = jobs[jobId];
+
+    return processDataForPie(job);
+  }
+
+  processDataForTimeSeries = jobId => {
+    const { jobs } = this.props;
+    const job = jobs[jobId];
+
+    return processDataForTimeSeries(job);
+  }
+
+  renderGraphTypesSelector() {
+    return (
+      <select onChange={e => this.setState({ graphType: e.target.value })}>
+        <option value={GRAPH_TYPES.PIE}>Pie Chart</option>
+        <option value={GRAPH_TYPES.TIME_SERIES}>Line Chart</option>
+      </select>
+    );
   }
 
   renderJob = ([ jobId, job ], i) => {
@@ -71,52 +116,17 @@ class JobsHistory extends Component {
     return Object.entries(this.props.jobs).map(this.renderJob);
   }
 
-  renderJobResults() {
+  renderPie() {
     const { jobId } = this.state;
-    const { jobs } = this.props;
-    const nameMap = {};
-
-    const job = jobs[jobId];
-
-    const processed = job.results
-      .reduce((list, userResults) => {
-        return [
-          ...list,
-          ...userResults.data,
-        ];
-      }, [])
-      .reduce((acc, data) => {
-        if (data.confidence < .2) {
-          return acc;
-        }
-
-        const date = new Date();
-        const weeks = Math.floor(Math.random() * 8);
-
-        date.setDate(new Date().getDate() - (weeks * 7));
-
-        acc.push({
-          name: data.name,
-          date: date.toISOString().split('T')[0],
-        });
-        nameMap[data.name] = 0;
-        return acc;
-      }, [])
-      .reduce((acc, { date, name }) => {
-        acc[name] = acc[name] || 0;
-        acc[name]++
-        return acc;
-      }, {});
+    const { data } = this.processDataForPie(jobId);
 
     return (
       <div className="algo-modal__job-results-container">
+        { this.renderGraphTypesSelector() }
         <div className="algo-modal__job-results">
-          <PieChart width={780} height={500}>
+          <PieChart width={600} height={300}>
             <Pie
-              data={Object.entries(processed).reduce((acc, [name, count]) => {
-                acc.push({ name, count });
-                return acc;
-              }, [])}
+              data={data}
               dataKey="count"
               nameKey="name"
               cx="50%"
@@ -130,7 +140,7 @@ class JobsHistory extends Component {
                 return name.name;
               }}
             >
-              {Object.keys(processed).map((_, i) => (
+              {Object.keys(data).map((_, i) => (
                 <Cell key={i} fill={randomColor({ luminosity: 'dark' })} />
               ))}
             </Pie>
@@ -145,6 +155,74 @@ class JobsHistory extends Component {
         </button>
       </div>
     );
+  }
+
+  renderLines(allNames) {
+    const { selectedName } = this.state;
+
+    if (selectedName) {
+      return (
+        <Line
+          key={selectedName}
+          type="monotone"
+          dataKey={selectedName}
+          stroke={randomColor({ luminosity: 'dark' })}
+        />
+      );
+    }
+
+    return Object.keys(allNames)
+      .map(name => (
+        <Line
+          key={name}
+          type="monotone"
+          dataKey={name}
+          stroke={randomColor({ luminosity: 'dark' })}
+        />
+      ));
+  }
+
+  renderTimeSeries() {
+    const { selectedName, jobId } = this.state;
+    const { allNames, data } = this.processDataForTimeSeries(jobId);
+
+    return (
+      <div className="algo-modal__job-results-container">
+        { this.renderGraphTypesSelector() }
+        <div className="algo-modal__job-results">
+          <LineChart width={600} height={300} data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis minTickGap={1} />
+            <Tooltip />
+            <Legend onClick={e => {
+              this.setState({
+                selectedName: selectedName ? '' : e.dataKey,
+              })}
+            } />
+            {this.renderLines(allNames)}
+          </LineChart>
+        </div>
+        <button
+          className="algo-modal__job-results__back-btn"
+          onClick={() => this.setState({ isShowingJobResults: false, jobId: '' })}
+        >
+          Back
+        </button>
+      </div>
+    );
+  }
+
+  renderJobResults() {
+    const { graphType } = this.state;
+
+    switch (graphType) {
+      case GRAPH_TYPES.TIME_SERIES:
+        return this.renderTimeSeries();
+      case GRAPH_TYPES.PIE:
+      default:
+        return this.renderPie();
+    }
   }
 
   render() {
