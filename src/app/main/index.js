@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom';
-
+import classnames from 'classnames';
 import Account from '../account';
 import Marketplace from '../marketplace';
+import Upload from '../upload';
 import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
@@ -91,6 +92,7 @@ class App extends Component {
         <Switch>
           <Route path="/marketplace" component={Marketplace} />
           <Route path="/account" component={Account} />
+          <Route path="/upload" component={Upload} />
           <Route component={Marketplace}/>
         </Switch>
       </div>
@@ -98,14 +100,46 @@ class App extends Component {
   }
 
   render() {
+    const pathname = window.location.pathname;
+
     return (
       <Router>
         <div className="app">
           <header className="app-header">
             <img src={logo} className="app-logo" alt="logo" />
             <div className="app-header__items">
-              <Link className="app-header__item" to="marketplace">Marketplace</Link>
-              <Link className="app-header__item" to="account">Account</Link>
+              <Link
+                className={classnames('app-header__item', {
+                  'app-header__item--active': (/marketplace/gi).test(pathname),
+                })}
+                to="marketplace"
+              >
+                Marketplace
+              </Link>
+              <Link
+                className={classnames('app-header__item', {
+                  'app-header__item--active': (/account/gi).test(pathname),
+                })}
+                to="account"
+              >
+                Account
+              </Link>
+              <Link
+                className={classnames('app-header__item', {
+                  'app-header__item--active': (/upload/gi).test(pathname),
+                })}
+                to="upload"
+              >
+                Upload
+              </Link>
+              <Link
+                className={classnames('app-header__item', {
+                  'app-header__item--active': (/request/gi).test(pathname),
+                })}
+                to="request"
+              >
+                Request
+              </Link>
             </div>
           </header>
           { this.renderContent() }
