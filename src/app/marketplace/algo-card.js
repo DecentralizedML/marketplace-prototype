@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 import Modal from '../ui/modal';
 import ImageRecognition from './image-recognition';
 import TextAnalyzer from './text-analyzer';
@@ -17,6 +18,7 @@ class AlgoCard extends Component {
     type: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
+    isActive: PropTypes.bool.isRequired,
     isPurchased: PropTypes.bool.isRequired,
     getPurchasedState: PropTypes.func.isRequired,
   };
@@ -96,13 +98,22 @@ class AlgoCard extends Component {
   }
 
   render() {
-    const { title, thumbnail, stars, downloads } = this.props;
+    const { title, thumbnail, stars, downloads, isActive } = this.props;
 
     return (
       <div
-        className="marketplace__algo-card"
-        onClick={() => this.setState({ isShowingModal: true })}
+        className={classnames('marketplace__algo-card', {
+          'marketplace__algo-card--disabled': !isActive,
+        })}
+        onClick={() => this.setState({ isShowingModal: isActive })}
       >
+        {
+          !isActive && (
+            <div className="marketplace__algo-card__disable-text">
+              Coming Soon
+            </div>
+          )
+        }
         <div
           className="marketplace__algo-card__hero-image"
           style={{ backgroundImage: `url(${thumbnail})` }}

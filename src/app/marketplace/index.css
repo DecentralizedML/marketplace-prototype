@@ -53,9 +53,32 @@
     transition: 250ms ease-in-out;
     cursor: pointer;
     flex: 0 1 24%;
-    box-sizing: border-box; }
+    box-sizing: border-box;
+    position: relative; }
     .marketplace__algo-card:hover {
       box-shadow: 0 0px 0px 4px rgba(0, 118, 163, 0.25); }
+    .marketplace__algo-card--disabled {
+      cursor: default; }
+      .marketplace__algo-card--disabled:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.4); }
+      .marketplace__algo-card--disabled:hover {
+        box-shadow: none; }
+    .marketplace__algo-card__disable-text {
+      position: absolute;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #FFF;
+      right: 0;
+      left: 0;
+      text-align: center;
+      top: 40%; }
     .marketplace__algo-card__hero-image {
       height: 9rem;
       background-repeat: no-repeat;
