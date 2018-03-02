@@ -29,7 +29,7 @@ const algos = {
     stars: ' - ',
     description: 'Detect and identify if food in a picture',
     downloads: 0,
-    isActive: false,
+    isActive: true,
   },
   '8a6aaa36-a54b-4183-9d58-58e7b7158c35': {
     title: 'Brand Scanner',
@@ -39,7 +39,7 @@ const algos = {
     stars: ' - ',
     description: 'Detect and identify if any famous brand wording in a picture (Coke, Mac Donald, Dior, Channel, etc...)',
     downloads: 0,
-    isActive: false,
+    isActive: true,
   },
   '7653c938-808b-42ac-abf2-1198342e36a6': {
     title: 'Twitter Text Analysis',
@@ -59,7 +59,7 @@ const algos = {
     stars: ' - ',
     description: 'Detect and identify if any worldwide famous landmark (eiffel tower, big ben, taj mahal, etc...)',
     downloads: 0,
-    isActive: false,
+    isActive: true,
   },
   'd766f147-1d61-49a8-9955-30432d94f51f': {
     title: 'IMDB Sentiment Analyzer',
@@ -69,7 +69,7 @@ const algos = {
     stars: ' - ',
     description: 'Determine sentiment from movie reviews.',
     downloads: 0,
-    isActive: false,
+    isActive: true,
   },
   '34285451-7afc-476a-8f6a-35722f379e49': {
     title: 'Animal\'s Breed Identifier',
