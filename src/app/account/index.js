@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import { requestEther, requestDml } from '../../ducks/faucets';
+import Approval from './approval';
 
 import './index.css';
 
@@ -11,14 +10,6 @@ class Account extends Component {
     account: PropTypes.string.isRequired,
     ethBalance: PropTypes.string.isRequired,
     dmlBalance: PropTypes.string.isRequired,
-    dmlFaucetTx: PropTypes.string.isRequired,
-    etherFaucetError: PropTypes.string.isRequired,
-    dmlFaucetError: PropTypes.string.isRequired,
-    isRequestingEther: PropTypes.bool.isRequired,
-    isRequestingDml: PropTypes.bool.isRequired,
-    hasRequestedDml: PropTypes.bool.isRequired,
-    requestEther: PropTypes.func.isRequired,
-    requestDml: PropTypes.func.isRequired,
   };
 
   renderWarning() {
@@ -67,25 +58,47 @@ class Account extends Component {
     return null;
   }
 
+  renderEtherBalance() {
+    // const { ethBalance } = this.props;
+
+    return null;
+    // return (
+    //   <div className="wallet-card__balance-row">
+    //     <div className="wallet-card__balance">
+    //       <div className="wallet-card__balance-header-text">Ethereum Balance:</div>
+    //       <div className="wallet-card__balance-wrapper">
+    //         <span className="wallet-card__balance-text">{ethBalance}</span>
+    //         <span className="wallet-card__balance-unit">ETH</span>
+    //       </div>
+    //     </div>
+    //   </div>
+    // )
+  }
+
+  renderDmlBalance() {
+    const { dmlBalance } = this.props;
+
+    return (
+      <div className="wallet-card__balance-row">
+        <div className="wallet-card__balance">
+          <div className="wallet-card__balance-header-text">DML Balance:</div>
+          <div className="wallet-card__balance-wrapper">
+            <span className="wallet-card__balance-text">{dmlBalance}</span>
+            <span className="wallet-card__balance-unit wallet-card__balance-unit--dml">DML</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    const {
-      account,
-      ethBalance,
-      dmlBalance,
-      // requestEther,
-      // requestDml,
-      // isRequestingEther,
-      // isRequestingDml,
-      // hasRequestedDml,
-      // etherFaucetError,
-      // dmlFaucetError,
-    } = this.props;
+    const { account } = this.props;
 
     return (
       <div className="account">
         <div className="wallet-card">
           <div className="wallet-card__header">
-            <div className="wallet-card__title">Your Wallet Balance</div>
+            <div className="wallet-card__title">Balance</div>
             <a
               className="wallet-card__wallet-selector"
               href={`https://etherscan.io/address/${account}`}
@@ -98,27 +111,12 @@ class Account extends Component {
           <div className="wallet-card__content">
             { this.renderWarning() }
             <div className="wallet-card__balances">
-              <div className="wallet-card__balance-row">
-                <div className="wallet-card__balance">
-                  <div className="wallet-card__balance-header-text">Ethereum Balance:</div>
-                  <div className="wallet-card__balance-wrapper">
-                    <span className="wallet-card__balance-text">{ethBalance}</span>
-                    <span className="wallet-card__balance-unit">ETH</span>
-                  </div>
-                </div>
-              </div>
-              <div className="wallet-card__balance-row">
-                <div className="wallet-card__balance">
-                  <div className="wallet-card__balance-header-text">DML Balance:</div>
-                  <div className="wallet-card__balance-wrapper">
-                    <span className="wallet-card__balance-text">{dmlBalance}</span>
-                    <span className="wallet-card__balance-unit wallet-card__balance-unit--dml">DML</span>
-                  </div>
-                </div>
-              </div>
+              { this.renderEtherBalance() }
+              { this.renderDmlBalance() }
             </div>
           </div>
         </div>
+        <Approval />
       </div>
     );
   }
@@ -129,15 +127,5 @@ export default connect(
     account: state.metamask.accounts[0] || '',
     ethBalance: state.metamask.ethBalance.toFixed(5),
     dmlBalance: state.metamask.dmlBalance.toFixed(0),
-    etherFaucetError: state.faucets.etherFaucetError,
-    isRequestingEther: state.faucets.isRequestingEther,
-    isRequestingDml: state.faucets.isRequestingDml,
-    dmlFaucetError: state.faucets.dmlFaucetError,
-    hasRequestedDml: state.faucets.hasRequestedDml,
-    dmlFaucetTx: state.faucets.dmlFaucetTx,
-  }),
-  dispatch => ({
-    requestEther: () => dispatch(requestEther()),
-    requestDml: () => dispatch(requestDml()),
-  }),
+  })
 )(Account);

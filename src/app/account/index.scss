@@ -100,6 +100,7 @@
 
   &__balance-text {
     font-size: 1.25rem;
+    flex: 1 1 auto;
   }
 
   &__balance-unit {
@@ -136,6 +137,51 @@
 
     &:active {
       background-color: rgba($allports-blue, .3);
+    }
+  }
+
+  &__input {
+    padding: .5rem;
+    margin: .5rem 0;
+    border: 2px solid rgba($black, .1);
+    border-radius: 4px;
+    flex: 1 0 50%;
+    font-size: 1rem;
+    width: 206px;
+    background-color: white;
+    padding: .5rem;
+    appearance: none;
+    outline: none;
+
+    &::placeholder {
+      color: rgba($black, .3);
+    }
+  }
+
+  &__approve-btn {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-transform: uppercase;
+    color: $white;
+    border: none;
+    background-color: rgba($allports-blue, .9);
+    box-shadow: 0 0 2px 1px rgba($black, .1);
+    cursor: pointer;
+    font-size: .75rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    position: relative;
+    text-decoration: none;
+    transition: 200ms linear;
+    font-weight: 500;
+
+    &:hover {
+      background-color: rgba($allports-blue, .8);
+    }
+
+    &:active {
+      background-color: $allports-blue;
     }
   }
 }

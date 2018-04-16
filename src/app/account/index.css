@@ -71,7 +71,8 @@
     flex-flow: row nowrap;
     align-items: center; }
   .wallet-card__balance-text {
-    font-size: 1.25rem; }
+    font-size: 1.25rem;
+    flex: 1 1 auto; }
   .wallet-card__balance-unit {
     font-size: .75rem;
     background-color: #9c9c9c;
@@ -99,3 +100,38 @@
       background-color: rgba(0, 118, 163, 0.1); }
     .wallet-card__button:active {
       background-color: rgba(0, 118, 163, 0.3); }
+  .wallet-card__input {
+    padding: .5rem;
+    margin: .5rem 0;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    flex: 1 0 50%;
+    font-size: 1rem;
+    width: 206px;
+    background-color: white;
+    padding: .5rem;
+    appearance: none;
+    outline: none; }
+    .wallet-card__input::placeholder {
+      color: rgba(0, 0, 0, 0.3); }
+  .wallet-card__approve-btn {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-transform: uppercase;
+    color: #FFF;
+    border: none;
+    background-color: rgba(0, 118, 163, 0.9);
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: .75rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    position: relative;
+    text-decoration: none;
+    transition: 200ms linear;
+    font-weight: 500; }
+    .wallet-card__approve-btn:hover {
+      background-color: rgba(0, 118, 163, 0.8); }
+    .wallet-card__approve-btn:active {
+      background-color: #0076A3; }

@@ -1,14 +1,11 @@
 import { createAction, handleActions } from 'redux-actions'
-import { TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI } from '../utils/constants';
-
-// import socket from '../utils/io';
+import { TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI, MARKETPLACE_CONTRACT_ADDRESS } from '../utils/constants';
 
 // Constants
-const ETH_DECIMALS = 18;
-const ETH_DENOMINATION = Math.pow(10, ETH_DECIMALS);
 const DETECT = 'app/metamask/detect';
 const UPDATE_ETH_BALANCE = 'app/metamask/updateEthBalance';
 const UPDATE_DML_BALANCE = 'app/metamask/updateDmlBalance';
+const UPDATE_DML_ALLOWANCE = 'app/metamask/updateDmlAllowance';
 
 const initialState = {
   hasWeb3: false,
@@ -17,15 +14,16 @@ const initialState = {
   network: null,
   ethBalance: 0,
   dmlBalance: 0,
+  dmlAllowance: 0,
 };
 
 export const detect = createAction(DETECT);
 export const updateEthBalance = createAction(UPDATE_ETH_BALANCE);
 export const updateDmlBalance = createAction(UPDATE_DML_BALANCE);
+export const updateDmlAllowance = createAction(UPDATE_DML_ALLOWANCE);
 
-// let hasConnectedToSocket = false;
 
-export const startPolling = () => (dispatch, getState) => {
+export const startPolling = () => async (dispatch, getState) => {
   const { metamask: { isLocked } } = getState();
   const timeout = isLocked ? 1000 : 5000;
 
@@ -43,23 +41,76 @@ export const startPolling = () => (dispatch, getState) => {
           return dispatch(updateEthBalance(err));
         }
 
-        return dispatch(updateEthBalance(data.toString() / ETH_DENOMINATION));
+        return dispatch(updateEthBalance(web3.fromWei(data, 'ether').toNumber()));
       });
 
       const contract = window.web3.eth.contract(TOKEN_CONTRACT_ABI).at(TOKEN_CONTRACT_ADDRESS);
-      contract.balanceOf(account, (err, data) => {
-        if (err) {
-          return dispatch(updateDmlBalance(err));
+      let denominator;
+
+      try {
+        const decimals = await getDecimals(contract);
+        denominator = Math.pow(10, decimals);
+      } catch (err) {
+        console.error('Error getting decimals');
+        console.error(err)
+      }
+
+      if (denominator) {
+        try {
+          const dmlBalance = await getDmlBalance(contract, account);
+          dispatch(updateDmlBalance(dmlBalance/denominator));
+        } catch (e) {
+          dispatch(updateDmlBalance(e));
         }
 
-        return dispatch(updateDmlBalance(web3.fromWei(data, 'ether').toNumber()));
-      })
+        try {
+          const dmlAllowance = await getDmlAllowance(contract, account);
+          dispatch(updateDmlAllowance(dmlAllowance/denominator));
+        } catch (err) {
+          dispatch(updateDmlAllowance(err));
+        }
+      }
+
     }
 
   }
 
   setTimeout(() => dispatch(startPolling()), timeout);
 };
+
+function getDecimals(contract) {
+  return new Promise((resolve, reject) => {
+    contract.decimals((err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      
+      resolve(data.toNumber());
+    })
+  });
+}
+
+function getDmlBalance(contract, account) {
+  return new Promise((resolve, reject) => {
+    contract.balanceOf(account, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data.toNumber())
+    });
+  });
+}
+
+function getDmlAllowance(contract, account) {
+  return new Promise((resolve, reject) => {
+    contract.allowance(account, MARKETPLACE_CONTRACT_ADDRESS, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data.toNumber())
+    });
+  });
+}
 
 export default handleActions({
 
@@ -79,6 +130,11 @@ export default handleActions({
   [UPDATE_DML_BALANCE]: (state, { payload, error }) => ({
     ...state,
     dmlBalance: error ? 0 : payload,
+  }),
+
+  [UPDATE_DML_ALLOWANCE]: (state, { payload, error }) => ({
+    ...state,
+    dmlAllowance: error ? 0 : payload,
   }),
 
 }, initialState);
