@@ -1,5 +1,8 @@
 import { createAction, handleActions } from 'redux-actions'
 
+const API_ADDRESS = '/createJob';
+// const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/createJob';
+
 const CREATE_JOB = asyncActionCreator('app/jobs/createJob');
 const GET_JOB_HISTORY_BY_ALGO = asyncActionCreator('app/jobs/getJobHistoryByAlgo');
 
@@ -21,7 +24,7 @@ export const createJob = ({ maxDevice, rewardsPerDevice, algoId }) => async (dis
       requestor: account,
     };
 
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/createJob', {
+    const response = await fetch(API_ADDRESS, {
       body: JSON.stringify(body),
       headers: {
         'content-type': 'application/json',

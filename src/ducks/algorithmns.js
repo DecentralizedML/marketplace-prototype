@@ -1,5 +1,8 @@
 import { createAction, handleActions } from 'redux-actions'
 
+const API_ADDRESS = '/algorithmns';
+// const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns'
+
 // constant
 const STATE_API = [
   {
@@ -442,7 +445,7 @@ export const fetchAllAlgos = () => async dispatch => {
   dispatch(fetchAllAlgosRequest());
 
   try {
-    const response = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns');
+    const response = await fetch(API_ADDRESS);
     const { algos } = await response.json();
     return dispatch(fetchAllAlgosResponse(algos));
   } catch (err) {

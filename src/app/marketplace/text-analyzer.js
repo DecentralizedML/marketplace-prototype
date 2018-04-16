@@ -19,7 +19,7 @@ class TextAnalyzer extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    stars: PropTypes.number.isRequired,
+    stars: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     description: PropTypes.string.isRequired,
     downloads: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,

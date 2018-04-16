@@ -13,7 +13,7 @@ class AlgoCard extends Component {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    stars: PropTypes.number.isRequired,
+    stars: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     description: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
