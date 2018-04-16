@@ -1,5 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
-import { TOKEN_ADDRESS, TOKEN_ABI } from './faucets';
+import { TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI } from '../utils/constants';
+
 // import socket from '../utils/io';
 
 // Constants
@@ -37,13 +38,6 @@ export const startPolling = () => (dispatch, getState) => {
     dispatch(detect(web3));
 
     if (account) {
-      // if (!hasConnectedToSocket) {
-      //   hasConnectedToSocket = true;
-      //   socket.emit('add corporate user', {
-      //     account,
-      //   });
-      // }
-
       web3.eth.getBalance(account, (err, data) => {
         if (err) {
           return dispatch(updateEthBalance(err));
@@ -52,13 +46,13 @@ export const startPolling = () => (dispatch, getState) => {
         return dispatch(updateEthBalance(data.toString() / ETH_DENOMINATION));
       });
 
-      const contract = window.web3.eth.contract(TOKEN_ABI).at(TOKEN_ADDRESS);
+      const contract = window.web3.eth.contract(TOKEN_CONTRACT_ABI).at(TOKEN_CONTRACT_ADDRESS);
       contract.balanceOf(account, (err, data) => {
         if (err) {
           return dispatch(updateDmlBalance(err));
         }
 
-        return dispatch(updateDmlBalance(data.c[0]/100000000));
+        return dispatch(updateDmlBalance(web3.fromWei(data, 'ether').toNumber()));
       })
     }
 
