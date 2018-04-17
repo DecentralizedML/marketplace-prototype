@@ -1,19 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as actions from '../../ducks/metamask';
 
 class Approval extends Component {
   static propTypes = {
     dmlAllowance: PropTypes.number.isRequired,
+    isApprovingDml: PropTypes.bool.isRequired,
+    approveDml: PropTypes.func.isRequired,
   };
 
   state = {
-    approvalLimit: 0,
+    approvalLimit: '',
   };
+
+  approve = async () => {
+    const { approveDml } = this.props;
+    const { approvalLimit } = this.state;
+
+    if (!approvalLimit) {
+      return null;
+    }
+
+    try {
+      await approveDml(approvalLimit);
+    } finally {
+      this.setState({ approvalLimit: '' });
+    }
+  }
 
   render() {
     const { approvalLimit } = this.state;
-    const { dmlAllowance } = this.props;
+    const { dmlAllowance, isApprovingDml } = this.props;
 
     return (
       <div className="wallet-card">
@@ -46,8 +64,16 @@ class Approval extends Component {
                     value={approvalLimit}
                   />
                 </div>
-                <button className="wallet-card__approve-btn" disabled={!approvalLimit}>
-                  {`Set Debit Limit to ${approvalLimit ? approvalLimit : 0} DML`}
+                <button
+                  className="wallet-card__approve-btn"
+                  disabled={!approvalLimit || isApprovingDml}
+                  onClick={this.approve}
+                >
+                  { 
+                    isApprovingDml
+                      ? 'Setting Debit Limit...'
+                      : `Set Debit Limit to ${approvalLimit ? approvalLimit : 0} DML`
+                  }
                 </button>
               </div>
             </div>
@@ -61,5 +87,9 @@ class Approval extends Component {
 export default connect(
   state => ({
     dmlAllowance: state.metamask.dmlAllowance,
-  })
+    isApprovingDml: state.metamask.isApprovingDml,
+  }),
+  dispatch => ({
+    approveDml: allowance => dispatch(actions.approveDml(allowance)),
+  }),
 )(Approval);

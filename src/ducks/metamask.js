@@ -6,11 +6,14 @@ const DETECT = 'app/metamask/detect';
 const UPDATE_ETH_BALANCE = 'app/metamask/updateEthBalance';
 const UPDATE_DML_BALANCE = 'app/metamask/updateDmlBalance';
 const UPDATE_DML_ALLOWANCE = 'app/metamask/updateDmlAllowance';
+const DML_APPROVE_REQUEST = 'app/metamask/dmlApproveRequest';
+const DML_APPROVE_RESPONSE = 'app/metamask/dmlApproveResponse';
 
 const initialState = {
   hasWeb3: false,
   accounts: [],
   isLocked: false,
+  isApprovingDml: false,
   network: null,
   ethBalance: 0,
   dmlBalance: 0,
@@ -21,6 +24,8 @@ export const detect = createAction(DETECT);
 export const updateEthBalance = createAction(UPDATE_ETH_BALANCE);
 export const updateDmlBalance = createAction(UPDATE_DML_BALANCE);
 export const updateDmlAllowance = createAction(UPDATE_DML_ALLOWANCE);
+export const dmlApproveRequest = createAction(DML_APPROVE_REQUEST);
+export const dmlApproveResponse = createAction(DML_APPROVE_RESPONSE);
 
 
 export const startPolling = () => async (dispatch, getState) => {
@@ -112,6 +117,32 @@ function getDmlAllowance(contract, account) {
   });
 }
 
+export const approveDml = allowance => (dispatch, getState) => {
+  const { metamask: { isLocked, hasWeb3 } } = getState();
+
+  if (!hasWeb3 || isLocked) {
+    return null;
+  }
+
+  dispatch(dmlApproveRequest()); 
+  const contract = window.web3.eth.contract(TOKEN_CONTRACT_ABI).at(TOKEN_CONTRACT_ADDRESS);
+
+  return new Promise(async (resolve, reject) => {
+    const decimals = await getDecimals(contract);
+    const denominator = Math.pow(10, decimals);
+
+    contract.approve(MARKETPLACE_CONTRACT_ADDRESS, allowance * denominator, (err, data) => {
+      if (err) {
+        dispatch(dmlApproveResponse(err));
+        return reject(err);
+      }
+
+      dispatch(dmlApproveResponse(data));
+      return resolve(data);
+    }) 
+  });
+}
+
 export default handleActions({
 
   [DETECT]: (state, { payload: web3 }) => ({
@@ -136,5 +167,15 @@ export default handleActions({
     ...state,
     dmlAllowance: error ? 0 : payload,
   }),
+
+  [DML_APPROVE_REQUEST]: state => ({
+    ...state,
+    isApprovingDml: true,
+  }),
+
+  [DML_APPROVE_RESPONSE]: state => ({
+    ...state,
+    isApprovingDml: false,
+  })
 
 }, initialState);
