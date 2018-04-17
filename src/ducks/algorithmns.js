@@ -32,37 +32,39 @@ export const getPurchasedState = algoId => async (dispatch, getState) => {
 
   const [account] = accounts;
   const contract = window.web3.eth.contract(MARKETPLACE_CONTRACT_ABI).at(MARKETPLACE_CONTRACT_ADDRESS);
-  console.log(contract)
-  // contract.mainState(account, algoId, (err, resp) => {
-  //   if (err) {
-  //     return dispatch(getPurchasedStateResponse(err));
-  //   }
-  //   return dispatch(getPurchasedStateResponse({
-  //     id: algoId,
-  //     isPurchased: resp,
-  //   }));
-  // });
+
+  contract.purchased(account, algoId, (err, [id, hasPurchased]) => {
+    if (err) {
+      return dispatch(getPurchasedStateResponse(err));
+    }
+
+    return dispatch(getPurchasedStateResponse({
+      id: algoId,
+      isPurchased: hasPurchased,
+    }));
+  });
 }
 
 export const buyAlgoRequest = createAction(BUY_ALGO_REQUEST);
 export const buyAlgoResponse = createAction(BUY_ALGO_RESPONSE);
 export const buyAlgo = algoId => async (dispatch, getState) => {
-  const { metamask: { isLocked, hasWeb3 } } = getState();
+  const { metamask: { isLocked, hasWeb3, accounts } } = getState();
 
   if (!hasWeb3 || isLocked) {
     return null;
   }
 
   dispatch(buyAlgoRequest());
+
   const contract = window.web3.eth.contract(MARKETPLACE_CONTRACT_ABI).at(MARKETPLACE_CONTRACT_ADDRESS);
 
-  // contract.buyAlgo(algoId, (err, resp) => {
-  //   if (err) {
-  //     return dispatch(buyAlgoRequest(err));
-  //   }
+  contract.buy(algoId, 1000000000000000000, { from: accounts[0] }, (err, resp) => {
+    if (err) {
+      return dispatch(buyAlgoRequest(err));
+    }
 
-  //   return dispatch(buyAlgoResponse({ txHash: resp, id: algoId }));
-  // });
+    return dispatch(buyAlgoResponse({ txHash: resp, id: algoId }));
+  });
 
 }
 

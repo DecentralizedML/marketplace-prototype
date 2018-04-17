@@ -360,18 +360,94 @@ export const TOKEN_CONTRACT_ABI = [
   }
 ];
 
-export const MARKETPLACE_CONTRACT_ADDRESS = '0x5ea73f388f6fd7d37701e3832194b05bb15ae5c4';
+export const MARKETPLACE_CONTRACT_ADDRESS = '0xcc893c22392881894357a7d552009139f0a9104e';
 export const MARKETPLACE_CONTRACT_ABI = [
   {
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
-  {
-    "inputs": [],
+    "constant": false,
+    "inputs": [
+      {
+        "name": "algoId",
+        "type": "bytes32"
+      },
+      {
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "buy",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "constructor"
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferToken",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setTokenAddress",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "purchased",
+    "outputs": [
+      {
+        "name": "algoId",
+        "type": "bytes32"
+      },
+      {
+        "name": "hasPurchased",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "constant": true,
@@ -389,21 +465,12 @@ export const MARKETPLACE_CONTRACT_ABI = [
   },
   {
     "constant": true,
-    "inputs": [
+    "inputs": [],
+    "name": "token",
+    "outputs": [
       {
         "name": "",
         "type": "address"
-      }
-    ],
-    "name": "purchased",
-    "outputs": [
-      {
-        "name": "algoId",
-        "type": "string"
-      },
-      {
-        "name": "hasPurchased",
-        "type": "bool"
       }
     ],
     "payable": false,
@@ -411,23 +478,10 @@ export const MARKETPLACE_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "state",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes"
-      }
-    ],
+    "inputs": [],
     "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   }
 ];
 

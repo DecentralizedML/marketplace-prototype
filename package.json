@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "bignumber.js": "^6.0.0",
     "blueimp-load-image": "^2.18.0",
     "body-parser": "^1.18.2",
     "classnames": "^2.2.5",

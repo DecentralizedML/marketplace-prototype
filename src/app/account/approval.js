@@ -5,7 +5,7 @@ import * as actions from '../../ducks/metamask';
 
 class Approval extends Component {
   static propTypes = {
-    dmlAllowance: PropTypes.number.isRequired,
+    dmlAllowance: PropTypes.string.isRequired,
     isApprovingDml: PropTypes.bool.isRequired,
     approveDml: PropTypes.func.isRequired,
   };
@@ -86,7 +86,7 @@ class Approval extends Component {
 
 export default connect(
   state => ({
-    dmlAllowance: state.metamask.dmlAllowance,
+    dmlAllowance: state.metamask.dmlAllowance.toFixed(0),
     isApprovingDml: state.metamask.isApprovingDml,
   }),
   dispatch => ({
