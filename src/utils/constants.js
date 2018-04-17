@@ -360,7 +360,7 @@ export const TOKEN_CONTRACT_ABI = [
   }
 ];
 
-export const MARKETPLACE_CONTRACT_ADDRESS = '0xcc893c22392881894357a7d552009139f0a9104e';
+export const MARKETPLACE_CONTRACT_ADDRESS = '0xab77c9bfc435d393ae3e65b30b9c4c2edf223eec';
 export const MARKETPLACE_CONTRACT_ABI = [
   {
     "constant": false,
@@ -375,6 +375,44 @@ export const MARKETPLACE_CONTRACT_ABI = [
       }
     ],
     "name": "buy",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyBeta",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setTokenAddress",
     "outputs": [
       {
         "name": "success",
@@ -404,22 +442,42 @@ export const MARKETPLACE_CONTRACT_ABI = [
     "type": "function"
   },
   {
-    "constant": false,
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "constant": true,
     "inputs": [
       {
-        "name": "newTokenAddress",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "setTokenAddress",
+    "name": "betaAccess",
     "outputs": [
       {
-        "name": "success",
+        "name": "",
         "type": "bool"
       }
     ],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -452,20 +510,6 @@ export const MARKETPLACE_CONTRACT_ABI = [
   {
     "constant": true,
     "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
     "name": "token",
     "outputs": [
       {
@@ -476,12 +520,6 @@ export const MARKETPLACE_CONTRACT_ABI = [
     "payable": false,
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
   }
 ];
 

@@ -20,6 +20,7 @@ const algos = {
     type: 'image_recognition',
     model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
     isActive: true,
+    cost: 1000000000000000000,
   },
   // '829ae96ed925455c9d1e420189cc4025': {
   //   title: 'Food Scanner',
@@ -70,6 +71,7 @@ const algos = {
     description: 'Determine sentiment from movie reviews.',
     downloads: 0,
     isActive: true,
+    cost: 1000000000000000000,
   },
   // '342854517afc476a8f6a35722f379e49': {
   //   title: 'Animal\'s Breed Identifier',
@@ -90,6 +92,7 @@ const algos = {
     type: 'image_recognition',
     model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
     isActive: false,
+    cost: 1000000000000000000,
   },
 };
 

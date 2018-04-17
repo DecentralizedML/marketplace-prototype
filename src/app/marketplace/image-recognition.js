@@ -262,32 +262,48 @@ class ImageRecognition extends Component {
 
     switch (this.state.activeTab) {
       case 0:
+        return isPurchased
+          ? (
+            <div className="algo-modal__image-recognition">
+              { this.renderLeft() }
+              { this.renderRight() }
+            </div>
+          )
+          : (
+            <div className="algo-modal__create-job--no-purchase">
+              Please purchase algo first.
+            </div>
+          );
+      case 1:
         return (
-          <div className="algo-modal__image-recognition">
-            { this.renderLeft() }
-            { this.renderRight() }
+          <div className="algo-modal__create-job--no-purchase">
+            Coming Soon!
           </div>
         );
-      case 1:
-        return isPurchased
-          ? (
-            <CreateJob algoId={id} />
-          )
-          : (
-            <div className="algo-modal__create-job--no-purchase">
-              Please purchase algo first.
-            </div>
-          );
+        // return isPurchased
+        //   ? (
+        //     <CreateJob algoId={id} />
+        //   )
+        //   : (
+        //     <div className="algo-modal__create-job--no-purchase">
+        //       Please purchase algo first.
+        //     </div>
+        //   );
       case 2:
-        return isPurchased
-          ? (
-            <JobsHistory algoId={id} />
-          )
-          : (
-            <div className="algo-modal__create-job--no-purchase">
-              Please purchase algo first.
-            </div>
-          );
+        return (
+          <div className="algo-modal__create-job--no-purchase">
+            Coming Soon!
+          </div>
+        );
+        // return isPurchased
+        //   ? (
+        //     <JobsHistory algoId={id} />
+        //   )
+        //   : (
+        //     <div className="algo-modal__create-job--no-purchase">
+        //       Please purchase algo first.
+        //     </div>
+        //   );
       default:
         return null;
     }
