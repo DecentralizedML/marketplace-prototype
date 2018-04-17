@@ -93,13 +93,21 @@ class App extends Component {
         <Switch>
           <Route path="/marketplace" component={Marketplace} />
           <Route path="/account" component={Account} />
-          <Route path="/upload" component={Upload} />
-          <Route path="/request" component={Request} />
+          <Route path="/bounties" component={Request} />
           <Route component={Marketplace}/>
         </Switch>
       </div>
     );
   }
+          // <Route path="/upload" component={Upload} />
+    // <Link
+    //   className={classnames('app-header__item', {
+    //     'app-header__item--active': (/upload/gi).test(pathname),
+    //   })}
+    //   to="upload"
+    // >
+    //   Upload
+    // </Link>
 
   render() {
     const pathname = window.location.pathname;
@@ -128,20 +136,13 @@ class App extends Component {
               </Link>
               <Link
                 className={classnames('app-header__item', {
-                  'app-header__item--active': (/upload/gi).test(pathname),
+                  'app-header__item--active': (/bounties/gi).test(pathname),
                 })}
-                to="upload"
+                to="bounties"
               >
-                Upload
+                Bounties
               </Link>
-              <Link
-                className={classnames('app-header__item', {
-                  'app-header__item--active': (/request/gi).test(pathname),
-                })}
-                to="request"
-              >
-                Request
-              </Link>
+
             </div>
           </header>
           { this.renderContent() }
