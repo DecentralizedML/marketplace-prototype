@@ -33,7 +33,7 @@ export const getPurchasedState = algoId => async (dispatch, getState) => {
   const [account] = accounts;
   const contract = window.web3.eth.contract(MARKETPLACE_CONTRACT_ABI).at(MARKETPLACE_CONTRACT_ADDRESS);
 
-  contract.betaAccess(account, (err, data) => {
+  contract.hasPurchased(account, algoId, (err, data) => {
     if (err) {
       return dispatch(getPurchasedStateResponse(err));
     }
@@ -58,7 +58,7 @@ export const buyAlgo = algoId => async (dispatch, getState) => {
 
   const contract = window.web3.eth.contract(MARKETPLACE_CONTRACT_ABI).at(MARKETPLACE_CONTRACT_ADDRESS);
 
-  contract.buyBeta(1000000000000000000, { from: accounts[0] }, (err, resp) => {
+  contract.buy(algoId, 1000000000000000000, { from: accounts[0] }, (err, resp) => {
     if (err) {
       return dispatch(buyAlgoRequest(err));
     }

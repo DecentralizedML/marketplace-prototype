@@ -78,7 +78,7 @@ class App extends Component {
       );
     }
 
-    if (network !== '3') {
+    if (process.env.NODE_ENV !== 'development' && network !== '3') {
       return (
         <div className="app-content__message">
           <h1>Oops, you’re on the wrong network.</h1>
