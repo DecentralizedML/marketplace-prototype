@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import * as actions from '../../ducks/bounties';
 import BountyRow from './bounty-row';
+import CreateBountyModal from './create-bounty-modal';
 
 import './index.css';
 
@@ -18,10 +19,20 @@ class Request extends Component {
 
   state = {
     activeTab: 0,
+    isShowingCreateModal: false,
   };
 
   componentWillMount() {
     this.props.getAllBounties();
+  }
+
+  closeModal = e => {
+    e.stopPropagation();
+    this.setState({ isShowingCreateModal: false });
+  }
+
+  openModal = () => {
+    this.setState({ isShowingCreateModal: true });
   }
 
   renderRows() {
@@ -34,10 +45,16 @@ class Request extends Component {
   }
 
   renderContent() {
-    if (this.props.isLoadingAllBounties) {
+    const { isLoadingAllBounties, allBounties } = this.props;
+
+    if (isLoadingAllBounties) {
       return (
         <div className="bounty__content bounty__content--loading" />
       );
+    }
+
+    if (!allBounties.length) {
+      return <div className="bounty__content bounty__content--empty">No Bounties</div>;
     }
 
     return (
@@ -45,6 +62,12 @@ class Request extends Component {
         {this.renderRows()}
       </div>
     );
+  }
+
+  renderModal() {
+    return !this.state.isShowingCreateModal
+      ? null
+      : <CreateBountyModal onClose={this.closeModal} />;
   }
 
   render() {
@@ -65,10 +88,16 @@ class Request extends Component {
             ))}
           </div>
           <div className="bounty__header__actions">
-            <button className="bounty__create-btn">Create New Bounty</button>
+            <button
+              className="bounty__create-btn"
+              onClick={this.openModal}
+            >
+              Create New Bounty
+            </button>
           </div>
         </div>
         { this.renderContent() }
+        { this.renderModal() }
       </div>
     );
   }

@@ -52,7 +52,11 @@
     border: 1px solid rgba(156, 156, 156, 0.25);
     position: relative;
     top: -1px;
-    z-index: 100; }
+    z-index: 100;
+    margin-bottom: 2rem; }
+    .bounty__content--empty {
+      padding: 2rem;
+      text-align: center; }
     .bounty__content--loading {
       text-align: center;
       background-color: #FFF;
@@ -65,7 +69,6 @@
         height: 40px;
         background-color: rgba(0, 118, 163, 0.5);
         border-radius: 100%;
-        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
         animation: sk-scaleout 1.0s infinite ease-in-out; }
   .bounty__bounty-row {
     padding: 1rem;
@@ -79,15 +82,18 @@
     .bounty__bounty-row--loading {
       opacity: .5; }
       .bounty__bounty-row--loading .bounty__bounty-row__thumbnail {
-        background-color: rgba(0, 0, 0, 0.2); }
+        background-color: rgba(0, 0, 0, 0.2);
+        animation: colorchange 1.0s infinite ease-in-out; }
       .bounty__bounty-row--loading .bounty__bounty-row__body {
         padding-right: 2rem; }
       .bounty__bounty-row--loading .bounty__bounty-row__title {
         background-color: rgba(0, 0, 0, 0.2);
-        height: 1rem; }
+        height: 1rem;
+        animation: colorchange 1.0s infinite ease-in-out; }
       .bounty__bounty-row--loading .bounty__bounty-row__description {
         background-color: rgba(0, 0, 0, 0.2);
-        height: .8rem; }
+        height: .8rem;
+        animation: colorchange 1.0s infinite ease-in-out; }
     .bounty__bounty-row__thumbnail {
       width: 4rem;
       height: 4rem;
@@ -106,19 +112,20 @@
     .bounty__bounty-row__description {
       font-size: .8rem;
       border-radius: 3px; }
+    .bounty__bounty-row__footer {
+      text-align: right; }
 
-@-webkit-keyframes sk-scaleout {
+@keyframes colorchange {
   0% {
-    -webkit-transform: scale(0); }
+    background: rgba(0, 0, 0, 0.2); }
+  50% {
+    background: rgba(0, 0, 0, 0.3); }
   100% {
-    -webkit-transform: scale(1);
-    opacity: 0; } }
+    background: rgba(0, 0, 0, 0.2); } }
 
 @keyframes sk-scaleout {
   0% {
-    -webkit-transform: scale(0);
     transform: scale(0); }
   100% {
-    -webkit-transform: scale(1);
     transform: scale(1);
     opacity: 0; } }

@@ -8,8 +8,8 @@ import Bounty from '../solidity/build/contracts/Bounty.json';
 
 // Rinkeby
 export const TOKEN_CONTRACT_ADDRESS = '0x3195fd025302c62907886b1743405e14a89514b6';
-export const MARKETPLACE_CONTRACT_ADDRESS = '0x87e9aee4e3267ef94588bfb3e3826081e0cd27d5';
-export const BOUNTY_FACTORY_ADDRESS = '0x433e9f64798728d3f4471e01374f7971c3718c5f';
+export const MARKETPLACE_CONTRACT_ADDRESS = '0x3195fd025302c62907886b1743405e14a89514b6';
+export const BOUNTY_FACTORY_ADDRESS = '0xccb4331d206d177ff6acc8d9fc5139862e6377fc';
 
 
 export const TOKEN_CONTRACT_ABI = FixedSupplyToken.abi;

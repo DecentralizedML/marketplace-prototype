@@ -73,6 +73,12 @@
     position: relative;
     top: -1px;
     z-index: 100;
+    margin-bottom: 2rem;
+
+    &--empty {
+      padding: 2rem;
+      text-align: center;
+    }
 
     &--loading {
       text-align: center;
@@ -87,7 +93,6 @@
         height: 40px;
         background-color: rgba($allports-blue, .5);
         border-radius: 100%;  
-        -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
         animation: sk-scaleout 1.0s infinite ease-in-out;
       }
     }
@@ -112,6 +117,7 @@
 
         &__thumbnail {
           background-color: rgba($black, .2);
+          animation: colorchange 1.0s infinite ease-in-out;
         }
 
         &__body {
@@ -121,11 +127,13 @@
         &__title {
           background-color: rgba($black, .2);
           height: 1rem;
+          animation: colorchange 1.0s infinite ease-in-out;
         }
 
         &__description {
           background-color: rgba($black, .2);
           height: .8rem;
+          animation: colorchange 1.0s infinite ease-in-out;
         }
       }
     }
@@ -155,23 +163,24 @@
       font-size: .8rem;
       border-radius: 3px;
     }
+
+
+    &__footer {
+      text-align: right;
+    }
   }
 }
 
-@-webkit-keyframes sk-scaleout {
-  0% { -webkit-transform: scale(0) }
-  100% {
-    -webkit-transform: scale(1.0);
-    opacity: 0;
-  }
+@keyframes colorchange {
+  0%   {background: rgba($black, .2);}
+  50% {background: rgba($black, .3);}
+  100% {background: rgba($black, .2);}
 }
 
 @keyframes sk-scaleout {
-  0% { 
-    -webkit-transform: scale(0);
+  0% {
     transform: scale(0);
   } 100% {
-    -webkit-transform: scale(1.0);
     transform: scale(1.0);
     opacity: 0;
   }

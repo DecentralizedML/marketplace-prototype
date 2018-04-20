@@ -46,7 +46,7 @@ class BountyRow extends Component {
         </div>
         <div className="bounty__bounty-row__footer">
           <div className="bounty__bounty-row__prize">
-            {`${data.prizes.reduce((sum, prize) => sum + prize.toNumber()/1000000000000000000, 0)} DML`}
+            {`${data.prizes.reduce((sum, prize) => sum + prize.toNumber()/1000000000000000000, 0).toFixed(0)} DML`}
           </div>
           <div className="bounty__bounty-row__participants">
             {`${data.participants.length} participants`}

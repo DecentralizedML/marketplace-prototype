@@ -1,0 +1,111 @@
+@import '../../styles/variables.scss';
+
+.create-bounty-modal {
+  top: 4rem;
+  left: 0;
+  right: 0;
+  position: fixed;
+  background-color: $white;
+  border-radius: 4px;
+  box-shadow: 0 0 8px 4px rgba($black, .1);
+  display: flex;
+  flex-flow: column nowrap;
+  width: 600px;
+  margin: 0 auto;
+
+  &__header {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: rgba($black, .75);
+    color: $white;
+    padding: 2rem;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  &__content {
+    padding: 2rem 2rem 0 2rem;
+  }
+
+  &__instruction {
+    background-color: $cream-yellow;
+    text-align: center;
+    padding: 1rem;
+    font-size: .8rem;
+  }
+
+  &__success {
+    background-color: $aero-blue;
+    text-align: center;
+    padding: 1rem;
+    font-size: .8rem;
+  }
+
+  &__footer {
+    padding: 1rem 2rem 2rem;
+  }
+
+  &__error {
+    color: $red;
+    text-align: center;
+    font-size: .8rem;
+    padding-bottom: 1rem;
+    height: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__create-btn {
+    width: 100%;
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba($allports-blue, .9);
+    color: $white;
+    padding: .8rem 2rem;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: rgba($allports-blue, .8);
+    }
+
+    &:active {
+      background-color: $allports-blue;
+    }
+  }
+
+  &__input-wrapper {
+    width: 100%;
+    margin: 2rem 0;
+
+    &__label {
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 0 0 .5rem .5rem;
+    }
+
+    &__input {
+      font-size: 1rem;
+      padding: .5rem;
+      border-radius: 4px;
+      border: 1px solid rgba($black, .2);
+      outline: none;
+      width: calc(100% - 1rem);
+
+      &::placeholder {
+        font-size: .8rem;
+        color: rgba($black, .4);
+      }
+    }
+  }
+
+  &__prize-inputs {
+    width: 100%;
+
+    .create-bounty-modal__input-wrapper__input {
+      margin-bottom: .5rem;
+    } 
+  }
+}

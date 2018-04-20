@@ -86,9 +86,9 @@ contract DmlBountyFactory {
         return bountyAddressByParticipant[participantAddress];
     }
     
-    function createBounty(uint[] prizes) public {
+    function createBounty(string name, uint[] prizes) public {
         address creator = msg.sender;
-        address newBounty = new Bounty(token, creator, owner, prizes);
+        address newBounty = new Bounty(token, creator, owner, name, prizes);
         allBountyAddresses.push(newBounty);
         bountyAddressByCreator[msg.sender].push(newBounty);
     }
@@ -112,6 +112,7 @@ contract Bounty {
     address public token;
 
     // state variables
+    string public name;
     uint[] public prizes;
     address[] public winners;
     address[] public participants;
@@ -129,13 +130,14 @@ contract Bounty {
         Paused
     }
     
-    constructor(address tokenAddress, address creatorAddress, address ownerAddress, uint[] initPrizes) public {
+    constructor(address tokenAddress, address creatorAddress, address ownerAddress, string initName, uint[] initPrizes) public {
         factory = msg.sender;
         creator = creatorAddress;
         moderator = ownerAddress;
         token = tokenAddress;
         prizes = initPrizes;
         status = Status.Initialized;
+        name = initName;
     }
     
     function isFunded() public view returns (bool success) {
@@ -144,21 +146,9 @@ contract Bounty {
         return true;
     }
 
-    function getData() public view returns (uint[] retPrizes, address[] retWinenrs, address[] retParticipants, Status retStatus) {
-        return (prizes, winners, participants, status);
+    function getData() public view returns (string retName, uint[] retPrizes, address[] retWinenrs, address[] retParticipants, Status retStatus) {
+        return (name, prizes, winners, participants, status);
     }
-
-    // function getPrizes() public view returns (uint[] ret) {
-    //     return prizes;
-    // }
-
-    // function getWinners() public view returns (address[] ret) {
-    //     return winners;
-    // }
-
-    // function getParticipants() public view returns (address[] ret) {
-    //     return participants;
-    // }
     
     function join(address participantAddress) public returns (bool success) {
         if (status != Status.EnrollmentStart) {
@@ -174,10 +164,22 @@ contract Bounty {
         
         return true;
     }
+
+    function updateBounty(string newName, uint[] newPrizes) public {
+        require(updateName(newName));
+        require(updatePrizes(newPrizes));
+    }
+
+    function updateName(string newName) public returns (bool success) {
+        require(msg.sender == moderator || msg.sender == creator);
+        name = newName;
+        return true;
+    }
     
-    function updatePrizes(uint[] newPrizes) public {
+    function updatePrizes(uint[] newPrizes) public returns (bool success) {
         require(msg.sender == moderator || msg.sender == creator);
         prizes = newPrizes;
+        return true;
     }
 
     function setStatus(Status newStatus) private returns (bool success) {
