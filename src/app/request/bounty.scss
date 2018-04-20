@@ -1,0 +1,160 @@
+@import '../../styles/variables.scss';
+
+.bounty-page {
+  background-color: $white;
+  width: 800px;
+  margin: 1rem auto;
+  display: flex;
+  flex-flow: column nowrap;
+  border-radius: 3px;
+
+  &__header {
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    height: 11rem;
+    background-color: $allports-blue;
+    padding: 2rem 3rem;
+    color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    box-shadow: $standard-box-shadow;
+  }
+
+  &__primary-data {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  &__general-info {
+    flex: 1 1 auto;
+    justify-content: center;
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 400;
+    padding-bottom: .25rem;
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+  }
+
+  &__participants {
+    font-size: .8rem;
+    flex: 1 0 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+  }
+
+  &__prize-info {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__prize {
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  &__prize-text {
+    font-size: .8rem;
+  }
+
+  &__secondary-data {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    &__divider {
+      height: 4px;
+      width: 4px;
+      border-radius: 4px;
+      background-color: #e2e2e2;
+      margin: 0 .75rem;
+    }
+  }
+
+  &__status {
+    display: flex;
+    flex-flow: row nowrap;
+    position: relative;
+    font-size: .8rem;
+    align-items: center;
+
+    &::before {
+      content: '';
+      position: relative;
+      display: inline-block;
+      width: .6rem;
+      height: .6rem;
+      background-color: #CCC;
+      border-radius: 50%;
+      margin-right: .3rem;
+      box-shadow: inset 2px -2px 2px 0px rgba($black, 0.2);
+    }
+
+    &--initialized {
+      &::before {
+        background-color: #d42d2d;
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  &__sidebar {
+    width: 12rem;
+    border-right: 1px solid rgba($black, .1);
+
+    &__item {
+      padding: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        color: $golden-tainoi-orange;
+      }
+
+      &:active {
+        color: $black;
+      }
+
+      &--active {
+        font-weight: 600 !important;
+
+        &:hover {
+          color: $black;
+        }
+      }
+    }
+  }
+
+  &__content {
+    flex: 1 0 auto;
+  }
+
+  &__prizes {
+    padding: 1rem 2rem;
+
+    &__row {
+      display: flex;
+      flex-flow: row nowrap;
+      padding: 1rem 0 .5rem;
+    }
+
+    &__place {
+      flex: 0 0 10%;
+      font-weight: 600;
+    }
+  }
+}

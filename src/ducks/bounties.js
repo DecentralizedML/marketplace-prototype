@@ -8,6 +8,8 @@ import asyncQueue from '../utils/async-queue';
 
 const GET_ALL_BOUNTIES_REQUEST = 'app/bounties/getAllBountiesRequest';
 const GET_ALL_BOUNTIES_RESPONSE = 'app/bounties/getAllBountiesResponse';
+const GET_ALL_BOUNTIES_CREATED_BY_ME_REQUEST = 'app/bounties/getAllBountiesCreatedByMeRequest';
+const GET_ALL_BOUNTIES_CREATED_BY_ME_RESPONSE = 'app/bounties/getAllBountiesCreatedByMeResponse';
 const GET_BOUNTY_REQUEST = 'app/bounties/getBountyRequest';
 const GET_BOUNTY_RESPONSE = 'app/bounties/getBountyResponse';
 const CREATE_NEW_BOUNTY_REQUEST = 'app/bounties/createNewBountyRequest';
@@ -16,7 +18,9 @@ const CREATE_NEW_BOUNTY_RESPONSE = 'app/bounties/createNewBountyResponse';
 const initialState = {
   allBounties:[],
   allBountiesMap: {},
+  createdByMe: [],
   isLoadingAllBounties: false,
+  isLoadingAllBountiesCreatedByMe: false,
   isCreatingBounty: false,
 };
 
@@ -51,12 +55,36 @@ export const getAllBounties = () => (dispatch, getState) => {
 
   dispatch(getAllBountiesRequest());
 
-  bountyFactory.getAllBounties((err, data) => {
-    if (err) {
-      return dispatch(getAllBountiesResponse(err));
+  asyncQueue.add(async () => {
+    try {
+      const data = await promisify(bountyFactory.getAllBounties);
+      dispatch(getAllBountiesResponse(data));
+    } catch (e) {
+      dispatch(getAllBountiesResponse(e));
     }
+  });
+}
 
-    return dispatch(getAllBountiesResponse(data));
+const getAllBountiesCreatedByMeRequest = createAction(GET_ALL_BOUNTIES_CREATED_BY_ME_REQUEST);
+const getAllBountiesCreatedByMeResponse = createAction(GET_ALL_BOUNTIES_CREATED_BY_ME_RESPONSE);
+export const getAllBountiesCreatedByMe = () => (dispatch, getState) => {
+  const bountyFactory = getFactoryContract(getState);
+
+  if (!bountyFactory) {
+    return;
+  }
+
+  const { metamask: { accounts } } = getState();
+
+  dispatch(getAllBountiesCreatedByMeRequest());
+
+  asyncQueue.add(async () => {
+    try {
+      const data = await promisify(bountyFactory.getBountiesByCreator, accounts[0]);
+      dispatch(getAllBountiesCreatedByMeResponse(data));
+    } catch (e) {
+      dispatch(getAllBountiesCreatedByMeResponse(e));
+    }
   });
 }
 
@@ -83,7 +111,7 @@ export const getBounty = address => (dispatch, getState) => {
         // thumbnailUrl: 'https://kaggle2.blob.core.windows.net/competitions/kaggle/8540/logos/thumb76_76.png?t=2018-02-13-18-59-39',
         thumbnailUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAPFBMVEXX19eOjo7a2tqLi4vd3N3GxsapqamTk5Ozs7OampqsrKzAwMCvr6/JycmIiIiQkJCjo6O7u7vR0dGYmJgw/inwAAACvklEQVR4nO3b7XKqMBRGYUgAQSUo3v+9Hl4/o2214nja7r3Wr840TMkziSLSonBf9dMn8AvCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhQEGCgMMFAYYKAwwUBhgoDDAQGGAgcIAA4UBBgoDDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhcH/MOjrVxvffIZvNwi79GpNeO8pvt+gK18sLjEwYrCY3WDFINZVmFfVRisGq7mzCGsMjBmE6tkKawahffq6oLZnEJ99T6wDBrYNYkwpPjKxbZA2q3FcbZJng+mSSe8TvV+D2B/nFMa728GwQWzPU7r/OmnZIL8l4tRgkc2o2vk06ML1Lz0aDPk6WPg0SNnrwZhfIuyiG4PYnP9m1eTXjnXnxqBM29P1wSpfBjHUyY1BmdrDjbL2imATqs6PQRmH5Xa7Hq72/zTmZiHYNtAHx9uPjVEn03ky+NC0FaaxVwvBn8H+tuvVQvBncBicLwRvBvutoNGDY4PjNxBhGf0anIb3yalBTJvTNLPN4MggpmHZX24tXTaDF4MDQD7Hy2ZwYfARoMg3gwOD+AlAkW8G+waxqT6f2nkzmDfI7qTcHjA4Mfia4LIZjBvcIbhsBtsGdwmKsIn2De4TnBEsG6QHBCcEiwYp7ntMIIRpcDJnUPSrY9+ZUdDA0dozWdNPx7532GGgNYNZR1sy4Hnlpp1bZ+W59TLOrjRj8FIWDOYvguMFxd83WDevtv3rBsXjF/+HvfkM+R9PDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhQEGCgMMFAYYKAwwUBhgoDDAQGGAgcIAA4UBBgoDDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDCaDf8N4LuL6NkZ5AAAAAElFTkSuQmCC',
         title: data[0],
-        subtitle: ' - ',
+        subtitle: 'No Subtitle',
       }));
     } catch (e) {
       dispatch(getBountyResponse(e));
@@ -141,6 +169,16 @@ export default handleActions({
     isLoadingAllBounties: false,
     allBounties: error
       ? state.allBounties
+      : payload,
+  }),
+
+  [GET_ALL_BOUNTIES_CREATED_BY_ME_REQUEST]: state => ({ ...state, isLoadingAllBountiesCreatedByMe: true }),
+
+  [GET_ALL_BOUNTIES_CREATED_BY_ME_RESPONSE]: (state, { payload, error }) => ({
+    ...state,
+    isLoadingAllBountiesCreatedByMe: false,
+    createdByMe: error
+      ? state.createdByMe
       : payload,
   }),
 

@@ -33,9 +33,17 @@ export default class Modal extends Component {
     modalRoot.removeChild(this.el);
   }
 
+  onClose = e => {
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
+    }
+
+    this.props.onClose(e);
+  }
+
   render() {
     return ReactDOM.createPortal(
-      <div className="modal__overlay" onClick={this.props.onClose}>
+      <div className="modal__overlay" onClick={this.onClose}>
         {this.props.children}
       </div>,
       this.el,

@@ -5,16 +5,22 @@ import PropTypes from 'prop-types';
 import * as actions from '../../ducks/bounties';
 import BountyRow from './bounty-row';
 import CreateBountyModal from './create-bounty-modal';
+import Bounty from './bounty';
+import { Switch, Route } from 'react-router-dom';
+
 
 import './index.css';
 
-const TABS = ['All', 'Completed'];
+const TABS = ['All', 'Created By Me'];
 
 class Request extends Component {
   static propTypes = {
     getAllBounties: PropTypes.func.isRequired,
+    getAllBountiesCreatedByMe: PropTypes.func.isRequired,
     allBounties: PropTypes.array.isRequired,
+    createdByMe: PropTypes.array.isRequired,
     isLoadingAllBounties: PropTypes.bool.isRequired,
+    isLoadingAllBountiesCreatedByMe: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -24,6 +30,7 @@ class Request extends Component {
 
   componentWillMount() {
     this.props.getAllBounties();
+    this.props.getAllBountiesCreatedByMe();
   }
 
   closeModal = e => {
@@ -35,8 +42,8 @@ class Request extends Component {
     this.setState({ isShowingCreateModal: true });
   }
 
-  renderRows() {
-    return this.props.allBounties.map(bounty => (
+  renderRows(bounties) {
+    return bounties.map(bounty => (
       <BountyRow
         key={bounty}
         address={bounty}
@@ -45,23 +52,49 @@ class Request extends Component {
   }
 
   renderContent() {
-    const { isLoadingAllBounties, allBounties } = this.props;
+    const {
+      isLoadingAllBounties,
+      isLoadingAllBountiesCreatedByMe,
+      allBounties,
+      createdByMe,
+    } = this.props;
 
-    if (isLoadingAllBounties) {
+    if (this.state.activeTab === 0) {
+      if (isLoadingAllBounties) {
+        return (
+          <div className="bounty__content bounty__content--loading" />
+        );
+      }
+
+      if (!allBounties.length) {
+        return <div className="bounty__content bounty__content--empty">No Bounties</div>;
+      }
+
       return (
-        <div className="bounty__content bounty__content--loading" />
+        <div className="bounty__content">
+          {this.renderRows(allBounties)}
+        </div>
       );
     }
 
-    if (!allBounties.length) {
-      return <div className="bounty__content bounty__content--empty">No Bounties</div>;
+    if (this.state.activeTab === 1) {
+      if (isLoadingAllBountiesCreatedByMe) {
+        return (
+          <div className="bounty__content bounty__content--loading" />
+        );
+      }
+
+      if (!createdByMe.length) {
+        return <div className="bounty__content bounty__content--empty">No Bounties</div>;
+      }
+
+      return (
+        <div className="bounty__content">
+          {this.renderRows(createdByMe)}
+        </div>
+      );
     }
 
-    return (
-      <div className="bounty__content">
-        {this.renderRows()}
-      </div>
-    );
   }
 
   renderModal() {
@@ -70,7 +103,7 @@ class Request extends Component {
       : <CreateBountyModal onClose={this.closeModal} />;
   }
 
-  render() {
+  renderMain = () => {
     return (
       <div className="bounty">
         <div className="bounty__header">
@@ -101,14 +134,26 @@ class Request extends Component {
       </div>
     );
   }
+
+  render() {
+    return (
+      <Switch>
+        <Route path="/bounties/:address" component={Bounty} />
+        <Route render={this.renderMain}/>
+      </Switch>
+    );
+  }
 }
 
 export default connect(
   state => ({
     allBounties: state.bounties.allBounties,
+    createdByMe: state.bounties.createdByMe,
     isLoadingAllBounties: state.bounties.isLoadingAllBounties,
+    isLoadingAllBountiesCreatedByMe: state.bounties.isLoadingAllBountiesCreatedByMe,
   }),
   dispatch => ({
     getAllBounties: () => dispatch(actions.getAllBounties()),
+    getAllBountiesCreatedByMe: () => dispatch(actions.getAllBountiesCreatedByMe()),
   })
 )(Request);

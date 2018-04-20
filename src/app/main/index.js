@@ -5,7 +5,7 @@ import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 import classnames from 'classnames';
 import Account from '../account';
 import Marketplace from '../marketplace';
-import Upload from '../upload';
+// import Upload from '../upload';
 import Request from '../request';
 import * as metamaskActions from '../../ducks/metamask';
 import logo from '../../logo.svg';
@@ -122,7 +122,7 @@ class App extends Component {
                 className={classnames('app-header__item', {
                   'app-header__item--active': (/marketplace/gi).test(pathname),
                 })}
-                to="marketplace"
+                to="/marketplace"
               >
                 Marketplace
               </Link>
@@ -130,7 +130,7 @@ class App extends Component {
                 className={classnames('app-header__item', {
                   'app-header__item--active': (/account/gi).test(pathname),
                 })}
-                to="account"
+                to="/account"
               >
                 Account
               </Link>
@@ -138,7 +138,7 @@ class App extends Component {
                 className={classnames('app-header__item', {
                   'app-header__item--active': (/bounties/gi).test(pathname),
                 })}
-                to="bounties"
+                to="/bounties"
               >
                 Bounties
               </Link>

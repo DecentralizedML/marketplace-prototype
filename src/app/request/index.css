@@ -20,7 +20,7 @@
       padding: 1rem 2rem;
       border: 1px solid rgba(156, 156, 156, 0.25);
       margin-right: .5rem;
-      width: 6rem;
+      min-width: 6rem;
       cursor: pointer;
       background-color: #F9F9F9;
       border-top-right-radius: 3px;

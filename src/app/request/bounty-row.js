@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import * as actions from '../../ducks/bounties';
+import { withRouter } from 'react-router';
 
 class BountyRow extends Component {
   static propTypes = {
@@ -14,12 +15,21 @@ class BountyRow extends Component {
     bountyData: PropTypes.object,
   };
 
+  state = {
+    isShowingModal: false,
+  }
+
   componentWillMount() {
     this.props.getBounty();
   }
 
+  closeModal = () => {
+    this.setState({ isShowingModal: false });
+  }
+
   render() {
-    const data = this.props.bountyData || {
+    const { bountyData, address, history } = this.props;
+    const data = bountyData || {
       prizes: [],
       participants: [],
     };
@@ -27,8 +37,9 @@ class BountyRow extends Component {
     return (
       <div
         className={classnames('bounty__bounty-row', {
-          'bounty__bounty-row--loading': !this.props.bountyData,
+          'bounty__bounty-row--loading': !bountyData,
         })}
+        onClick={() => history.push(`/bounties/${address}/description`)}
       >
         <div
           className="bounty__bounty-row__thumbnail"
@@ -57,11 +68,13 @@ class BountyRow extends Component {
   }
 }
 
-export default connect(
-  (state, { address }) => ({
-    bountyData: state.bounties.allBountiesMap[address],
-  }),
-  (dispatch, ownProps) => ({
-    getBounty: () => dispatch(actions.getBounty(ownProps.address)),
-  })
-)(BountyRow);
+export default withRouter(
+  connect(
+    (state, { address }) => ({
+      bountyData: state.bounties.allBountiesMap[address],
+    }),
+    (dispatch, ownProps) => ({
+      getBounty: () => dispatch(actions.getBounty(ownProps.address)),
+    })
+  )(BountyRow)
+);
