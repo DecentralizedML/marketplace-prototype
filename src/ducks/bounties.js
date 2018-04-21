@@ -6,6 +6,9 @@ import {
 } from '../utils/constants';
 import asyncQueue from '../utils/async-queue';
 
+const API_ADDRESS = '';
+// const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881'
+
 const GET_ALL_BOUNTIES_REQUEST = 'app/bounties/getAllBountiesRequest';
 const GET_ALL_BOUNTIES_RESPONSE = 'app/bounties/getAllBountiesResponse';
 const GET_ALL_BOUNTIES_CREATED_BY_ME_REQUEST = 'app/bounties/getAllBountiesCreatedByMeRequest';
@@ -14,6 +17,8 @@ const GET_BOUNTY_REQUEST = 'app/bounties/getBountyRequest';
 const GET_BOUNTY_RESPONSE = 'app/bounties/getBountyResponse';
 const CREATE_NEW_BOUNTY_REQUEST = 'app/bounties/createNewBountyRequest';
 const CREATE_NEW_BOUNTY_RESPONSE = 'app/bounties/createNewBountyResponse';
+const UPDATE_BOUNTY_DETAIL_REQUEST = 'app/bounties/updateBountyDetailRequest';
+const UPDATE_BOUNTY_DETAIL_RESPONSE = 'app/bounties/updateBountyDetailResponse';
 
 const initialState = {
   allBounties:[],
@@ -142,7 +147,31 @@ export const createNewBounty = (name, prizes) => (dispatch, getState) => {
       }
     });
   })
+}
 
+const updateBountyDetailRequest = createAction(UPDATE_BOUNTY_DETAIL_REQUEST);
+const updateBountyDetailResponse = createAction(UPDATE_BOUNTY_DETAIL_RESPONSE);
+export const updateBountyDetail = bounty => async (dispatch, getState) => {
+  dispatch(updateBountyDetailRequest());
+
+  try {
+    const response = await fetch(`${API_ADDRESS}/update_bounty_detail/${bounty.address}`, {
+      body: JSON.stringify(bounty),
+      headers: { 'content-type': 'application/json' },
+      method: 'POST',
+    });
+
+    const { error, payload } = await response.json();
+
+    if (error) {
+      throw new Error(payload);
+    }
+
+    dispatch(updateBountyDetailResponse(payload))
+  } catch (error) {
+    console.log(error);
+    dispatch(updateBountyDetailResponse(error))
+  }
 }
 
 function promisify(fn, ...args) {
@@ -195,6 +224,20 @@ export default handleActions({
   [CREATE_NEW_BOUNTY_REQUEST]: state => ({ ...state, isCreatingBounty: true }),
   [CREATE_NEW_BOUNTY_RESPONSE]: state => ({ ...state, isCreatingBounty: false }),
 
+  [UPDATE_BOUNTY_DETAIL_REQUEST]: state => ({ ...state, isUpdatingBounty: true }),
+  [UPDATE_BOUNTY_DETAIL_RESPONSE]: (state, { payload, error }) => ({
+    ...state,
+    isUpdatingBounty: false,
+    allBountiesMap: error
+      ? state.allBountiesMap
+      : {
+        ...state.allBountiesMap,
+        [payload.address]: {
+          ...state.allBountiesMap[payload.address],
+          ...payload,
+        },
+      }
+  }),
 
 
 }, initialState);

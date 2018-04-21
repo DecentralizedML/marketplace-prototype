@@ -6,7 +6,15 @@ const server = require('http').createServer(app);
 const path = require('path');
 const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
-const { insertJob, getActiveJob, getCompletedJobs, postJobResult, getJobs, ready } = require('./mongo');
+const {
+  insertJob,
+  getActiveJob,
+  getCompletedJobs,
+  postJobResult,
+  getJobs,
+  ready,
+  updateBountyDetail,
+} = require('./mongo');
 
 const jsonParser = bodyParser.json()
 
@@ -222,6 +230,50 @@ app.post('/get_job_history_by_algo', jsonParser, async (req, res) => {
 
   try {
     const result = await getJobs({ algo_id, requestor });
+    res.send({ error: false, payload: result });
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err.message })
+  }
+});
+
+app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const {
+    thumbnailUrl,
+    imageUrl,
+    subtitle,
+    description,
+    data,
+    evaluation,
+    rules,
+    address,
+  } = body;
+
+  if (!thumbnailUrl || typeof thumbnailUrl !== 'string') return res.state(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
+  if (!imageUrl || typeof imageUrl !== 'string') return res.state(400).send({ error: true, payload: 'Invalid imageUrl' });
+  if (!description || typeof description !== 'string') return res.state(400).send({ error: true, payload: 'Invalid description' });
+  if (!subtitle || typeof subtitle !== 'string') return res.state(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
+  if (!data || typeof data !== 'string') return res.state(400).send({ error: true, payload: 'Invalid data' });
+  if (!evaluation || typeof evaluation !== 'string') return res.state(400).send({ error: true, payload: 'Invalid evaluation' });
+  if (!rules || typeof rules !== 'string') return res.state(400).send({ error: true, payload: 'Invalid rules' });
+  if (!address || typeof address !== 'string') return res.state(400).send({ error: true, payload: 'Invalid address' });
+  
+  try {
+    const result = await updateBountyDetail({
+      thumbnailUrl,
+      imageUrl,
+      subtitle,
+      description,
+      data,
+      evaluation,
+      rules,
+      address,
+    });
     res.send({ error: false, payload: result });
   } catch (err) {
     res.status(500).send({ error: true, payload: err.message })

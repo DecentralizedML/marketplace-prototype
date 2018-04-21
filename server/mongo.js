@@ -202,6 +202,53 @@ const postJobResult = jobResult => {
     })
 }
 
+const updateBountyDetail = bounty => {
+  return ready()
+    .then(client => {
+      const bounties = client.db('dml-proto').collection('bounties');
+      const query = { address: { $eq: bounty.address } };
+
+      return new Promise((resolve, reject) => {
+        bounties.findOne(query, (bountyError, result) => {
+          if (bountyError) {
+            reject(bountyError);
+          } else {
+            if (result) {
+              return bounties.findOneAndReplace(query, bounty, (replaceError, replaceResult) => {
+                if (replaceError) {
+                  console.log(replaceError);
+                  console.log('Failed to update bounty.')
+                  reject(replaceError);
+                } else {
+                  if (!replaceResult.value) {
+                    return reject(new Error('Failed to update bounty'));
+                  }
+                  console.log('Successfuly updated bounty.');
+                  resolve({
+                    ...bounty,
+                    _id: replaceResult.value._id,
+                  });
+                }
+              });
+            }
+
+            bounties.insert(bounty, (err, doc) => {
+              if (err) {
+                console.log(err);
+                console.log('Failed to update bounty.')
+                reject(err);
+              } else {
+                console.log('Successfuly updated bounty.');
+                resolve(doc.ops);
+              }
+            });
+          }
+        });
+      });
+    });
+};
+
+
 module.exports = {
   ready,
   insertJob,
@@ -209,4 +256,5 @@ module.exports = {
   getCompletedJobs,
   postJobResult,
   getJobs,
+  updateBountyDetail,
 };

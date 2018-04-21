@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-// import * as actions from '../../ducks/bounties';
+import * as actions from '../../ducks/bounties';
 import Modal from '../ui/modal';
 
 const bemify = block => (elem = '', modifier = '') => (
@@ -21,13 +20,13 @@ class UpdateBountyDetailModal extends Component {
     super(props);
     const { bountyData } = props;
     const {
-      thumbnailUrl,
-      imageUrl,
-      subtitle,
-      description,
-      data,
-      evaluation,
-      rules,
+      thumbnailUrl = '',
+      imageUrl = '',
+      subtitle = '',
+      description = '',
+      data = '',
+      evaluation = '',
+      rules = '',
     } = bountyData || {};
     this.state = {
       thumbnailUrl,
@@ -44,6 +43,34 @@ class UpdateBountyDetailModal extends Component {
     this.setState({
       [key]: e.target.value,
     });
+  }
+
+  submit = () => {
+    const {
+      thumbnailUrl,
+      imageUrl,
+      subtitle,
+      description,
+      data,
+      evaluation,
+      rules,
+    } = this.state;
+    const { address, updateBountyDetail } = this.props;
+
+    if (!thumbnailUrl || !imageUrl || !subtitle || !description || !data || !evaluation || !rules || !address) {
+      return null;
+    }
+
+    updateBountyDetail({
+      thumbnailUrl,
+      imageUrl,
+      subtitle,
+      description,
+      data,
+      evaluation,
+      rules,
+      address,
+    })
   }
 
   render() {
@@ -131,7 +158,12 @@ class UpdateBountyDetailModal extends Component {
             </div>
           </div>
           <div className={bem('footer')}>
-            <button className={bemify(bem('footer'))('button')}>Update</button>
+            <button
+              className={bemify(bem('footer'))('button')}
+              onClick={this.submit}
+            >
+              Update
+            </button>
           </div>
         </div>
       </Modal>
@@ -142,5 +174,8 @@ class UpdateBountyDetailModal extends Component {
 export default connect(
   (state, { address }) => ({
     bountyData: state.bounties.allBountiesMap[address],
+  }),
+  dispatch => ({
+    updateBountyDetail: bounty => dispatch(actions.updateBountyDetail(bounty)),
   })
 )(UpdateBountyDetailModal);
