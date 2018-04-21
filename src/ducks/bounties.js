@@ -27,6 +27,7 @@ const initialState = {
   isLoadingAllBounties: false,
   isLoadingAllBountiesCreatedByMe: false,
   isCreatingBounty: false,
+  isUpdatingBounty: false,
 };
 
 function getFactoryContract(getState) {
@@ -107,17 +108,30 @@ export const getBounty = address => (dispatch, getState) => {
   asyncQueue.add(async () => {
     try {
       const data = await promisify(bounty.getData)
-      dispatch(getBountyResponse({
+      const response = await fetch(`${API_ADDRESS}/bounty_detail/${address}`);
+
+      const ret = {
         bountyAddress: address,
         prizes: data[1],
         winners: data[2],
         participants: data[3],
         status: data[4],
-        // thumbnailUrl: 'https://kaggle2.blob.core.windows.net/competitions/kaggle/8540/logos/thumb76_76.png?t=2018-02-13-18-59-39',
-        thumbnailUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAPFBMVEXX19eOjo7a2tqLi4vd3N3GxsapqamTk5Ozs7OampqsrKzAwMCvr6/JycmIiIiQkJCjo6O7u7vR0dGYmJgw/inwAAACvklEQVR4nO3b7XKqMBRGYUgAQSUo3v+9Hl4/o2214nja7r3Wr840TMkziSLSonBf9dMn8AvCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhQEGCgMMFAYYKAwwUBhgoDDAQGGAgcIAA4UBBgoDDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhcH/MOjrVxvffIZvNwi79GpNeO8pvt+gK18sLjEwYrCY3WDFINZVmFfVRisGq7mzCGsMjBmE6tkKawahffq6oLZnEJ99T6wDBrYNYkwpPjKxbZA2q3FcbZJng+mSSe8TvV+D2B/nFMa728GwQWzPU7r/OmnZIL8l4tRgkc2o2vk06ML1Lz0aDPk6WPg0SNnrwZhfIuyiG4PYnP9m1eTXjnXnxqBM29P1wSpfBjHUyY1BmdrDjbL2imATqs6PQRmH5Xa7Hq72/zTmZiHYNtAHx9uPjVEn03ky+NC0FaaxVwvBn8H+tuvVQvBncBicLwRvBvutoNGDY4PjNxBhGf0anIb3yalBTJvTNLPN4MggpmHZX24tXTaDF4MDQD7Hy2ZwYfARoMg3gwOD+AlAkW8G+waxqT6f2nkzmDfI7qTcHjA4Mfia4LIZjBvcIbhsBtsGdwmKsIn2De4TnBEsG6QHBCcEiwYp7ntMIIRpcDJnUPSrY9+ZUdDA0dozWdNPx7532GGgNYNZR1sy4Hnlpp1bZ+W59TLOrjRj8FIWDOYvguMFxd83WDevtv3rBsXjF/+HvfkM+R9PDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDDBQGGCgMMBAYYCBwgADhQEGCgMMFAYYKAwwUBhgoDDAQGGAgcIAA4UBBgoDDBQGGCgMMFAYYKAwwEBhgIHCAAOFAQYKAwwUBhgoDCaDf8N4LuL6NkZ5AAAAAElFTkSuQmCC',
         title: data[0],
-        subtitle: 'No Subtitle',
-      }));
+      };
+
+      const { error, payload } = await response.json();
+
+      if (!error) {
+        ret.description = payload.description;
+        ret.evaluation = payload.evaluation;
+        ret.imageUrl = payload.imageUrl;
+        ret.rules = payload.rules;
+        ret.data = payload.data;
+        ret.subtitle = payload.subtitle;
+        ret.thumbnailUrl = payload.thumbnailUrl;
+      }
+
+      dispatch(getBountyResponse(ret));
     } catch (e) {
       dispatch(getBountyResponse(e));
     }
@@ -167,10 +181,11 @@ export const updateBountyDetail = bounty => async (dispatch, getState) => {
       throw new Error(payload);
     }
 
-    dispatch(updateBountyDetailResponse(payload))
+    dispatch(updateBountyDetailResponse(payload));
+    return payload;
   } catch (error) {
-    console.log(error);
-    dispatch(updateBountyDetailResponse(error))
+    dispatch(updateBountyDetailResponse(error));
+    return error;
   }
 }
 

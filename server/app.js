@@ -14,6 +14,7 @@ const {
   getJobs,
   ready,
   updateBountyDetail,
+  getBountyDetail,
 } = require('./mongo');
 
 const jsonParser = bodyParser.json()
@@ -232,6 +233,24 @@ app.post('/get_job_history_by_algo', jsonParser, async (req, res) => {
     const result = await getJobs({ algo_id, requestor });
     res.send({ error: false, payload: result });
   } catch (err) {
+    res.status(500).send({ error: true, payload: err.message })
+  }
+});
+
+app.get('/bounty_detail/:address?', async (req, res) => {
+  const { address } = req.params;
+
+  if (!address || typeof address !== 'string') {
+    return res.status(400).send({ error: true, payload: `Invalid address: ${address}`});
+  }
+  try {
+    const result = await getBountyDetail(address);
+    res.send({ error: false, payload: result });
+  } catch (err) {
+    if ((/Cannot find bounty address/gi).test(err.message)) {
+      res.status(200).send({ error: true, payload: err.message })
+      return;
+    }
     res.status(500).send({ error: true, payload: err.message })
   }
 });

@@ -27,3 +27,7 @@ body {
 button[disabled] {
   opacity: .3;
   cursor: not-allowed; }
+  button[disabled]:hover {
+    opacity: .3; }
+  button[disabled]:active {
+    opacity: .3; }

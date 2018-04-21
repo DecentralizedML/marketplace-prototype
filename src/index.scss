@@ -33,4 +33,12 @@ body {
 button[disabled] {
   opacity: .3;
   cursor: not-allowed;
+
+  &:hover {
+    opacity: .3;
+  }
+
+  &:active {
+    opacity: .3;
+  }
 }

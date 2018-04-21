@@ -44,7 +44,7 @@ class BountyRow extends Component {
         <div
           className="bounty__bounty-row__thumbnail"
           style={{
-            backgroundImage: `url(${data.thumbnailUrl})`,
+            backgroundImage: data.thumbnailUrl && `url(${data.thumbnailUrl})`,
           }}
         />
         <div className="bounty__bounty-row__body">

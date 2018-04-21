@@ -202,6 +202,24 @@ const postJobResult = jobResult => {
     })
 }
 
+const getBountyDetail = address => {
+  return ready()
+    .then(client => {
+      const bounties = client.db('dml-proto').collection('bounties');
+      const query = { address: { $eq: address } };
+      return new Promise((resolve, reject) => {
+        bounties.findOne(query, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            if (!result) return reject(new Error('Cannot find bounty address: ' + address));
+            resolve(result);
+          }
+        })
+      });
+    });
+}
+
 const updateBountyDetail = bounty => {
   return ready()
     .then(client => {
@@ -257,4 +275,5 @@ module.exports = {
   postJobResult,
   getJobs,
   updateBountyDetail,
+  getBountyDetail,
 };

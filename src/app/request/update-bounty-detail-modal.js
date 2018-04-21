@@ -14,6 +14,7 @@ class UpdateBountyDetailModal extends Component {
     address: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     bountyData: PropTypes.object,
+    isUpdatingBounty: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -55,7 +56,7 @@ class UpdateBountyDetailModal extends Component {
       evaluation,
       rules,
     } = this.state;
-    const { address, updateBountyDetail } = this.props;
+    const { address, updateBountyDetail, onClose } = this.props;
 
     if (!thumbnailUrl || !imageUrl || !subtitle || !description || !data || !evaluation || !rules || !address) {
       return null;
@@ -70,7 +71,7 @@ class UpdateBountyDetailModal extends Component {
       evaluation,
       rules,
       address,
-    })
+    }).then(onClose);
   }
 
   render() {
@@ -161,6 +162,7 @@ class UpdateBountyDetailModal extends Component {
             <button
               className={bemify(bem('footer'))('button')}
               onClick={this.submit}
+              disabled={this.props.isUpdatingBounty}
             >
               Update
             </button>
@@ -174,6 +176,7 @@ class UpdateBountyDetailModal extends Component {
 export default connect(
   (state, { address }) => ({
     bountyData: state.bounties.allBountiesMap[address],
+    isUpdatingBounty: state.bounties.isUpdatingBounty,
   }),
   dispatch => ({
     updateBountyDetail: bounty => dispatch(actions.updateBountyDetail(bounty)),

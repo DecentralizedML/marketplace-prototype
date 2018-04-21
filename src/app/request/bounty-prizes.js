@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 class BountyPrizes extends Component {
   static propTypes = {
-    address: PropTypes.string.isRequired,
+    match: PropTypes.object.isRequired,
     bountyData: PropTypes.object,
   };
 
@@ -21,7 +21,7 @@ class BountyPrizes extends Component {
     return (
       <div className="bounty-page__prizes">
         {data.prizes.map((prize, i) => (
-          <div className="bounty-page__prizes__row">
+          <div key={i} className="bounty-page__prizes__row">
             <div className="bounty-page__prizes__place">{`#${i + 1}`}</div>
             <div className="bounty-page__prizes__prize">
               {`${prize.dividedBy(1000000000000000000).toNumber().toFixed(0)} DML`}

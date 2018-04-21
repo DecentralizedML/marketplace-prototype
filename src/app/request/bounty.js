@@ -85,7 +85,13 @@ class Bounty extends Component {
 
     return (
       <div className="bounty-page">
-        <div className="bounty-page__header">
+        <div 
+          className="bounty-page__header"
+          style={{
+            backgroundImage: data.imageUrl && `url(${data.imageUrl})`,
+          }}
+        >
+          <div className="bounty-page__header-cover" style={{ opacity: data.imageUrl ? 1 : 0 }}/>
           <div className="bounty-page__primary-data">
             <div className="bounty-page__general-info">
               <div className="bounty-page__title">
@@ -136,14 +142,14 @@ class Bounty extends Component {
           </div>
           <div className="bounty-page__content">
             <Switch>
-              <Route path="/bounties/:address/description" render={() => <div>I am a description</div>} />
+              <Route path="/bounties/:address/description" render={() => <div>{data.description}</div>} />
               <Route path="/bounties/:address/prizes" component={BountyPrizes} />
-              <Route path="/bounties/:address/evaluation" render={() => <div>I am a evaluation</div>} />
-              <Route path="/bounties/:address/data" render={() => <div>I am a data</div>} />
-              <Route path="/bounties/:address/rules" render={() => <div>I am a rules</div>} />
+              <Route path="/bounties/:address/evaluation" render={() => <div>{data.evaluation}</div>} />
+              <Route path="/bounties/:address/data" render={() => <div>{data.data}</div>} />
+              <Route path="/bounties/:address/rules" render={() => <div>{data.rules}</div>} />
               <Route path="/bounties/:address/submission" render={() => <div>I am a submission</div>} />
               <Route path="/bounties/:address/admin" component={BountyAdmin} />
-              <Route render={() => <div>I am a description</div>} />
+              <Route render={() => <div>{data.description}</div>} />
             </Switch>
           </div>
         </div>
