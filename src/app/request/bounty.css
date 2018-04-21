@@ -6,6 +6,7 @@
   flex-flow: column nowrap;
   border-radius: 3px; }
   .bounty-page__header {
+    flex: 0 0 auto;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
     height: 11rem;
@@ -25,11 +26,11 @@
     display: flex;
     flex-flow: column nowrap; }
   .bounty-page__title {
-    font-size: 2.5rem;
+    font-size: 1.2rem;
     font-weight: 400;
     padding-bottom: .25rem; }
   .bounty-page__subtitle {
-    font-size: 1rem; }
+    font-size: .9rem; }
   .bounty-page__participants {
     font-size: .8rem;
     flex: 1 0 auto;
@@ -43,7 +44,7 @@
     align-items: center;
     justify-content: center; }
   .bounty-page__prize {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 400; }
   .bounty-page__prize-text {
     font-size: .8rem; }
@@ -57,6 +58,122 @@
       border-radius: 4px;
       background-color: #e2e2e2;
       margin: 0 .75rem; }
+  .bounty-page__admin {
+    padding: 2rem;
+    display: flex;
+    flex-flow: row nowrap; }
+    .bounty-page__admin__status-wrapper {
+      flex: 1 0 auto; }
+    .bounty-page__admin__status-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding-bottom: 1rem; }
+    .bounty-page__admin__checklist-item {
+      position: relative;
+      font-size: .8rem;
+      padding-bottom: .8rem;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      line-height: 1rem; }
+      .bounty-page__admin__checklist-item::before {
+        content: '\002715';
+        position: relative;
+        display: inline-block;
+        color: #FF0000;
+        font-size: 1rem;
+        font-weight: 400;
+        margin-right: 1rem; }
+      .bounty-page__admin__checklist-item--checked::before {
+        content: '\002714';
+        color: #00c700; }
+    .bounty-page__admin__actions {
+      display: flex;
+      flex-flow: column nowrap; }
+    .bounty-page__admin__action {
+      font-size: .6rem;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      background-color: #888888;
+      color: #FFF;
+      padding: .4rem 1rem;
+      border-radius: 3px;
+      margin-bottom: .25rem; }
+      .bounty-page__admin__action--red {
+        background-color: #f75858; }
+      .bounty-page__admin__action--yellow {
+        background-color: #ffb300; }
+      .bounty-page__admin__action--green {
+        background-color: #00b563; }
+      .bounty-page__admin__action:hover {
+        opacity: .9; }
+      .bounty-page__admin__action:active {
+        opacity: 1; }
+    .bounty-page__admin__update-bounty-detail-modal {
+      top: 4rem;
+      bottom: 4rem;
+      left: 0;
+      right: 0;
+      position: fixed;
+      background-color: #FFF;
+      border-radius: 4px;
+      box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-flow: column nowrap;
+      width: 600px;
+      margin: 0 auto; }
+      .bounty-page__admin__update-bounty-detail-modal__header {
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.75);
+        color: #FFF;
+        padding: 2rem;
+        text-transform: uppercase;
+        font-weight: 400; }
+      .bounty-page__admin__update-bounty-detail-modal__content {
+        padding: 2rem 2rem 0 2rem;
+        overflow-y: auto; }
+      .bounty-page__admin__update-bounty-detail-modal__row {
+        width: 100%;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-flow: column; }
+        .bounty-page__admin__update-bounty-detail-modal__row__label {
+          font-weight: 400;
+          padding-bottom: .2rem;
+          font-size: .8rem;
+          padding-left: .5rem; }
+        .bounty-page__admin__update-bounty-detail-modal__row__input {
+          outline: none;
+          padding: .5rem;
+          font-size: 1rem;
+          border-radius: 3px;
+          border: 1px solid rgba(0, 0, 0, 0.2); }
+        .bounty-page__admin__update-bounty-detail-modal__row__textarea {
+          outline: none;
+          padding: .5rem;
+          font-size: 1rem;
+          border-radius: 3px;
+          border: 1px solid rgba(0, 0, 0, 0.2);
+          height: 15rem; }
+      .bounty-page__admin__update-bounty-detail-modal__footer {
+        padding: 1rem 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.2); }
+        .bounty-page__admin__update-bounty-detail-modal__footer__button {
+          font-size: .8rem;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          background-color: rgba(0, 118, 163, 0.9);
+          color: #FFF;
+          padding: .8rem 2rem;
+          border-radius: 3px;
+          width: 100%; }
+          .bounty-page__admin__update-bounty-detail-modal__footer__button:hover {
+            background-color: rgba(0, 118, 163, 0.8); }
+          .bounty-page__admin__update-bounty-detail-modal__footer__button:active {
+            background-color: #0076A3; }
   .bounty-page__status {
     display: flex;
     flex-flow: row nowrap;
@@ -93,7 +210,8 @@
         .bounty-page__sidebar__item--active:hover {
           color: #000; }
   .bounty-page__content {
-    flex: 1 0 auto; }
+    flex: 1 0 auto;
+    overflow-y: auto; }
   .bounty-page__prizes {
     padding: 1rem 2rem; }
     .bounty-page__prizes__row {

@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import * as actions from '../../ducks/bounties';
-import { withRouter } from 'react-router';
-import { Switch, Route } from 'react-router-dom';
+import BountyPrizes from './bounty-prizes';
+import BountyAdmin from './bounty-admin';
 
 import './bounty.css';
 
 const TABS = [
-  { name: 'Description', path: "description" },
   { name: 'Prizes', path: "prizes" },
-  { name: 'Evaluation', path: "evaluation" },
+  { name: 'Description', path: "description" },
   { name: 'Data', path: "data" },
+  { name: 'Evaluation', path: "evaluation" },
   { name: 'Rules', path: "rules" },
   { name: 'Submission', path: "submission" },
   { name: 'Admin', path: "admin" },
@@ -24,6 +26,7 @@ class Bounty extends Component {
     // Redux
     getBounty: PropTypes.func.isRequired,
     bountyData: PropTypes.object,
+    isCreatedByMe: PropTypes.bool.isRequired,
   };
 
   componentWillMount() {
@@ -72,29 +75,8 @@ class Bounty extends Component {
     }
   }
 
-  renderPrizes = () => {
-    const { bountyData } = this.props;
-    const data = bountyData || {
-      prizes: [],
-      participants: [],
-    };
-
-    return (
-      <div className="bounty-page__prizes">
-        {data.prizes.map((prize, i) => (
-          <div className="bounty-page__prizes__row">
-            <div className="bounty-page__prizes__place">{`#${i + 1}`}</div>
-            <div className="bounty-page__prizes__prize">
-              {`${prize.dividedBy(1000000000000000000).toNumber().toFixed(0)} DML`}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   render() {
-    const { match, history, location, bountyData } = this.props;
+    const { match, history, location, bountyData, isCreatedByMe } = this.props;
     const { address } = match.params;
     const data = bountyData || {
       prizes: [],
@@ -132,27 +114,35 @@ class Bounty extends Component {
         </div>
         <div className="bounty-page__body">
           <div className="bounty-page__sidebar">
-            {TABS.map(({ name, path }) => (
-              <div
-                key={path}
-                className={classnames('bounty-page__sidebar__item', {
-                  'bounty-page__sidebar__item--active': location.pathname === `/bounties/${address}/${path}`,
-                })}
-                onClick={() => history.push(`/bounties/${address}/${path}`)}
-              >
-                {name}
-              </div>
-            ))}
+            {
+              TABS.map(({ name, path }) => {
+                if (path === 'admin' && !isCreatedByMe) {
+                  return null;
+                }
+
+                return (
+                  <div
+                    key={path}
+                    className={classnames('bounty-page__sidebar__item', {
+                      'bounty-page__sidebar__item--active': location.pathname === `/bounties/${address}/${path}`,
+                    })}
+                    onClick={() => history.push(`/bounties/${address}/${path}`)}
+                  >
+                    {name}
+                  </div>
+                );
+              })
+            }
           </div>
           <div className="bounty-page__content">
             <Switch>
               <Route path="/bounties/:address/description" render={() => <div>I am a description</div>} />
-              <Route path="/bounties/:address/prizes" render={this.renderPrizes} />
+              <Route path="/bounties/:address/prizes" component={BountyPrizes} />
               <Route path="/bounties/:address/evaluation" render={() => <div>I am a evaluation</div>} />
               <Route path="/bounties/:address/data" render={() => <div>I am a data</div>} />
               <Route path="/bounties/:address/rules" render={() => <div>I am a rules</div>} />
               <Route path="/bounties/:address/submission" render={() => <div>I am a submission</div>} />
-              <Route path="/bounties/:address/admin" render={() => <div>I am a admin</div>} />
+              <Route path="/bounties/:address/admin" component={BountyAdmin} />
               <Route render={() => <div>I am a description</div>} />
             </Switch>
           </div>
@@ -165,6 +155,7 @@ class Bounty extends Component {
 export default connect(
   (state, { match }) => ({
     bountyData: state.bounties.allBountiesMap[match.params.address],
+    isCreatedByMe: state.bounties.createdByMe.indexOf(match.params.address) > -1,
   }),
   (dispatch, { match }) => ({
     getBounty: () => dispatch(actions.getBounty(match.params.address)),
