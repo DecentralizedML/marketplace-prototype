@@ -48,7 +48,9 @@ class CreateBountyModal extends Component {
 
     let error = '';
 
-    prizes.reduce((last, prize) => {
+    prizes.reduce((l, p) => {
+      const prize = Number(p);
+      const last = Number(l);
       if (prize < 0) {
         error = 'Prize cannot be negative';
       }
@@ -77,7 +79,7 @@ class CreateBountyModal extends Component {
     const { title, prizes } = this.state;
 
     if (!this.props.isCreatingBounty && this.isValid()) {
-      this.props.createNewBounty(title, prizes.map(prize => prize * 1000000000000000000))
+      this.props.createNewBounty(title, prizes.map(prize => prize * 1000000000000000000).filter(d => !!d))
         .then(() => {
           this.setState({
             title: '',

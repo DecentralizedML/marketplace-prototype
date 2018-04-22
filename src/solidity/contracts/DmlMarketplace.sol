@@ -2,7 +2,7 @@ pragma solidity ^0.4.22;
 
 contract DmlMarketplace {
     // Public Variables
-    address public owner;
+    mapping(address => bool) public moderators;
     address public token;
     
     // bountyFactory address
@@ -13,7 +13,7 @@ contract DmlMarketplace {
     mapping(address => mapping(bytes32 => bool)) public hasPurchased;
     
     constructor() public {
-        owner = msg.sender;
+        moderators[msg.sender] = true;
     }
     
     function isReady() view public returns (bool success) {
@@ -23,13 +23,33 @@ contract DmlMarketplace {
 
         return true;
     }
-    
+
+    function isModerator(address modAddress) view public returns (bool success) {
+        return moderators[modAddress];
+    }
+
+    function addModerator(address newModerator) public {
+        require(isModerator(msg.sender));
+        moderators[newModerator] = true;
+    }
+
+    function removeModerator(address mod) public {
+        require(isModerator(msg.sender));
+        moderators[mod] = false;
+    }
+
     function init (address newTokenAddress) public returns (bool success) {
-        require(msg.sender == owner);
+        require(isModerator(msg.sender));
         token = newTokenAddress;
-        DmlBountyFactory f = new DmlBountyFactory(owner, token);
+        DmlBountyFactory f = new DmlBountyFactory(token);
         bountyFactory = f;
         return true;
+    }
+
+    function setBountyFactory(address factoryAddress) public {
+        require(isModerator(msg.sender));
+        DmlBountyFactory f = DmlBountyFactory(factoryAddress);
+        bountyFactory = f;
     }
     
     function buy(bytes32 algoId, uint value) public returns (bool success) {
@@ -53,7 +73,7 @@ contract DmlMarketplace {
     }
     
     function transferToken (address receiver, uint amount) public {
-        require(msg.sender == owner);
+        require(isModerator(msg.sender));
         
         ERC20Interface c = ERC20Interface(token);
         require(c.transfer(receiver, amount));
@@ -62,15 +82,13 @@ contract DmlMarketplace {
 
 contract DmlBountyFactory {
     address public marketplace;
-    address public owner;
     address public token;
     address[] public allBountyAddresses;
     mapping(address => address[]) public bountyAddressByCreator;
     mapping(address => address[]) public bountyAddressByParticipant;
     
-    constructor(address ownerAddress, address tokenAddress) public {
+    constructor(address tokenAddress) public {
         marketplace = msg.sender;
-        owner = ownerAddress;
         token = tokenAddress;
     }
 
@@ -88,7 +106,7 @@ contract DmlBountyFactory {
     
     function createBounty(string name, uint[] prizes) public {
         address creator = msg.sender;
-        address newBounty = new Bounty(token, creator, owner, name, prizes);
+        address newBounty = new Bounty(token, creator, name, prizes, marketplace);
         allBountyAddresses.push(newBounty);
         bountyAddressByCreator[msg.sender].push(newBounty);
     }
@@ -108,12 +126,13 @@ contract Bounty {
     
     // public constants
     address public creator;
-    address public moderator;
     address public token;
+    address public marketplace;
 
     // state variables
     string public name;
     uint[] public prizes;
+    uint public createdAt;
     address[] public winners;
     address[] public participants;
     Status public status;
@@ -121,23 +140,31 @@ contract Bounty {
 
     enum Status {
         Initialized,
-        ReadyForEnrollment,
         EnrollmentStart,
         EnrollmentEnd,
         BountyStart,
         BountyEnd,
+        EvaluationEnd,
         Completed,
-        Paused
+        Paused,
+        Cancelled,
     }
     
-    constructor(address tokenAddress, address creatorAddress, address ownerAddress, string initName, uint[] initPrizes) public {
+    constructor(
+        address tokenAddress,
+        address creatorAddress,
+        string initName,
+        uint[] initPrizes,
+        address mpAddress
+    ) public {
         factory = msg.sender;
+        marketplace = mpAddress;
         creator = creatorAddress;
-        moderator = ownerAddress;
         token = tokenAddress;
         prizes = initPrizes;
         status = Status.Initialized;
         name = initName;
+        createdAt = now;
     }
     
     function isFunded() public view returns (bool success) {
@@ -146,11 +173,13 @@ contract Bounty {
         return true;
     }
 
-    function getData() public view returns (string retName, uint[] retPrizes, address[] retWinenrs, address[] retParticipants, Status retStatus) {
-        return (name, prizes, winners, participants, status);
+    function getData() public view returns (string retName, uint[] retPrizes, address[] retWinenrs, address[] retParticipants, Status retStatus, address retCreator, uint createdTime) {
+        return (name, prizes, winners, participants, status, creator, createdAt);
     }
     
     function join(address participantAddress) public returns (bool success) {
+        require(msg.sender == factory);
+
         if (status != Status.EnrollmentStart) {
             return false;
         }
@@ -171,24 +200,50 @@ contract Bounty {
     }
 
     function updateName(string newName) public returns (bool success) {
-        require(msg.sender == moderator || msg.sender == creator);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender) || msg.sender == creator);
+        name = newName;
+        return true;
+    }
+
+    function forceUpdateName(string newName) public returns (bool success) {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
         name = newName;
         return true;
     }
     
     function updatePrizes(uint[] newPrizes) public returns (bool success) {
-        require(msg.sender == moderator || msg.sender == creator);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender) || msg.sender == creator);
+        require(status == Status.Initialized);
+        prizes = newPrizes;
+        return true;
+    }
+
+    function forceUpdatePrizes(uint[] newPrizes) public returns (bool success) {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
         prizes = newPrizes;
         return true;
     }
 
     function setStatus(Status newStatus) private returns (bool success) {
-        require(msg.sender == moderator || msg.sender == creator);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender) || msg.sender == creator);
+        status = newStatus;
+        return true;
+    }
+
+    function forceSetStatus(Status newStatus) public returns (bool success) {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
         status = newStatus;
         return true;
     }
     
     function startEnrollment() public {
+        require(status == Status.Initialized);
         require(prizes.length > 0);
         require(isFunded());
         setStatus(Status.EnrollmentStart);
@@ -200,7 +255,7 @@ contract Bounty {
     }
     
     function startBounty() public {
-        require(status == Status.EnrollmentStart);
+        require(status == Status.EnrollmentEnd);
         setStatus(Status.BountyStart);
     }
     
@@ -210,18 +265,34 @@ contract Bounty {
     }
 
     function updateWinners(address[] newWinners) public {
-        require(msg.sender == moderator || msg.sender == creator);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender) || msg.sender == creator);
         require(status == Status.BountyEnd);
         require(newWinners.length == prizes.length);
+
+        for (uint i = 0; i < newWinners.length; i++) {
+            require(participantsMap[newWinners[i]]);
+        }
+
+        winners = newWinners;
+        setStatus(Status.EvaluationEnd);
+    }
+
+    function forceUpdateWinners(address[] newWinners) public {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
+
         winners = newWinners;
     }
 
     function payoutWinners() public {
-        require(msg.sender == moderator || msg.sender == creator);
         ERC20Interface c = ERC20Interface(token);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+
+        require(dmp.isModerator(msg.sender) || msg.sender == creator);
         require(isFunded());
         require(winners.length == prizes.length);
-        require(status == Status.BountyEnd);
+        require(status == Status.EvaluationEnd);
 
         for (uint i = 0; i < prizes.length; i++) {
             require(c.transfer(winners[i], prizes[i]));
@@ -239,7 +310,8 @@ contract Bounty {
     }
 
     function transferToken (address receiver, uint amount) public {
-        require(msg.sender == moderator);
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
         ERC20Interface c = ERC20Interface(token);
         require(c.transfer(receiver, amount));
     }

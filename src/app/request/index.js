@@ -43,12 +43,19 @@ class Request extends Component {
   }
 
   renderRows(bounties) {
-    return bounties.map(bounty => (
-      <BountyRow
-        key={bounty}
-        address={bounty}
-      />
-    ));
+    let rows = [];
+
+    for (let i = bounties.length - 1; i >= 0; i--) {
+      const bounty = bounties[i];
+      rows.push(
+        <BountyRow
+          key={bounty}
+          address={bounty}
+        />
+      );
+    }
+
+    return rows;
   }
 
   renderContent() {

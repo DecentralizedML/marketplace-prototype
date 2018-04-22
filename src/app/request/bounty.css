@@ -4,18 +4,21 @@
   margin: 1rem auto;
   display: flex;
   flex-flow: column nowrap;
-  border-radius: 3px; }
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.05); }
+  .bounty-page__markdown {
+    padding: 1rem 2rem; }
   .bounty-page__header {
     flex: 0 0 auto;
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
+    overflow: hidden;
     height: 11rem;
     background-color: #0076A3;
     padding: 2rem 3rem;
     color: white;
     display: flex;
     flex-flow: column nowrap;
-    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.05);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -73,6 +76,27 @@
       border-radius: 4px;
       background-color: #e2e2e2;
       margin: 0 .75rem; }
+    .bounty-page__secondary-data__info {
+      flex: 1 1 auto;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center; }
+    .bounty-page__secondary-data__actions {
+      display: flex;
+      flex-flow: row nowrap; }
+    .bounty-page__secondary-data__action {
+      font-size: .8rem;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      background-color: rgba(0, 181, 99, 0.9);
+      color: #FFF;
+      padding: .8rem 2rem;
+      border-radius: 3px; }
+      .bounty-page__secondary-data__action:hover {
+        background-color: rgba(0, 181, 99, 0.8); }
+      .bounty-page__secondary-data__action:active {
+        background-color: #00b563; }
   .bounty-page__admin {
     padding: 2rem;
     display: flex;
@@ -139,6 +163,13 @@
       flex-flow: column nowrap;
       width: 600px;
       margin: 0 auto; }
+      .bounty-page__admin__update-bounty-detail-modal--update-winners {
+        bottom: auto; }
+      .bounty-page__admin__update-bounty-detail-modal__error {
+        font-size: .8rem;
+        color: red;
+        text-align: center;
+        padding-bottom: 1rem; }
       .bounty-page__admin__update-bounty-detail-modal__header {
         border-top-right-radius: 4px;
         border-top-left-radius: 4px;
@@ -200,14 +231,23 @@
       content: '';
       position: relative;
       display: inline-block;
-      width: .6rem;
+      width: .65rem;
       height: .6rem;
       background-color: #CCC;
       border-radius: 50%;
       margin-right: .3rem;
-      box-shadow: inset 2px -2px 2px 0px rgba(0, 0, 0, 0.2); }
+      box-shadow: inset 2px -2px 2px 0px rgba(0, 0, 0, 0.2);
+      flex: 0 0 auto; }
     .bounty-page__status--initialized::before {
       background-color: #d42d2d; }
+    .bounty-page__status--enrollment_started::before {
+      background-color: #00c700; }
+    .bounty-page__status--enrollment_end::before {
+      background-color: #ffbf00; }
+    .bounty-page__status--bounty_start::before {
+      background-color: #00c700; }
+    .bounty-page__status--bounty_end::before {
+      background-color: #ffbf00; }
   .bounty-page__body {
     display: flex;
     flex-flow: row nowrap; }
@@ -215,16 +255,22 @@
     width: 12rem;
     border-right: 1px solid rgba(0, 0, 0, 0.1); }
     .bounty-page__sidebar__item {
-      padding: 1rem;
-      cursor: pointer; }
+      padding: 1rem 1rem 1rem 2rem;
+      cursor: pointer;
+      font-weight: 300; }
       .bounty-page__sidebar__item:hover {
-        color: #FDCC52; }
+        background-color: rgba(0, 118, 163, 0.1); }
       .bounty-page__sidebar__item:active {
-        color: #000; }
+        background-color: rgba(0, 118, 163, 0.2); }
       .bounty-page__sidebar__item--active {
-        font-weight: 600 !important; }
-        .bounty-page__sidebar__item--active:hover {
-          color: #000; }
+        font-weight: 600 !important;
+        background-color: rgba(0, 118, 163, 0.1); }
+      .bounty-page__sidebar__item--admin {
+        background-color: #fffcd2; }
+        .bounty-page__sidebar__item--admin:hover {
+          background-color: rgba(255, 252, 210, 0.7); }
+        .bounty-page__sidebar__item--admin:active {
+          background-color: rgba(255, 252, 210, 0.9); }
   .bounty-page__content {
     flex: 1 0 auto;
     overflow-y: auto; }

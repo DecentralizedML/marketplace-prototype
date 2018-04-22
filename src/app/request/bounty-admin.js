@@ -4,19 +4,24 @@ import { withRouter } from 'react-router';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { BigNumber } from 'bignumber.js';
-import { BOUNTY_ABI, TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI } from '../../utils/constants';
-// import * as actions from '../../ducks/bounties';
+import { BOUNTY_ABI, TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI, BOUNTY_STATUS } from '../../utils/constants';
+import * as actions from '../../ducks/bounties';
 import UpdateBountyDetailModal from './update-bounty-detail-modal';
+import UpdateWinnersModal from './update-winners-modal';
 
 
 const MODAL_TYPES = {
   UPDATE_BOUNTY_DETAIL: 'UPDATE_BOUNTY_DETAIL',
+  UPDATE_WINNER: 'UPDATE_WINNER',
 };
 
 class BountyAdmin extends Component {
   static propTypes = {
     bountyData: PropTypes.object,
     match: PropTypes.object.isRequired,
+    getBounty: PropTypes.func.isRequired,
+    isLocked: PropTypes.bool.isRequired,
+    hasWeb3: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -24,6 +29,7 @@ class BountyAdmin extends Component {
     modalType: null,
     isFunded: false,
     tokenTransferTx: '',
+    startEnrollmentTx: '',
   }
 
   componentWillMount() {
@@ -38,20 +44,23 @@ class BountyAdmin extends Component {
     const { isLocked, hasWeb3, match: { params: { address } } } = this.props;
 
     if (isLocked || !hasWeb3) {
-      this.timeout = setTimeout(this.pool, 1000);
+      this.timeout = setTimeout(this.poll, 1000);
       return;
     }
 
     const contract = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
     contract.isFunded((err, data) => {
       if (err) {
-        this.timeout = setTimeout(this.pool, 15000);
+        this.timeout = setTimeout(this.poll, 15000);
         return;
       }
 
       this.setState({ isFunded: data });
-      this.timeout = setTimeout(this.pool, 15000);
+      this.timeout = setTimeout(this.poll, 15000);
     });
+
+    this.props.getBounty();
   }
 
   fundContract = () => {
@@ -74,7 +83,102 @@ class BountyAdmin extends Component {
 
       this.setState({ tokenTransferTx: data });
     });
+  }
 
+  startEnrollment = () => {
+    const { isLocked, hasWeb3, bountyData,  match: { params: { address } } } = this.props;
+    const { isFunded, startEnrollmentTx } = this.state;
+    const { description } = bountyData || {};
+
+    if (isLocked || !hasWeb3 || !isFunded || startEnrollmentTx || !description) {
+      return;
+    }
+
+    const bounty = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
+    bounty.startEnrollment((err, data) => {
+      if (err) {
+        return null;
+      }
+
+      this.setState({ startEnrollmentTx: data });
+    });
+  }
+
+  stopEnrollment = () => {
+    const { isLocked, hasWeb3,  match: { params: { address } } } = this.props;
+    const { isFunded, stopEnrollmentTx } = this.state;
+
+    if (isLocked || !hasWeb3 || !isFunded || stopEnrollmentTx) {
+      return;
+    }
+
+    const bounty = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
+    bounty.stopEnrollment((err, data) => {
+      if (err) {
+        return null;
+      }
+
+      this.setState({ stopEnrollmentTx: data });
+    });
+  }
+
+  startBounty = () => {
+    const { isLocked, hasWeb3,  match: { params: { address } } } = this.props;
+    const { isFunded, startBountyTx } = this.state;
+
+    if (isLocked || !hasWeb3 || !isFunded || startBountyTx) {
+      return;
+    }
+
+    const bounty = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
+    bounty.startBounty((err, data) => {
+      if (err) {
+        return null;
+      }
+
+      this.setState({ startBountyTx: data });
+    });
+  }
+
+  stopBounty = () => {
+    const { isLocked, hasWeb3,  match: { params: { address } } } = this.props;
+    const { isFunded, stopEnrollmentTx } = this.state;
+
+    if (isLocked || !hasWeb3 || !isFunded || stopEnrollmentTx) {
+      return;
+    }
+
+    const bounty = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
+    bounty.stopBounty((err, data) => {
+      if (err) {
+        return null;
+      }
+
+      this.setState({ stopBountyTx: data });
+    });
+  }
+
+  payWinners = () => {
+    const { isLocked, hasWeb3,  match: { params: { address } } } = this.props;
+    const { isFunded, payWinnersTx } = this.state;
+
+    if (isLocked || !hasWeb3 || !isFunded || payWinnersTx) {
+      return;
+    }
+
+    const bounty = window.web3.eth.contract(BOUNTY_ABI).at(address);
+
+    bounty.payoutWinners((err, data) => {
+      if (err) {
+        return null;
+      }
+
+      this.setState({ payWinnersTx: data });
+    });
   }
 
   showModal = type => {
@@ -91,6 +195,16 @@ class BountyAdmin extends Component {
     });
   }
 
+  getStatus = () => {
+    const { bountyData } = this.props;
+    const { status } = bountyData || {};
+    const currentStatus = status && status.toNumber
+      ? status.toNumber()
+      : 0;
+
+    return currentStatus;
+  } 
+
   renderModal() {
     const { isShowingModal, modalType } = this.state;
     const { match } = this.props;
@@ -102,19 +216,23 @@ class BountyAdmin extends Component {
     switch(modalType) {
       case MODAL_TYPES.UPDATE_BOUNTY_DETAIL:
         return <UpdateBountyDetailModal onClose={this.hideModal} address={match.params.address} />;
+      case MODAL_TYPES.UPDATE_WINNER:
+        return (
+          <UpdateWinnersModal
+            onClose={this.hideModal}
+            address={match.params.address}
+            onTxSubmit={tx => this.setState({ updateWinnerTx: tx })}
+          />
+        );
       default:
         return null;
     }
   }
 
   renderButton({ text, backgroundColor, onClick, requiredStatus, disabled, shouldHide }) {
-    const { bountyData } = this.props;
-    const { status } = bountyData || {};
-    const currentStatus = status && status.toNumber
-      ? status.toNumber()
-      : 0;
+    const currentStatus = this.getStatus();
 
-    if (requiredStatus && currentStatus !== requiredStatus) {
+    if (typeof requiredStatus !== 'undefined' && currentStatus !== requiredStatus) {
       return null;
     }
 
@@ -138,6 +256,7 @@ class BountyAdmin extends Component {
     const data = bountyData || {
       prizes: [],
       participants: [],
+      winners: [],
     };
 
     return (
@@ -150,20 +269,53 @@ class BountyAdmin extends Component {
             Fill out bounty details
           </div>
           <div className={classnames('bounty-page__admin__checklist-item', {
-            'bounty-page__admin__checklist-item--checked': this.state.isFunded,
+            'bounty-page__admin__checklist-item--checked': this.state.isFunded || this.getStatus() === BOUNTY_STATUS.Completed,
           })}>
             Fund the bounty with DML
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': this.getStatus() >= BOUNTY_STATUS.EnrollmentStart,
+          })}>
+            Start Enrollment
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': this.getStatus() >= BOUNTY_STATUS.EnrollmentEnd,
+          })}>
+            End Enrollment
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': this.getStatus() >= BOUNTY_STATUS.BountyStart,
+          })}>
+            Begin Bounty
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': this.getStatus() >= BOUNTY_STATUS.BountyEnd,
+          })}>
+            End Bounty
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': data.winners.length === data.prizes.length,
+          })}>
+            Select Winners
+          </div>
+          <div className={classnames('bounty-page__admin__checklist-item', {
+            'bounty-page__admin__checklist-item--checked': this.getStatus() === BOUNTY_STATUS.Completed,
+          })}>
+            Pay Winners
           </div>
         </div>
         <div className="bounty-page__admin__actions">
           {/*this.renderButton({ text: 'Update Bounty Contract' })*/}
           {this.renderButton({
             text: 'Update Bounty Details',
+            shouldHide: this.getStatus() > BOUNTY_STATUS.Initialized,
+            disabled: this.getStatus() > BOUNTY_STATUS.Initialized,
             onClick: () => this.showModal(MODAL_TYPES.UPDATE_BOUNTY_DETAIL),
           })}
           {this.renderButton({
             text: 'Fund the Bounty',
             backgroundColor: 'yellow',
+            shouldHide: this.state.isFunded || this.getStatus() === BOUNTY_STATUS.Completed,
             onClick: this.fundContract,
             disabled: this.state.isFunded || this.state.tokenTransferTx,
           })}
@@ -171,31 +323,46 @@ class BountyAdmin extends Component {
             text: 'Start Enrollment',
             backgroundColor: 'green',
             shouldHide: !this.state.isFunded || !data.description,
+            requiredStatus: BOUNTY_STATUS.Initialized,
+            onClick: this.startEnrollment,
+            disabled: this.state.startEnrollmentTx,
           })}
           {this.renderButton({
             text: 'Stop Enrollment',
             backgroundColor: 'red',
-            requiredStatus: 4,
+            requiredStatus: BOUNTY_STATUS.EnrollmentStart,
+            onClick: this.stopEnrollment,
+            disabled: this.state.stopEnrollmentTx,
           })}
           {this.renderButton({
-            text: 'Start Submission',
+            text: 'Start Accepting Submission',
             backgroundColor: 'green',
-            requiredStatus: 5,
+            requiredStatus: BOUNTY_STATUS.EnrollmentEnd,
+            onClick: this.startBounty,
+            disabled: this.state.startBountyTx,
           })}
           {this.renderButton({
-            text: 'End Submission',
+            text: 'Stop Accepting Submission',
             backgroundColor: 'red',
-            requiredStatus: 6,
+            requiredStatus: BOUNTY_STATUS.BountyStart,
+            onClick: this.stopBounty,
+            disabled: this.state.stopBountyTx,
           })}
           {this.renderButton({
             text: 'Update Winners',
             backgroundColor: 'yellow',
-            requiredStatus: 7,
+            requiredStatus: BOUNTY_STATUS.BountyEnd,
+            shouldHide: data.winners.length === data.prizes.length,
+            onClick: () => this.showModal(MODAL_TYPES.UPDATE_WINNER),
+            disabled: this.state.updateWinnerTx,
           })}
           {this.renderButton({
             text: 'Payout Bounty',
             backgroundColor: 'green',
-            requiredStatus: 8,
+            requiredStatus: BOUNTY_STATUS.EvaluationEnd,
+            shouldHide: !data.winners.length,
+            onClick: this.payWinners,
+            disabled: this.state.payWinnersTx,
           })}
         </div>
         { this.renderModal() }
@@ -209,5 +376,8 @@ export default connect(
     bountyData: state.bounties.allBountiesMap[match.params.address],
     isLocked: state.metamask.isLocked,
     hasWeb3: state.metamask.hasWeb3,
-  })
+  }),
+  (dispatch, { match: { params: { address } } }) => ({
+    getBounty: () => dispatch(actions.getBounty(address)),
+  }),
 )(withRouter(BountyAdmin));

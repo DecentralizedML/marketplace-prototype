@@ -257,7 +257,7 @@ const updateBountyDetail = bounty => {
                 reject(err);
               } else {
                 console.log('Successfuly updated bounty.');
-                resolve(doc.ops);
+                resolve(doc.ops[0]);
               }
             });
           }
