@@ -17,6 +17,10 @@ class UpdateBountyDetailModal extends Component {
     isUpdatingBounty: PropTypes.bool.isRequired,
   };
 
+  state = {
+    error: '',
+  };
+
   constructor(props) {
     super(props);
     const { bountyData } = props;
@@ -59,6 +63,7 @@ class UpdateBountyDetailModal extends Component {
     const { address, updateBountyDetail, onClose } = this.props;
 
     if (!thumbnailUrl || !imageUrl || !subtitle || !description || !data || !evaluation || !rules || !address) {
+      this.setState({ error: 'All fields are required'});
       return null;
     }
 
@@ -159,6 +164,7 @@ class UpdateBountyDetailModal extends Component {
             </div>
           </div>
           <div className={bem('footer')}>
+            <div className={bem('error')}>{this.state.error}</div>
             <button
               className={bemify(bem('footer'))('button')}
               onClick={this.submit}

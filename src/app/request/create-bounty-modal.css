@@ -1,5 +1,6 @@
 .create-bounty-modal {
   top: 4rem;
+  bottom: 4rem;
   left: 0;
   right: 0;
   position: fixed;
@@ -19,7 +20,8 @@
     text-transform: uppercase;
     font-weight: 400; }
   .create-bounty-modal__content {
-    padding: 2rem 2rem 0 2rem; }
+    padding: 2rem 2rem 0 2rem;
+    overflow-y: auto; }
   .create-bounty-modal__instruction {
     background-color: #fffcd2;
     text-align: center;
@@ -31,7 +33,8 @@
     padding: 1rem;
     font-size: .8rem; }
   .create-bounty-modal__footer {
-    padding: 1rem 2rem 2rem; }
+    padding: 1rem 2rem 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.2); }
   .create-bounty-modal__error {
     color: #FF0000;
     text-align: center;

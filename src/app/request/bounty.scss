@@ -8,7 +8,8 @@
   flex-flow: column nowrap;
   border-radius: 3px;
   box-shadow: $standard-box-shadow;
-
+  flex: 1 1 auto;
+  height: 0;
 
   &__markdown {
     padding: 1rem 2rem;
@@ -375,6 +376,9 @@
   &__body {
     display: flex;
     flex-flow: row nowrap;
+    flex: 1 1 auto;
+    height: 0;
+    background-color: rgba($black, 0.02);
   }
 
   &__sidebar {
@@ -416,6 +420,8 @@
   &__content {
     flex: 1 0 auto;
     overflow-y: auto;
+    display: flex;
+    flex-flow: column nowrap;
   }
 
   &__prizes {

@@ -5,7 +5,9 @@
   display: flex;
   flex-flow: column nowrap;
   border-radius: 3px;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.05); }
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.05);
+  flex: 1 1 auto;
+  height: 0; }
   .bounty-page__markdown {
     padding: 1rem 2rem; }
   .bounty-page__header {
@@ -250,7 +252,10 @@
       background-color: #ffbf00; }
   .bounty-page__body {
     display: flex;
-    flex-flow: row nowrap; }
+    flex-flow: row nowrap;
+    flex: 1 1 auto;
+    height: 0;
+    background-color: rgba(0, 0, 0, 0.02); }
   .bounty-page__sidebar {
     width: 12rem;
     border-right: 1px solid rgba(0, 0, 0, 0.1); }
@@ -273,7 +278,9 @@
           background-color: rgba(255, 252, 210, 0.9); }
   .bounty-page__content {
     flex: 1 0 auto;
-    overflow-y: auto; }
+    overflow-y: auto;
+    display: flex;
+    flex-flow: column nowrap; }
   .bounty-page__prizes {
     padding: 1rem 2rem; }
     .bounty-page__prizes__row {

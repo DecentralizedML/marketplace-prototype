@@ -2,6 +2,7 @@
 
 .create-bounty-modal {
   top: 4rem;
+  bottom: 4rem;
   left: 0;
   right: 0;
   position: fixed;
@@ -25,6 +26,7 @@
 
   &__content {
     padding: 2rem 2rem 0 2rem;
+    overflow-y: auto;
   }
 
   &__instruction {
@@ -43,6 +45,7 @@
 
   &__footer {
     padding: 1rem 2rem 2rem;
+    border-top: 1px solid rgba($black, .2);
   }
 
   &__error {

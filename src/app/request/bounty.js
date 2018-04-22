@@ -10,6 +10,7 @@ import BountySidebar from './bounty-sidebar';
 import BountyPrizes from './bounty-prizes';
 import BountyAdmin from './bounty-admin';
 import BountyHeader from './bounty-header';
+import Submission from './submission';
 
 import './bounty.css';
 
@@ -56,7 +57,7 @@ class Bounty extends Component {
               <Route path="/bounties/:address/evaluation" render={() => this.renderMarkdown(data.evaluation)} />
               <Route path="/bounties/:address/data" render={() => this.renderMarkdown(data.data)} />
               <Route path="/bounties/:address/rules" render={() => this.renderMarkdown(data.rules)} />
-              <Route path="/bounties/:address/submission" render={() => this.renderMarkdown(data.submission)} />
+              <Route path="/bounties/:address/submission" component={Submission} />
               <Route path="/bounties/:address/admin" component={BountyAdmin} />
               <Route render={() => this.renderMarkdown(data.description)} />
             </Switch>
