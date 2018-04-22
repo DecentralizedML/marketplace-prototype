@@ -1,8 +1,8 @@
 import { createAction, handleActions } from 'redux-actions'
 import { MARKETPLACE_CONTRACT_ADDRESS, MARKETPLACE_CONTRACT_ABI } from '../utils/constants';
 
-const API_ADDRESS = '/algorithmns';
-// const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns'
+// const API_ADDRESS = '/algorithmns';
+const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns'
 const GET_PURCHASED_STATE_REQUEST = 'app/algorithmns/getPurchasedStateRequest';
 const GET_PURCHASED_STATE_RESPONSE = 'app/algorithmns/getPurchasedStateResponse';
 const BUY_ALGO_REQUEST = 'app/algorithmns/buyAlgoRequest';

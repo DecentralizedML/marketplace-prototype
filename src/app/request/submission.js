@@ -53,7 +53,8 @@ class Submission extends Component {
             onClick={async () => {
               this.setState({ isDownloading: true });
               const filename = link.replace('https://www.googleapis.com/storage/v1/b/bounty-submissions/o/', '');
-              const f = await fetch('/get_submission', {
+
+              const f = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/get_submission', {
                 body: JSON.stringify({
                   filename,
                   account,

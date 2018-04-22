@@ -1,5 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 
+// const API_ADDRESS = '';
+const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881';
 const LOGOUT = 'app/user/logout';
 const LOGIN = 'app/user/login';
 
@@ -23,7 +25,7 @@ export const login = () => async (dispatch, getState) => {
 
   const account = accounts[0];
 
-  const res = await fetch('/get_seed', {
+  const res = await fetch(`${API_ADDRESS}/get_seed`, {
     body: JSON.stringify({ account }),
     headers: { 'content-type': 'application/json' },
     method: 'POST',
@@ -56,7 +58,7 @@ export const login = () => async (dispatch, getState) => {
       return null;
     }
 
-    const res = await fetch('/authenticate', {
+    const res = await fetch(`${API_ADDRESS}/authenticate`, {
       body: JSON.stringify({ sig: data.result, account }),
       headers: { 'content-type': 'application/json' },
       method: 'POST',

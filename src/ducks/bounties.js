@@ -6,8 +6,8 @@ import {
 } from '../utils/constants';
 import asyncQueue from '../utils/async-queue';
 
-const API_ADDRESS = '';
-// const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881'
+// const API_ADDRESS = '';
+const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881'
 
 const GET_ALL_BOUNTIES_REQUEST = 'app/bounties/getAllBountiesRequest';
 const GET_ALL_BOUNTIES_RESPONSE = 'app/bounties/getAllBountiesResponse';
@@ -243,7 +243,7 @@ export const getSubmission = address => async dispatch => {
   dispatch(getSubmissionsRequest());
 
   try {
-    const res = await fetch(`/submissions/${address}`);
+    const res = await fetch(`${API_ADDRESS}/submissions/${address}`);
     const json = await res.json();
 
     if (json.error) {
