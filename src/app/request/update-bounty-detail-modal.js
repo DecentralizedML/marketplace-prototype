@@ -15,6 +15,8 @@ class UpdateBountyDetailModal extends Component {
     onClose: PropTypes.func.isRequired,
     bountyData: PropTypes.object,
     isUpdatingBounty: PropTypes.bool.isRequired,
+    account: PropTypes.string.isRequired,
+    jwt: PropTypes.string.isRequired,
   };
 
   state = {
@@ -60,9 +62,10 @@ class UpdateBountyDetailModal extends Component {
       evaluation,
       rules,
     } = this.state;
-    const { address, updateBountyDetail, onClose } = this.props;
 
-    if (!thumbnailUrl || !imageUrl || !subtitle || !description || !data || !evaluation || !rules || !address) {
+    const { address, updateBountyDetail, onClose, account } = this.props;
+
+    if (!thumbnailUrl || !imageUrl || !subtitle || !description || !data || !evaluation || !rules || !address || !account) {
       this.setState({ error: 'All fields are required'});
       return null;
     }
@@ -76,7 +79,16 @@ class UpdateBountyDetailModal extends Component {
       evaluation,
       rules,
       address,
-    }).then(onClose);
+      account,
+    }).then(d => {
+      if (d.error) {
+        this.setState({ error: d.error });
+        return;
+      }
+
+      onClose();
+
+    }).catch(e => this.setState({ error: e.message }));
   }
 
   render() {
@@ -183,6 +195,8 @@ export default connect(
   (state, { address }) => ({
     bountyData: state.bounties.allBountiesMap[address],
     isUpdatingBounty: state.bounties.isUpdatingBounty,
+    account: state.metamask.accounts[0],
+    jwt: state.user.jwt,
   }),
   dispatch => ({
     updateBountyDetail: bounty => dispatch(actions.updateBountyDetail(bounty)),

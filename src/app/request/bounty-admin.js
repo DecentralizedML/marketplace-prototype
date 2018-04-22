@@ -22,6 +22,7 @@ class BountyAdmin extends Component {
     getBounty: PropTypes.func.isRequired,
     isLocked: PropTypes.bool.isRequired,
     hasWeb3: PropTypes.bool.isRequired,
+    jwt: PropTypes.string.isRequired,
   };
 
   state = {
@@ -252,7 +253,7 @@ class BountyAdmin extends Component {
   }
 
   render() {
-    const { bountyData } = this.props;
+    const { bountyData, jwt } = this.props;
     const data = bountyData || {
       prizes: [],
       participants: [],
@@ -309,7 +310,7 @@ class BountyAdmin extends Component {
           {this.renderButton({
             text: 'Update Bounty Details',
             shouldHide: this.getStatus() > BOUNTY_STATUS.Initialized,
-            disabled: this.getStatus() > BOUNTY_STATUS.Initialized,
+            disabled: this.getStatus() > BOUNTY_STATUS.Initialized || !jwt,
             onClick: () => this.showModal(MODAL_TYPES.UPDATE_BOUNTY_DETAIL),
           })}
           {this.renderButton({
@@ -317,7 +318,7 @@ class BountyAdmin extends Component {
             backgroundColor: 'yellow',
             shouldHide: this.state.isFunded || this.getStatus() === BOUNTY_STATUS.Completed,
             onClick: this.fundContract,
-            disabled: this.state.isFunded || this.state.tokenTransferTx,
+            disabled: this.state.isFunded || this.state.tokenTransferTx || !jwt,
           })}
           {this.renderButton({
             text: 'Start Enrollment',
@@ -325,28 +326,28 @@ class BountyAdmin extends Component {
             shouldHide: !this.state.isFunded || !data.description,
             requiredStatus: BOUNTY_STATUS.Initialized,
             onClick: this.startEnrollment,
-            disabled: this.state.startEnrollmentTx,
+            disabled: this.state.startEnrollmentTx || !jwt,
           })}
           {this.renderButton({
             text: 'Stop Enrollment',
             backgroundColor: 'red',
             requiredStatus: BOUNTY_STATUS.EnrollmentStart,
             onClick: this.stopEnrollment,
-            disabled: this.state.stopEnrollmentTx,
+            disabled: this.state.stopEnrollmentTx || !jwt,
           })}
           {this.renderButton({
             text: 'Start Accepting Submission',
             backgroundColor: 'green',
             requiredStatus: BOUNTY_STATUS.EnrollmentEnd,
             onClick: this.startBounty,
-            disabled: this.state.startBountyTx,
+            disabled: this.state.startBountyTx || !jwt,
           })}
           {this.renderButton({
             text: 'Stop Accepting Submission',
             backgroundColor: 'red',
             requiredStatus: BOUNTY_STATUS.BountyStart,
             onClick: this.stopBounty,
-            disabled: this.state.stopBountyTx,
+            disabled: this.state.stopBountyTx || !jwt,
           })}
           {this.renderButton({
             text: 'Update Winners',
@@ -354,7 +355,7 @@ class BountyAdmin extends Component {
             requiredStatus: BOUNTY_STATUS.BountyEnd,
             shouldHide: data.winners.length === data.prizes.length,
             onClick: () => this.showModal(MODAL_TYPES.UPDATE_WINNER),
-            disabled: this.state.updateWinnerTx,
+            disabled: this.state.updateWinnerTx || !jwt,
           })}
           {this.renderButton({
             text: 'Payout Bounty',
@@ -362,7 +363,7 @@ class BountyAdmin extends Component {
             requiredStatus: BOUNTY_STATUS.EvaluationEnd,
             shouldHide: !data.winners.length,
             onClick: this.payWinners,
-            disabled: this.state.payWinnersTx,
+            disabled: this.state.payWinnersTx || !jwt,
           })}
         </div>
         { this.renderModal() }
@@ -376,6 +377,7 @@ export default connect(
     bountyData: state.bounties.allBountiesMap[match.params.address],
     isLocked: state.metamask.isLocked,
     hasWeb3: state.metamask.hasWeb3,
+    jwt: state.user.jwt,
   }),
   (dispatch, { match: { params: { address } } }) => ({
     getBounty: () => dispatch(actions.getBounty(address)),

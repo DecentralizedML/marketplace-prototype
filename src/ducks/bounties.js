@@ -172,12 +172,16 @@ export const createNewBounty = (name, prizes) => (dispatch, getState) => {
 const updateBountyDetailRequest = createAction(UPDATE_BOUNTY_DETAIL_REQUEST);
 const updateBountyDetailResponse = createAction(UPDATE_BOUNTY_DETAIL_RESPONSE);
 export const updateBountyDetail = bounty => async (dispatch, getState) => {
+  const { user: { jwt } } = getState();
   dispatch(updateBountyDetailRequest());
 
   try {
     const response = await fetch(`${API_ADDRESS}/update_bounty_detail/${bounty.address}`, {
       body: JSON.stringify(bounty),
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        Authorization: jwt,
+      },
       method: 'POST',
     });
 
@@ -191,7 +195,7 @@ export const updateBountyDetail = bounty => async (dispatch, getState) => {
     return payload;
   } catch (error) {
     dispatch(updateBountyDetailResponse(error));
-    return error;
+    throw error;
   }
 }
 

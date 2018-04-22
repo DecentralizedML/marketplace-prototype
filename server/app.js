@@ -172,6 +172,7 @@ function getPublicKeyFromSignedMessage(sig, account) {
   try {
     // Same data as before
     const data = seeds[account];
+    console.log({ data })
     const message = ethUtil.toBuffer(data)
     const msgHash = ethUtil.hashPersonalMessage(message)
 
@@ -181,7 +182,7 @@ function getPublicKeyFromSignedMessage(sig, account) {
     const publicKey = ethUtil.ecrecover(msgHash, sigParams.v, sigParams.r, sigParams.s)
     const sender = ethUtil.publicToAddress(publicKey)
     const addr = ethUtil.bufferToHex(sender)
-
+    delete seeds[account];
     return addr;
   } catch (e) {
     throw new Error('Cannot recover public key');
@@ -429,6 +430,7 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
     evaluation,
     rules,
     address,
+    account,
   } = body;
 
   if (!thumbnailUrl || typeof thumbnailUrl !== 'string') return res.state(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
@@ -441,6 +443,10 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
   if (!address || typeof address !== 'string') return res.state(400).send({ error: true, payload: 'Invalid address' });
   
   try {
+    const user = await getUserFromAuth(req);
+
+    if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' });
+
     const result = await updateBountyDetail({
       thumbnailUrl,
       imageUrl,
