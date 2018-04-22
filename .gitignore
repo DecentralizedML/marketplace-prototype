@@ -9,6 +9,7 @@
 # production
 /build
 */*.css
+/server/cert.json
 
 # misc
 .DS_Store

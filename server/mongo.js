@@ -266,6 +266,45 @@ const updateBountyDetail = bounty => {
     });
 };
 
+const insertSubmission = submission => {
+  return ready()
+    .then(client => {
+      const submissions = client.db('dml-proto').collection('submissions');
+      return new Promise((resolve, reject) => {
+        submissions.insert(submission, (err, doc) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to submit.')
+            reject(err);
+          } else {
+            console.log('Successfuly submitted.');
+            resolve(doc.ops[0]);
+          }
+        });
+      });
+    });
+};
+
+const getSubmissions = address => {
+  return ready()
+    .then(client => {
+      const submissions = client.db('dml-proto').collection('submissions');
+      const query = { address: { $eq: address } }
+      return new Promise((resolve, reject) => {
+        submissions.find(query).toArray((err, data) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to submit.')
+            reject(err);
+          } else {
+            console.log('Successfuly submitted.');
+            resolve(data);
+          }
+        });
+      });
+    })
+}
+
 
 module.exports = {
   ready,
@@ -276,4 +315,6 @@ module.exports = {
   getJobs,
   updateBountyDetail,
   getBountyDetail,
+  insertSubmission,
+  getSubmissions,
 };

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { BOUNTY_STATUS, BOUNTY_FACTORY_ADDRESS, BOUNTY_FACTORY_ABI } from '../../utils/constants';
-// import * as actions from '../../ducks/bounties';
+import * as actions from '../../ducks/bounties';
 
 class BountyHeader extends Component {
   static propTypes = {
@@ -12,6 +12,7 @@ class BountyHeader extends Component {
     bountyData: PropTypes.object,
     isCreatedByMe: PropTypes.bool.isRequired,
     isLocked: PropTypes.bool.isRequired,
+    isSubmittingBounty: PropTypes.bool.isRequired,
     hasWeb3: PropTypes.bool.isRequired,
     account: PropTypes.string,
   };
@@ -43,6 +44,19 @@ class BountyHeader extends Component {
 
       this.setState({ joinTx: data });
     });
+  }
+
+  submit = e => {
+    if (this.props.isSubmittingBounty) {
+      return null;
+    }
+
+    const data = new FormData();
+
+    data.append('file', e.target.files[0]);
+    data.append('account', this.props.account);
+
+    this.props.submitBounty(data, this.props.address);
   }
 
   renderStatus(status) {
@@ -121,8 +135,54 @@ class BountyHeader extends Component {
     return 0;
   }
 
+  renderCtaButton() {
+    const status = this.getStatus();
+    const { isCreatedByMe, bountyData, account } = this.props;
+    const { participants } = bountyData;
+
+    if (isCreatedByMe) {
+      return null;
+    }
+
+    switch (status) {
+      case BOUNTY_STATUS.EnrollmentStart:
+        return (
+          <button
+            className="bounty-page__secondary-data__action"
+            disabled={this.state.joinTx || participants.indexOf(account) > -1}
+            onClick={this.join}
+          >
+            {
+              this.state.joinTx
+                ? 'Joining...'
+                : participants.indexOf(account) > -1
+                  ? 'Joined'
+                  : 'Join'
+            }
+          </button>
+        );
+      case BOUNTY_STATUS.BountyStart:
+        return (
+          <button
+            className="bounty-page__secondary-data__action"
+            onClick={this.submit}
+            disabled={this.props.isSubmittingBounty}
+          >
+            { this.props.isSubmittingBounty ? 'Submitting Result' : 'Submit Result' }
+            <input
+              type="file"
+              className="bounty-page__secondary-data__file-input"
+              onChange={this.submit}
+            />
+          </button>
+        );
+      default:
+        return null;
+    }
+  }
+
   render() {
-    const { bountyData, isCreatedByMe, account } = this.props;
+    const { bountyData } = this.props;
     const {
       imageUrl,
       title,
@@ -167,19 +227,7 @@ class BountyHeader extends Component {
             </div>
           </div>
           <div className="bounty-page__secondary-data__actions">
-            <button
-              className="bounty-page__secondary-data__action"
-              disabled={this.getStatus() !== 1 || isCreatedByMe || this.state.joinTx || participants.indexOf(account) > -1}
-              onClick={this.join}
-            >
-              {
-                this.state.joinTx
-                  ? 'Joining...'
-                  : participants.indexOf(account) > -1
-                    ? 'Joined'
-                    : 'Join'
-              }
-            </button>
+            { this.renderCtaButton() }
           </div>
         </div>
       </div>
@@ -190,9 +238,13 @@ class BountyHeader extends Component {
 export default connect(
   (state, { address }) => ({
     bountyData: state.bounties.allBountiesMap[address],
+    isSubmittingBounty: state.bounties.isSubmittingBounty,
     isCreatedByMe: state.bounties.createdByMe.indexOf(address) > -1,
     isLocked: state.metamask.isLocked,
     hasWeb3: state.metamask.hasWeb3,
     account: state.metamask.accounts[0],
   }),
+  dispatch => ({
+    submitBounty: (file, address) => dispatch(actions.submitBounty(file, address)),
+  })
 )(withRouter(BountyHeader));

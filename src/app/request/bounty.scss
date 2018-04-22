@@ -127,6 +127,7 @@
       color: $white;
       padding: .8rem 2rem;
       border-radius: 3px;
+      position: relative;
 
       &:hover {
         background-color: rgba(#00b563, .8);
@@ -135,6 +136,16 @@
       &:active {
         background-color: #00b563;
       }
+    }
+
+    &__file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
     }
   }
 

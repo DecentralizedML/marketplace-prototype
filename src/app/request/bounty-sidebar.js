@@ -25,7 +25,7 @@ class BountySiderbar extends Component {
 
   render() {
     const { address, history, location, isCreatedByMe } = this.props;
-    console.log(this.props.account)
+
     return (
       <div className="bounty-page__sidebar">
         {

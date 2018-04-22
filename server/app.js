@@ -6,6 +6,9 @@ const server = require('http').createServer(app);
 const path = require('path');
 const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+
 const {
   insertJob,
   getActiveJob,
@@ -15,9 +18,23 @@ const {
   ready,
   updateBountyDetail,
   getBountyDetail,
+  insertSubmission,
+  getSubmissions,
 } = require('./mongo');
 
+const admin = require('firebase-admin');
+const config = require('./cert.json');
+admin.initializeApp({
+  credential: admin.credential.cert(config),
+  databaseURL: "https://decentralizedml-e05c9.firebaseio.com",
+  storageBucket: "bounty-submissions.appspot.com",
+});
+const bucket = admin.storage().bucket('bounty-submissions');
+// console.log(admin.storage().bucket().upload('app.js'))
+
 const jsonParser = bodyParser.json()
+
+app.use(fileUpload());
 
 const algos = {
   '551ac129ae81445c979eb18adc6c831a': {
@@ -236,6 +253,77 @@ app.post('/get_job_history_by_algo', jsonParser, async (req, res) => {
     res.status(500).send({ error: true, payload: err.message })
   }
 });
+
+app.get('/submissions/:address', async (req, res) => {
+  const { address } = req.params;
+
+  if (!address) return res.status(400).send({ error: true, payload: 'Address not found' });
+
+  try {
+    const data = await getSubmissions(address);
+    res.send({ error: false, payload: data });
+  } catch (e) {
+    res.status(500).send({ error: true, payload: e.message });
+  }
+});
+
+app.post('/bounty/:address/upload', async (req, res) => {
+  if (!req.files) return res.status(400).send({ error: true, payload: 'File not found' });
+  if (!req.body) return res.status(400).send({ error: true, payload: 'Account not found' });
+  
+  const { file } = req.files;
+  const { address } = req.params;
+  const { account } = req.body;
+
+  if (!file) return res.status(400).send({ error: true, payload: 'File not found' });
+  if (!address) return res.status(400).send({ error: true, payload: 'Address not found' });
+
+  try {
+    const filepath = await writeFile(file);
+    const uploadResponse = await bucket.upload(filepath);
+
+    await deleteFile(filepath);
+
+    const link = uploadResponse[0].metadata.selfLink;
+    const insertResponse = await insertSubmission({
+      address,
+      link,
+      submittedBy: account,
+      timestamp: new Date().getTime(),
+    });
+
+    res.send({ error: false, payload: insertResponse });
+  } catch (e) {
+    res.status(500).send({ error: true, payload: e.message });
+  }
+});
+
+function writeFile(file) {
+  const time = new Date().getTime();
+  const filename = `${time}-${file.name}`;
+  const filepath = process.cwd() + '/' + filename;
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filename, file.data, err => {  
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(filepath);
+    });
+  });
+}
+
+function deleteFile(filepath) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(filepath, err => {  
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(filepath);
+    });
+  });
+}
 
 app.get('/bounty_detail/:address?', async (req, res) => {
   const { address } = req.params;

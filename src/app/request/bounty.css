@@ -94,11 +94,20 @@
       background-color: rgba(0, 181, 99, 0.9);
       color: #FFF;
       padding: .8rem 2rem;
-      border-radius: 3px; }
+      border-radius: 3px;
+      position: relative; }
       .bounty-page__secondary-data__action:hover {
         background-color: rgba(0, 181, 99, 0.8); }
       .bounty-page__secondary-data__action:active {
         background-color: #00b563; }
+    .bounty-page__secondary-data__file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer; }
   .bounty-page__admin {
     padding: 2rem;
     display: flex;

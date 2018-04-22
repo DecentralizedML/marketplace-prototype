@@ -19,6 +19,10 @@ const CREATE_NEW_BOUNTY_REQUEST = 'app/bounties/createNewBountyRequest';
 const CREATE_NEW_BOUNTY_RESPONSE = 'app/bounties/createNewBountyResponse';
 const UPDATE_BOUNTY_DETAIL_REQUEST = 'app/bounties/updateBountyDetailRequest';
 const UPDATE_BOUNTY_DETAIL_RESPONSE = 'app/bounties/updateBountyDetailResponse';
+const SUBMIT_BOUNTY_REQUEST = 'app/bounties/submitBountyRequest';
+const SUBMIT_BOUNTY_RESPONSE = 'app/bounties/submitBountyResponse';
+const GET_SUBMISSIONS_REQUEST = 'app/bounties/getSubmissionsRequest';
+const GET_SUBMISSIONS_RESPONSE = 'app/bounties/getSubmissionsResponse';
 
 const initialState = {
   allBounties:[],
@@ -28,6 +32,8 @@ const initialState = {
   isLoadingAllBountiesCreatedByMe: false,
   isCreatingBounty: false,
   isUpdatingBounty: false,
+  isSubmittingBounty: false,
+  submissions: {},
 };
 
 function getFactoryContract(getState) {
@@ -201,6 +207,48 @@ function promisify(fn, ...args) {
   })
 }
 
+const submitBountyRequest = createAction(SUBMIT_BOUNTY_REQUEST);
+const submitBountyResponse = createAction(SUBMIT_BOUNTY_RESPONSE);
+export const submitBounty = (file, address) => async dispatch => {
+  dispatch(submitBountyRequest());
+  const opts = {
+    method: 'POST',
+    body: file,
+  };
+
+  try {
+    const data = await fetch(`${API_ADDRESS}/bounty/${address}/upload`, opts);
+    const json = await data.json();
+
+    if (json.error) {
+      return dispatch(submitBountyResponse(new Error(json.payload)));
+    }
+
+    dispatch(submitBountyResponse({ address, data: json.payload }));
+  } catch (e) {
+    dispatch(submitBountyResponse(e));
+  }
+}
+
+const getSubmissionsRequest = createAction(GET_SUBMISSIONS_REQUEST);
+const getSubmissionsResponse = createAction(GET_SUBMISSIONS_RESPONSE);
+export const getSubmission = address => async dispatch => {
+  dispatch(getSubmissionsRequest());
+
+  try {
+    const res = await fetch(`/submissions/${address}`);
+    const json = await res.json();
+
+    if (json.error) {
+      return dispatch(getSubmissionsResponse(new Error(json.payload)))
+    }
+
+    dispatch(getSubmissionsResponse({ address, data: json.payload }));
+  } catch (e) {
+    dispatch(getSubmissionsResponse(e));
+  }
+}
+
 export default handleActions({
 
   [GET_ALL_BOUNTIES_REQUEST]: state => ({
@@ -253,6 +301,40 @@ export default handleActions({
         },
       }
   }),
+
+  [SUBMIT_BOUNTY_REQUEST]: state => ({ ...state, isSubmittingBounty: true }),
+  [SUBMIT_BOUNTY_RESPONSE]: (state, { payload, error }) => {
+    if (error) {
+      return { ...state, isSubmittingBounty: false };
+    }
+
+    const { address, data } = payload;
+    const currentSubmissions = state.submissions[address] || [];
+
+    return {
+      ...state,
+      isSubmittingBounty: false,
+      submissions: {
+        ...state.submissions,
+        [address]: [ ...currentSubmissions, data ],
+      },
+    }
+  },
+
+  [GET_SUBMISSIONS_RESPONSE]: (state, { payload, error }) => {
+    if (error) {
+      return state;
+    }
+
+    const { address, data } = payload;
+
+    return {
+      ...state,
+      submissions: {
+        [address]: data,
+      },
+    };
+  }
 
 
 }, initialState);
