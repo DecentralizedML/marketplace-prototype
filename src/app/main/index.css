@@ -38,6 +38,19 @@
     padding: 1rem 1rem; }
     .app-header__item:hover {
       color: #FDCC52; }
+  .app-header__login {
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(0, 118, 163, 0.9);
+    color: #FFF;
+    padding: .8rem 2rem;
+    border-radius: 3px; }
+    .app-header__login:hover {
+      background-color: rgba(0, 118, 163, 0.8); }
+    .app-header__login:active {
+      background-color: #0076A3; }
 
 .app-content {
   flex: 1 1 auto;

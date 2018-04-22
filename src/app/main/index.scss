@@ -54,6 +54,25 @@
     //   color: $allports-blue;
     // }
   }
+
+  &__login {
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba($allports-blue, .9);
+    color: $white;
+    padding: .8rem 2rem;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: rgba($allports-blue, .8);
+    }
+
+    &:active {
+      background-color: $allports-blue;
+    }
+  }
 }
 
 .app-content {

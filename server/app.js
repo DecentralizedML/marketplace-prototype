@@ -8,6 +8,8 @@ const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
+const ethUtil = require('ethereumjs-util');
+const jwt = require('jsonwebtoken');
 
 const {
   insertJob,
@@ -121,6 +123,70 @@ const algos = {
     cost: 1000000000000000000,
   },
 };
+
+const seeds = {};
+
+app.post('/get_seed', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const seed = uuid();
+
+  seeds[body.account] = seed;
+
+  return res.send({ error: false, payload: seed });
+});
+
+app.post('/authenticate', jsonParser, async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const { sig, account } = body;
+  const pk = getPublicKeyFromSignedMessage(sig, account);
+  
+  if (pk === account) {
+    res.send({ error: false, payload: createJWT(pk) });
+  } else {
+    res.state(500).send({ error: true, payload: 'Error authenticating user' });
+  }
+});
+
+function createJWT(publicKey) {
+  // If the signature matches the owner supplied, create a
+  // JSON web token for the owner that expires in 24 hours.
+  try {
+    const token = jwt.sign({ user: publicKey }, getSecret(),  { expiresIn: '1d' });
+    return token;
+  } catch (e) {
+    throw new Error('Cannot create JWT');
+  }
+}
+
+function getPublicKeyFromSignedMessage(sig, account) {
+  try {
+    // Same data as before
+    const data = seeds[account];
+    const message = ethUtil.toBuffer(data)
+    const msgHash = ethUtil.hashPersonalMessage(message)
+
+    // Get the address of whoever signed this message
+    const signature = ethUtil.toBuffer(sig)
+    const sigParams = ethUtil.fromRpcSig(signature)
+    const publicKey = ethUtil.ecrecover(msgHash, sigParams.v, sigParams.r, sigParams.s)
+    const sender = ethUtil.publicToAddress(publicKey)
+    const addr = ethUtil.bufferToHex(sender)
+
+    return addr;
+  } catch (e) {
+    throw new Error('Cannot recover public key');
+  }
+}
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;
@@ -279,6 +345,10 @@ app.post('/bounty/:address/upload', async (req, res) => {
   if (!address) return res.status(400).send({ error: true, payload: 'Address not found' });
 
   try {
+    const user = await getUserFromAuth(req);
+
+    if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' })
+
     const filepath = await writeFile(file);
     const uploadResponse = await bucket.upload(filepath);
 
@@ -391,3 +461,32 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
 app.use(express.static(path.join(__dirname, '../build')));
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
+
+function getSecret() {
+  return `
+    1842121932
+    4892791267
+    9212093463
+    3516681983
+    4809163974
+    8523353727
+    7975240046
+    7714453299
+    9173909644
+    4069221049
+  `;
+}
+
+function getUserFromAuth(req) {
+  return new Promise((resolve, reject) => {
+    try {
+      const { authorization } = req.headers;
+      const token = jwt.verify(authorization, getSecret());
+      const { user } = token;
+      resolve(user);
+    } catch (e) {
+      reject(e);
+    }
+    
+  })
+}

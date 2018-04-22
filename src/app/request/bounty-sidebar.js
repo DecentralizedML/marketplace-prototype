@@ -12,6 +12,7 @@ const TABS = [
   { name: 'Evaluation', path: "evaluation" },
   { name: 'Rules', path: "rules" },
   { name: 'Submission', path: "submission" },
+  { name: 'Winners', path: "winners" },
   { name: 'Admin', path: "admin" },
 ];
 

@@ -8,6 +8,7 @@ import Markdown from 'react-markdown';
 import * as actions from '../../ducks/bounties';
 import BountySidebar from './bounty-sidebar';
 import BountyPrizes from './bounty-prizes';
+import BountyWinners from './bounty-winners';
 import BountyAdmin from './bounty-admin';
 import BountyHeader from './bounty-header';
 import Submission from './submission';
@@ -54,6 +55,7 @@ class Bounty extends Component {
             <Switch>
               <Route path="/bounties/:address/description" render={() => this.renderMarkdown(data.description)} />
               <Route path="/bounties/:address/prizes" component={BountyPrizes} />
+              <Route path="/bounties/:address/winners" component={BountyWinners} />
               <Route path="/bounties/:address/evaluation" render={() => this.renderMarkdown(data.evaluation)} />
               <Route path="/bounties/:address/data" render={() => this.renderMarkdown(data.data)} />
               <Route path="/bounties/:address/rules" render={() => this.renderMarkdown(data.rules)} />

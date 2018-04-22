@@ -214,6 +214,9 @@ export const submitBounty = (file, address) => async dispatch => {
   const opts = {
     method: 'POST',
     body: file,
+    headers: {
+      Authorization: `${localStorage.getItem('jwt')}`,
+    },
   };
 
   try {

@@ -8,6 +8,7 @@ import Marketplace from '../marketplace';
 // import Upload from '../upload';
 import Request from '../request';
 import * as metamaskActions from '../../ducks/metamask';
+import * as userActions from '../../ducks/user';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
 import networkImg from './metamask-network.png';
@@ -16,9 +17,11 @@ import './index.css';
 class App extends Component {
   static propTypes = {
     startPolling: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
     hasWeb3: PropTypes.bool.isRequired,
     isLocked: PropTypes.bool.isRequired,
     network: PropTypes.string,
+    account: PropTypes.string.isRequired,
   };
 
   state = {
@@ -109,6 +112,32 @@ class App extends Component {
     //   Upload
     // </Link>
 
+  renderLoginButton() {
+    const { jwt, logout, login } = this.props;
+
+    console.log({ jwt });
+
+    if (jwt) {
+      return (
+        <button
+          className="app-header__login"
+          onClick={() => logout()}
+        >
+          Logout
+        </button>
+      );
+    }
+
+    return (
+      <button
+        className="app-header__login"
+        onClick={login}
+      >
+        Login/Signup
+      </button>
+    );
+  }
+
   render() {
     const pathname = window.location.pathname;
 
@@ -142,8 +171,8 @@ class App extends Component {
               >
                 Bounties
               </Link>
-
             </div>
+            {this.renderLoginButton()}
           </header>
           { this.renderContent() }
         </div>
@@ -153,10 +182,16 @@ class App extends Component {
 }
 
 export default connect(
-  ({ metamask: { hasWeb3, isLocked, network }}) => ({
-    hasWeb3, isLocked, network,
+  ({ metamask: { hasWeb3, isLocked, network, accounts }, user }) => ({
+    hasWeb3,
+    isLocked,
+    network,
+    account: accounts[0] || '',
+    jwt: user.jwt,
   }),
   dispatch => ({
     startPolling: () => dispatch(metamaskActions.startPolling()),
+    logout: () => dispatch(userActions.logout()),
+    login: () => dispatch(userActions.login()),
   })
 )(App);

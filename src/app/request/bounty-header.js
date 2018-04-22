@@ -29,9 +29,9 @@ class BountyHeader extends Component {
   };
 
   join = () => {
-    const { address, hasWeb3, isLocked, account, bountyData: { participants }, isCreatedByMe } = this.props;
+    const { address, hasWeb3, isLocked, account, bountyData: { participants }, isCreatedByMe, jwt } = this.props;
 
-    if (!hasWeb3 || isLocked || !address || participants.indexOf(account) > -1 || this.state.joinTx || isCreatedByMe) {
+    if (!hasWeb3 || isLocked || !address || participants.indexOf(account) > -1 || this.state.joinTx || isCreatedByMe || !jwt) {
       return;
     }
 
@@ -47,7 +47,7 @@ class BountyHeader extends Component {
   }
 
   submit = e => {
-    if (this.props.isSubmittingBounty) {
+    if (this.props.isSubmittingBounty || !this.props.jwt) {
       return null;
     }
 
@@ -137,7 +137,7 @@ class BountyHeader extends Component {
 
   renderCtaButton() {
     const status = this.getStatus();
-    const { isCreatedByMe, bountyData, account } = this.props;
+    const { isCreatedByMe, bountyData, account, jwt } = this.props;
     const { participants } = bountyData;
 
     if (isCreatedByMe) {
@@ -149,7 +149,7 @@ class BountyHeader extends Component {
         return (
           <button
             className="bounty-page__secondary-data__action"
-            disabled={this.state.joinTx || participants.indexOf(account) > -1}
+            disabled={this.state.joinTx || participants.indexOf(account) > -1 || !jwt}
             onClick={this.join}
           >
             {
@@ -166,14 +166,14 @@ class BountyHeader extends Component {
           <button
             className="bounty-page__secondary-data__action"
             onClick={this.submit}
-            disabled={this.props.isSubmittingBounty}
+            disabled={this.props.isSubmittingBounty || !jwt}
           >
             { this.props.isSubmittingBounty ? 'Submitting Result' : 'Submit Result' }
-            <input
+            {jwt && <input
               type="file"
               className="bounty-page__secondary-data__file-input"
               onChange={this.submit}
-            />
+            />}
           </button>
         );
       default:
@@ -243,6 +243,7 @@ export default connect(
     isLocked: state.metamask.isLocked,
     hasWeb3: state.metamask.hasWeb3,
     account: state.metamask.accounts[0],
+    jwt: state.user.jwt,
   }),
   dispatch => ({
     submitBounty: (file, address) => dispatch(actions.submitBounty(file, address)),
