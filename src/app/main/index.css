@@ -46,10 +46,26 @@
     background-color: rgba(0, 118, 163, 0.9);
     color: #FFF;
     padding: .8rem 2rem;
-    border-radius: 3px; }
+    border-radius: 3px;
+    flex: 0 0 auto;
+    margin-bottom: 1rem; }
     .app-header__login:hover {
       background-color: rgba(0, 118, 163, 0.8); }
     .app-header__login:active {
+      background-color: #0076A3; }
+  .app-header__logout {
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(0, 118, 163, 0.9);
+    color: #FFF;
+    padding: .8rem 2rem;
+    border-radius: 3px;
+    flex: 0 0 auto; }
+    .app-header__logout:hover {
+      background-color: rgba(0, 118, 163, 0.8); }
+    .app-header__logout:active {
       background-color: #0076A3; }
 
 .app-content {

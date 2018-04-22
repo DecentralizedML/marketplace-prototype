@@ -12,6 +12,7 @@ import * as userActions from '../../ducks/user';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
 import networkImg from './metamask-network.png';
+import signImg from './metamask-sign-message.png';
 import './index.css';
 
 class App extends Component {
@@ -33,7 +34,7 @@ class App extends Component {
   }
 
   renderContent() {
-    const { hasWeb3, isLocked, network } = this.props;
+    const { hasWeb3, isLocked, network, jwt } = this.props;
     const { hasClickedInstallMetamask } = this.state;
 
     if (!hasWeb3) {
@@ -81,12 +82,30 @@ class App extends Component {
       );
     }
 
-    if (process.env.NODE_ENV !== 'development' && network !== '3') {
+    if (network !== '4') {
+    // if (process.env.NODE_ENV !== 'development' && network !== '4') {
       return (
         <div className="app-content__message">
           <h1>Oops, you’re on the wrong network.</h1>
-          <p>Simply open MetaMask and switch over to the Ropsten Network.</p>
+          <p>Simply open MetaMask and switch over to the Rinkeby Network.</p>
           <img src={networkImg} className="metamask-network" alt="metamask-network" />
+        </div>
+      );
+    }
+
+    if (!jwt) {
+      return (
+        <div className="app-content__message">
+          <h1>You are currently logged out.</h1>
+          <p>Please log in to your account by clicking the button below.</p>
+          <p>You will then receive a prompt from MetaMask to sign a secret message.</p>
+          <button
+            className="app-header__login"
+            onClick={this.props.login}
+          >
+            Login
+          </button>
+          <img src={signImg} className="metamask-network" alt="metamask-network" />
         </div>
       );
     }
@@ -113,14 +132,12 @@ class App extends Component {
     // </Link>
 
   renderLoginButton() {
-    const { jwt, logout, login } = this.props;
-
-    console.log({ jwt });
+    const { jwt, logout } = this.props;
 
     if (jwt) {
       return (
         <button
-          className="app-header__login"
+          className="app-header__logout"
           onClick={() => logout()}
         >
           Logout
@@ -128,14 +145,14 @@ class App extends Component {
       );
     }
 
-    return (
-      <button
-        className="app-header__login"
-        onClick={login}
-      >
-        Login/Signup
-      </button>
-    );
+    // return (
+    //   <button
+    //     className="app-header__login"
+    //     onClick={login}
+    //   >
+    //     Login/Signup
+    //   </button>
+    // );
   }
 
   render() {

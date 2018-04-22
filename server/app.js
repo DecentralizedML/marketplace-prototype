@@ -42,9 +42,9 @@ const algos = {
   '551ac129ae81445c979eb18adc6c831a': {
     title: 'Fashion Items Scanner',
     thumbnail: 'https://d2ot5om1nw85sh.cloudfront.net/image/home/couple.jpg',
-    stars: 4.76,
+    stars: ' - ',
     description: 'Identify fashion items from image',
-    downloads: 12901,
+    downloads: 0,
     type: 'image_recognition',
     model: 'https://transcranial.github.io/keras-js-demos-data/inception_v3/inception_v3.bin',
     isActive: true,
@@ -331,6 +331,29 @@ app.get('/submissions/:address', async (req, res) => {
     res.send({ error: false, payload: data });
   } catch (e) {
     res.status(500).send({ error: true, payload: e.message });
+  }
+});
+
+app.post('/get_submission', jsonParser, async (req, res) => {
+  if (!req.body) return res.status(400).send({ error: true, payload: 'Account not found' });
+  
+  try {
+    const { filename, account } = req.body;
+    const user = await getUserFromAuth(req);
+
+    if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' })
+
+    const file = bucket.file(decodeURIComponent(filename));
+
+    await file.download({
+      destination: filename,
+    });
+    
+    res.sendFile(process.cwd() + '/' + filename);
+
+    setTimeout(() => deleteFile(process.cwd() + '/' + filename), 5000);
+  } catch (e) {
+    res.status(500).send({ error: false, payload: e.message });
   }
 });
 

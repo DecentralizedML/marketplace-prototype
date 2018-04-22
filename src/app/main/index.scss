@@ -64,6 +64,28 @@
     color: $white;
     padding: .8rem 2rem;
     border-radius: 3px;
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
+
+    &:hover {
+      background-color: rgba($allports-blue, .8);
+    }
+
+    &:active {
+      background-color: $allports-blue;
+    }
+  }
+
+  &__logout {
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba($allports-blue, .9);
+    color: $white;
+    padding: .8rem 2rem;
+    border-radius: 3px;
+    flex: 0 0 auto;
 
     &:hover {
       background-color: rgba($allports-blue, .8);
