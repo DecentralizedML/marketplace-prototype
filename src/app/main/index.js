@@ -19,22 +19,57 @@ class App extends Component {
   static propTypes = {
     startPolling: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
+    signup: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
     hasWeb3: PropTypes.bool.isRequired,
     isLocked: PropTypes.bool.isRequired,
     network: PropTypes.string,
     account: PropTypes.string.isRequired,
+    hasSignedUp: PropTypes.bool.isRequired,
   };
 
   state = {
     hasClickedInstallMetamask: false,
+    firstName: '',
+    lastName: '',
+    emailAddress: '',
+    signupError: '',
   };
 
   componentWillMount() {
     this.props.startPolling();
+    this.props.getUser();
+  }
+
+  signup = e => {
+    e.preventDefault();
+
+    const { firstName, lastName, emailAddress } = this.state;
+    let error = '';
+
+    if (!emailAddress) {
+      error = 'Email address is empty';
+    }
+
+    if (!lastName) {
+      error = 'Last name is empty';
+    }
+
+    if (!firstName) {
+      error = 'First name is empty';
+    }
+
+    this.setState({ signupError: error });
+
+    if (!error) {
+      this.props.signup({ firstName, lastName, emailAddress })
+        .then(d => console.log(d))
+        .catch(d => console.log(d));
+    }
   }
 
   renderContent() {
-    const { hasWeb3, isLocked, network, jwt } = this.props;
+    const { hasWeb3, isLocked, network, jwt, hasSignedUp, isFetchingUser } = this.props;
     const { hasClickedInstallMetamask } = this.state;
 
     if (!hasWeb3) {
@@ -107,6 +142,51 @@ class App extends Component {
           </button>
           <img src={signImg} className="metamask-network" alt="metamask-network" />
         </div>
+      );
+    }
+
+    if (!hasSignedUp) {
+      return isFetchingUser ? null : (
+        <form className="app-content__signup" onSubmit={this.signup}>
+          <div className="app-content__signup__header">Finish Sign Up</div>
+          <div className="app-content__signup__content">
+            <div className="app-content__signup__row">
+              <div className="app-content__signup__label">First Name</div>
+              <input
+                type="text" className="app-content__signup__input"
+                onChange={e => this.setState({ firstName: e.target.value })}
+                value={this.state.firstName}
+              />
+            </div>
+            <div className="app-content__signup__row">
+              <div className="app-content__signup__label">Last Name</div>
+              <input
+                type="text" className="app-content__signup__input"
+                onChange={e => this.setState({ lastName: e.target.value })}
+                value={this.state.lastName}
+              />
+            </div>
+            <div className="app-content__signup__row">
+              <div className="app-content__signup__label">Email Address</div>
+              <input
+                type="email" className="app-content__signup__input"
+                onChange={e => this.setState({ emailAddress: e.target.value })}
+                value={this.state.emailAddress}
+              />
+            </div>
+          </div>
+          <div className="app-content__signup__footer">
+            <div className="app-content__signup__error">
+              { this.state.signupError }
+            </div>
+            <button
+              type="submit"
+              className="app-content__signup__signup-btn"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
       );
     }
 
@@ -205,10 +285,14 @@ export default connect(
     network,
     account: accounts[0] || '',
     jwt: user.jwt,
+    hasSignedUp: user.hasSignedUp,
+    isFetchingUser: user.isFetchingUser,
   }),
   dispatch => ({
     startPolling: () => dispatch(metamaskActions.startPolling()),
     logout: () => dispatch(userActions.logout()),
     login: () => dispatch(userActions.login()),
+    signup: user => dispatch(userActions.signup(user)),
+    getUser: () => dispatch(userActions.getUser()),
   })
 )(App);

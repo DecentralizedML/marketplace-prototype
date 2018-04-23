@@ -305,6 +305,45 @@ const getSubmissions = address => {
     })
 }
 
+const getUser = address => {
+  return ready()
+    .then(client => {
+      const users = client.db('dml-proto').collection('users');
+      const query = { address: { $eq: address } }
+      return new Promise((resolve, reject) => {
+        users.findOne(query, (err, data) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to fetch user.')
+            reject(err);
+          } else {
+            console.log('Successfuly fetched user.');
+            resolve(data);
+          }
+        });
+      });
+    })
+}
+
+const createUser = user => {
+  return ready()
+    .then(client => {
+      const users = client.db('dml-proto').collection('users');
+      return new Promise((resolve, reject) => {
+        users.insert(user, (err, doc) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to create user.')
+            reject(err);
+          } else {
+            console.log('Successfuly created user.');
+            resolve(doc.ops);
+          }
+        });
+      });
+    });
+  };
+
 
 module.exports = {
   ready,
@@ -317,4 +356,6 @@ module.exports = {
   getBountyDetail,
   insertSubmission,
   getSubmissions,
+  getUser,
+  createUser,
 };

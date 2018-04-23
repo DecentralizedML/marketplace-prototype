@@ -122,11 +122,10 @@ const algos = {
   },
 };
 
-const seeds = {};
-
 app.post('/get_seed', jsonParser, AuthControllers.getSeed);
 app.post('/authenticate', jsonParser, AuthControllers.authenticate);
-
+app.post('/signup', jsonParser, AuthControllers.signup);
+app.get('/get_user', AuthControllers.fetchUser);
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;

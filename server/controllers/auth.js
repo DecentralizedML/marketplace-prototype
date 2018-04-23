@@ -1,6 +1,7 @@
 const uuid = require('uuid4');
 const ethUtil = require('ethereumjs-util');
 const jwt = require('jsonwebtoken');
+const { getUser, createUser } = require('../mongo');
 
 // In-Memory Seeds storage
 // This will only live in memory for less than 5 seconds
@@ -37,18 +38,67 @@ const authenticate = async (req, res) => {
   if (!account) return res.state(400).send({ error: true, payload: 'Account address is invalid.' });
 
   const pk = getPublicKeyFromSignedMessage(sig, account);
+
+  const user = await getUser(pk);
   
   if (pk === account) {
-    res.send({ error: false, payload: createJWT(pk) });
+    res.send({
+      error: false,
+      payload: {
+        jwt: createJWT(pk),
+        user,
+      },
+    });
   } else {
     res.state(500).send({ error: true, payload: 'Error authenticating user' });
   }
 }
 
+const signup = async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
+  }
+
+  const { firstName, lastName, emailAddress, address } = body;
+
+  const userFromAuth = await getUserFromAuth(req);
+
+  if (!userFromAuth || userFromAuth !== address) return res.status(401).send({ error: true, payload: 'User not athenticated' })
+  if (!firstName) return res.state(400).send({ error: true, payload: 'firstName is not found.' });
+  if (!lastName) return res.state(400).send({ error: true, payload: 'lastName is not found.' });
+  if (!emailAddress) return res.state(400).send({ error: true, payload: 'emailAddress is not found.' });
+  if (!address) return res.state(400).send({ error: true, payload: 'address is not found.' });
+
+  try {
+    const user = await createUser({ firstName, lastName, emailAddress, address });
+    res.send({ error: false, payload: user });
+  } catch (e) {
+    res.status(500).send({ error: false, payload: e.message });
+  }
+};
+
+const fetchUser = async (req, res) => {
+  try {
+    const pk = await getUserFromAuth(req);
+
+    if (!pk) return res.status(401).send({ error: true, payload: 'User not authenticated' });
+
+    const user = await getUser(pk);
+
+    res.send({ error: false, payload: user });
+  } catch (e) {
+    res.status(500).send({ error: true, payload: e.message });
+  }
+};
+
 module.exports = {
   getSeed,
   authenticate,
+  signup,
   getUserFromAuth,
+  fetchUser,
 };
 
 function createJWT(publicKey) {
@@ -66,7 +116,6 @@ function getPublicKeyFromSignedMessage(sig, account) {
   try {
     // Same data as before
     const data = seeds[account];
-    console.log({ data })
     const message = ethUtil.toBuffer(data)
     const msgHash = ethUtil.hashPersonalMessage(message)
 
