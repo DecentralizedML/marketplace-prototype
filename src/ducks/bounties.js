@@ -6,23 +6,33 @@ import {
 } from '../utils/constants';
 import asyncQueue from '../utils/async-queue';
 
-// const API_ADDRESS = '';
-const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881'
+const API_ADDRESS = process.env.NODE_ENV === 'development'
+  ? ''
+  : 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881';
 
 const GET_ALL_BOUNTIES_REQUEST = 'app/bounties/getAllBountiesRequest';
 const GET_ALL_BOUNTIES_RESPONSE = 'app/bounties/getAllBountiesResponse';
+
 const GET_ALL_BOUNTIES_CREATED_BY_ME_REQUEST = 'app/bounties/getAllBountiesCreatedByMeRequest';
 const GET_ALL_BOUNTIES_CREATED_BY_ME_RESPONSE = 'app/bounties/getAllBountiesCreatedByMeResponse';
+
 const GET_BOUNTY_REQUEST = 'app/bounties/getBountyRequest';
 const GET_BOUNTY_RESPONSE = 'app/bounties/getBountyResponse';
+
 const CREATE_NEW_BOUNTY_REQUEST = 'app/bounties/createNewBountyRequest';
 const CREATE_NEW_BOUNTY_RESPONSE = 'app/bounties/createNewBountyResponse';
+
 const UPDATE_BOUNTY_DETAIL_REQUEST = 'app/bounties/updateBountyDetailRequest';
 const UPDATE_BOUNTY_DETAIL_RESPONSE = 'app/bounties/updateBountyDetailResponse';
+
 const SUBMIT_BOUNTY_REQUEST = 'app/bounties/submitBountyRequest';
 const SUBMIT_BOUNTY_RESPONSE = 'app/bounties/submitBountyResponse';
+
 const GET_SUBMISSIONS_REQUEST = 'app/bounties/getSubmissionsRequest';
 const GET_SUBMISSIONS_RESPONSE = 'app/bounties/getSubmissionsResponse';
+
+const DOWNLOAD_SUBMISSION_RESULT_REQUEST = 'app/bounties/downloadSubmissionResultRequest';
+const DOWNLOAD_SUBMISSION_RESULT_RESPONSE = 'app/bounties/downloadSubmissionResultResponse';
 
 const initialState = {
   allBounties:[],
@@ -33,6 +43,7 @@ const initialState = {
   isCreatingBounty: false,
   isUpdatingBounty: false,
   isSubmittingBounty: false,
+  isDownloadingSubmission: false,
   submissions: {},
 };
 
@@ -237,7 +248,7 @@ export const submitBounty = (file, address) => async dispatch => {
   } catch (e) {
     dispatch(submitBountyResponse(e));
   }
-}
+};
 
 const getSubmissionsRequest = createAction(GET_SUBMISSIONS_REQUEST);
 const getSubmissionsResponse = createAction(GET_SUBMISSIONS_RESPONSE);
@@ -256,7 +267,52 @@ export const getSubmission = address => async dispatch => {
   } catch (e) {
     dispatch(getSubmissionsResponse(e));
   }
-}
+};
+
+const downloadSubmissionResultRequest = createAction(DOWNLOAD_SUBMISSION_RESULT_REQUEST);
+const downloadSubmissionResultResponse = createAction(DOWNLOAD_SUBMISSION_RESULT_RESPONSE);
+export const downloadSubmissionResult = link => async (dispatch, getState) => {
+  const {
+    metamask: { accounts: [ account ] },
+    user: { jwt },
+  } = getState();
+
+  if (!account) {
+    return null;
+  }
+
+  dispatch(downloadSubmissionResultRequest());
+  const filename = link.replace('https://www.googleapis.com/storage/v1/b/bounty-submissions/o/', '');
+
+  const res = await fetch(`${API_ADDRESS}/get_submission`, {
+    body: JSON.stringify({ filename, account }),
+    headers: {
+      'content-type': 'application/json',
+      Authorization: jwt,
+    },
+    method: 'POST',
+  });
+
+  if (res.status > 200) {
+    dispatch(downloadSubmissionResultRequest());
+    return null;
+  };
+
+  const blob = await res.blob();
+  
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+
+  const url = window.URL.createObjectURL(blob);
+  a.href = url;
+  a.download = filename;
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.parentNode.removeChild(a);
+
+  dispatch(downloadSubmissionResultResponse());
+};
 
 export default handleActions({
 
@@ -343,7 +399,10 @@ export default handleActions({
         [address]: data,
       },
     };
-  }
+  },
+
+  [DOWNLOAD_SUBMISSION_RESULT_REQUEST]: state => ({ ...state, isDownloadingSubmission: true }),
+  [DOWNLOAD_SUBMISSION_RESULT_RESPONSE]: state => ({ ...state, isDownloadingSubmission: false }),
 
 
 }, initialState);

@@ -14,6 +14,7 @@ class Submission extends Component {
     getSubmission: PropTypes.func.isRequired,
     account: PropTypes.string.isRequired,
     bountyData: PropTypes.object,
+    isDownloadingSubmission: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -31,7 +32,7 @@ class Submission extends Component {
   }
 
   renderRows(list) {
-    const { account, bountyData } = this.props;
+    const { account, bountyData, isDownloadingSubmission, downloadSubmissionResult } = this.props;
     const { createdBy } = bountyData || {};
 
     if (!list.length) {
@@ -43,7 +44,7 @@ class Submission extends Component {
     }
 
     return list.map(({ submittedBy = '', timestamp, link }, i) => (
-      <div className="submission__row">
+      <div key={link} className="submission__row">
         <div className="submission__cell submission__cell--sender">
           {`${submittedBy.slice(0, 4)}...${submittedBy.slice(-4)}`}
         </div>
@@ -52,43 +53,10 @@ class Submission extends Component {
         </div>
         <div className="submission__cell submission__cell--result">
           <button
-            disabled={(submittedBy !== account && createdBy !== account) || this.state.isDownloading}
-            onClick={async () => {
-              this.setState({ isDownloading: true });
-              const filename = link.replace('https://www.googleapis.com/storage/v1/b/bounty-submissions/o/', '');
-
-              const f = await fetch('https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/get_submission', {
-                body: JSON.stringify({
-                  filename,
-                  account,
-                }),
-                headers: {
-                  'content-type': 'application/json',
-                  Authorization: this.props.jwt,
-                },
-                method: 'POST',
-              });
-
-              if (f.status > 200) {
-                this.setState({ isDownloading: false });
-                return null;
-              };
-
-              const blob = await f.blob();
-              
-              const a = document.createElement("a");
-              document.body.appendChild(a);
-              a.style = "display: none";
-
-              const url = window.URL.createObjectURL(blob);
-              a.href = url;
-              a.download = filename;
-              a.click();
-              window.URL.revokeObjectURL(url);
-              this.setState({ isDownloading: false });
-            }}
+            disabled={(submittedBy !== account && createdBy !== account) || isDownloadingSubmission}
+            onClick={() => downloadSubmissionResult(link)}
           >
-            { this.state.isDownloading ? 'Downloading' : 'Download Result' }
+            { isDownloadingSubmission ? 'Downloading' : 'Download Result' }
           </button>
         </div>
       </div>
@@ -143,10 +111,12 @@ export default connect(
   (state, { match: { params: { address } } }) => ({
     bountyData: state.bounties.allBountiesMap[address],
     submissions: state.bounties.submissions[address] || [],
+    isDownloadingSubmission: state.bounties.isDownloadingSubmission,
     account: state.metamask.accounts[0],
     jwt: state.user.jwt,
   }),
   dispatch => ({
     getSubmission: address => dispatch(actions.getSubmission(address)),
+    downloadSubmissionResult: link => dispatch(actions.downloadSubmissionResult(link)),
   }),
 )(withRouter(Submission));

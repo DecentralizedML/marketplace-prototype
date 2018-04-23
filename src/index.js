@@ -13,11 +13,11 @@ import Main from './app/main';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
-const store = createStore(
-  reducer,
-  // applyMiddleware(thunk),
-  applyMiddleware(thunk, logger),
-);
+const middlewares = process.env.NODE_ENV === 'development'
+  ? applyMiddleware(thunk, logger)
+  : applyMiddleware(thunk);
+
+const store = createStore(reducer, middlewares);
 
 ReactDOM.render(
   <Provider store={store}>

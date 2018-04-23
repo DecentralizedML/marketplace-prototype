@@ -1,7 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 
-// const API_ADDRESS = '';
-const API_ADDRESS = 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881';
+const API_ADDRESS = process.env.NODE_ENV === 'development'
+  ? ''
+  : 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881';
 const LOGOUT = 'app/user/logout';
 const LOGIN = 'app/user/login';
 
