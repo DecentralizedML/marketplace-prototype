@@ -129,8 +129,8 @@ class CreateBountyModal extends Component {
   renderContent() {
     if (this.state.isSubmitted) {
       return (
-        <div className="create-bounty-modal" onClick={e => e.stopPropagation()}>
-          <div className="create-bounty-modal__content">
+        <div className="create-bounty-modal--submitted" onClick={e => e.stopPropagation()}>
+          <div className="create-bounty-modal__content create-bounty-modal__content--submitted">
             <div className="create-bounty-modal__success">
               Your bounty contract is deployed! It will take about 1 minute before it shows up on your account.
             </div>

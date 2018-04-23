@@ -1,5 +1,6 @@
 .create-bounty-modal {
   top: 4rem;
+  bottom: 4rem;
   left: 0;
   right: 0;
   position: fixed;
@@ -10,6 +11,18 @@
   flex-flow: column nowrap;
   width: 600px;
   margin: 0 auto; }
+  .create-bounty-modal--submitted {
+    top: 4rem;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: #FFF;
+    border-radius: 4px;
+    box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-flow: column nowrap;
+    width: 600px;
+    margin: 0 auto; }
   .create-bounty-modal__header {
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
@@ -21,6 +34,8 @@
   .create-bounty-modal__content {
     padding: 2rem 2rem 0 2rem;
     overflow-y: auto; }
+    .create-bounty-modal__content--submitted {
+      padding-bottom: 2rem; }
   .create-bounty-modal__instruction {
     background-color: #fffcd2;
     text-align: center;

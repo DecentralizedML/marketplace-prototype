@@ -2,6 +2,7 @@
 
 .create-bounty-modal {
   top: 4rem;
+  bottom: 4rem;
   left: 0;
   right: 0;
   position: fixed;
@@ -12,6 +13,20 @@
   flex-flow: column nowrap;
   width: 600px;
   margin: 0 auto;
+
+  &--submitted {
+    top: 4rem;
+    left: 0;
+    right: 0;
+    position: fixed;
+    background-color: $white;
+    border-radius: 4px;
+    box-shadow: 0 0 8px 4px rgba($black, .1);
+    display: flex;
+    flex-flow: column nowrap;
+    width: 600px;
+    margin: 0 auto;
+  }
 
   &__header {
     border-top-right-radius: 4px;
@@ -26,6 +41,10 @@
   &__content {
     padding: 2rem 2rem 0 2rem;
     overflow-y: auto;
+
+    &--submitted {
+      padding-bottom: 2rem;
+    }
   }
 
   &__instruction {

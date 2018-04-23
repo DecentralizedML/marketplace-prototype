@@ -123,6 +123,8 @@ export const getBounty = address => (dispatch, getState) => {
         participants: data[3],
         status: data[4],
         title: data[0],
+        createdBy: data[5],
+        createdAt: data[6], 
       };
 
       const { error, payload } = await response.json();

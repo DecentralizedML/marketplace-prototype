@@ -13,6 +13,7 @@ class Submission extends Component {
     match: PropTypes.object.isRequired,
     getSubmission: PropTypes.func.isRequired,
     account: PropTypes.string.isRequired,
+    bountyData: PropTypes.object,
   };
 
   state = {
@@ -30,7 +31,8 @@ class Submission extends Component {
   }
 
   renderRows(list) {
-    const { account } = this.props;
+    const { account, bountyData } = this.props;
+    const { createdBy } = bountyData || {};
 
     if (!list.length) {
       return (
@@ -39,6 +41,7 @@ class Submission extends Component {
         </div>
       );
     }
+
     return list.map(({ submittedBy = '', timestamp, link }, i) => (
       <div className="submission__row">
         <div className="submission__cell submission__cell--sender">
@@ -49,7 +52,7 @@ class Submission extends Component {
         </div>
         <div className="submission__cell submission__cell--result">
           <button
-            disabled={submittedBy !== account || this.state.isDownloading}
+            disabled={(submittedBy !== account && createdBy !== account) || this.state.isDownloading}
             onClick={async () => {
               this.setState({ isDownloading: true });
               const filename = link.replace('https://www.googleapis.com/storage/v1/b/bounty-submissions/o/', '');
@@ -138,6 +141,7 @@ class Submission extends Component {
 
 export default connect(
   (state, { match: { params: { address } } }) => ({
+    bountyData: state.bounties.allBountiesMap[address],
     submissions: state.bounties.submissions[address] || [],
     account: state.metamask.accounts[0],
     jwt: state.user.jwt,
