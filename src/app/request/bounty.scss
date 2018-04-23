@@ -395,6 +395,7 @@
   &__sidebar {
     width: 12rem;
     border-right: 1px solid rgba($black, .1);
+    overflow-y: auto;
 
     &__item {
       padding: 1rem 1rem 1rem 2rem;

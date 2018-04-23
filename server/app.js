@@ -1,6 +1,4 @@
 const express = require('express');
-const uuid = require('uuid4');
-var ObjectId = require('mongodb').ObjectId;
 const app = express();
 const server = require('http').createServer(app);
 const path = require('path');
@@ -8,8 +6,9 @@ const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
-const ethUtil = require('ethereumjs-util');
-const jwt = require('jsonwebtoken');
+
+const AuthControllers = require('./controllers/auth');
+const getUserFromAuth = AuthControllers.getUserFromAuth;
 
 const {
   insertJob,
@@ -17,7 +16,7 @@ const {
   getCompletedJobs,
   postJobResult,
   getJobs,
-  ready,
+  // ready,
   updateBountyDetail,
   getBountyDetail,
   insertSubmission,
@@ -32,7 +31,6 @@ admin.initializeApp({
   storageBucket: "bounty-submissions.appspot.com",
 });
 const bucket = admin.storage().bucket('bounty-submissions');
-// console.log(admin.storage().bucket().upload('app.js'))
 
 const jsonParser = bodyParser.json()
 
@@ -126,68 +124,9 @@ const algos = {
 
 const seeds = {};
 
-app.post('/get_seed', jsonParser, async (req, res) => {
-  const { body } = req;
+app.post('/get_seed', jsonParser, AuthControllers.getSeed);
+app.post('/authenticate', jsonParser, AuthControllers.authenticate);
 
-  if (!body) {
-    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
-  }
-
-  const seed = uuid();
-
-  seeds[body.account] = seed;
-
-  return res.send({ error: false, payload: seed });
-});
-
-app.post('/authenticate', jsonParser, async (req, res) => {
-  const { body } = req;
-
-  if (!body) {
-    return res.status(400).send({ error: true, payload: 'Cannot parse json body.' });
-  }
-
-  const { sig, account } = body;
-  const pk = getPublicKeyFromSignedMessage(sig, account);
-  
-  if (pk === account) {
-    res.send({ error: false, payload: createJWT(pk) });
-  } else {
-    res.state(500).send({ error: true, payload: 'Error authenticating user' });
-  }
-});
-
-function createJWT(publicKey) {
-  // If the signature matches the owner supplied, create a
-  // JSON web token for the owner that expires in 24 hours.
-  try {
-    const token = jwt.sign({ user: publicKey }, getSecret(),  { expiresIn: '1d' });
-    return token;
-  } catch (e) {
-    throw new Error('Cannot create JWT');
-  }
-}
-
-function getPublicKeyFromSignedMessage(sig, account) {
-  try {
-    // Same data as before
-    const data = seeds[account];
-    console.log({ data })
-    const message = ethUtil.toBuffer(data)
-    const msgHash = ethUtil.hashPersonalMessage(message)
-
-    // Get the address of whoever signed this message
-    const signature = ethUtil.toBuffer(sig)
-    const sigParams = ethUtil.fromRpcSig(signature)
-    const publicKey = ethUtil.ecrecover(msgHash, sigParams.v, sigParams.r, sigParams.s)
-    const sender = ethUtil.publicToAddress(publicKey)
-    const addr = ethUtil.bufferToHex(sender)
-    delete seeds[account];
-    return addr;
-  } catch (e) {
-    throw new Error('Cannot recover public key');
-  }
-}
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;
@@ -490,32 +429,3 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
 app.use(express.static(path.join(__dirname, '../build')));
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
-
-function getSecret() {
-  return `
-    1842121932
-    4892791267
-    9212093463
-    3516681983
-    4809163974
-    8523353727
-    7975240046
-    7714453299
-    9173909644
-    4069221049
-  `;
-}
-
-function getUserFromAuth(req) {
-  return new Promise((resolve, reject) => {
-    try {
-      const { authorization } = req.headers;
-      const token = jwt.verify(authorization, getSecret());
-      const { user } = token;
-      resolve(user);
-    } catch (e) {
-      reject(e);
-    }
-    
-  })
-}

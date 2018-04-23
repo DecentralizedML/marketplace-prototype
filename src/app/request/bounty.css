@@ -267,7 +267,8 @@
     background-color: rgba(0, 0, 0, 0.02); }
   .bounty-page__sidebar {
     width: 12rem;
-    border-right: 1px solid rgba(0, 0, 0, 0.1); }
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-y: auto; }
     .bounty-page__sidebar__item {
       padding: 1rem 1rem 1rem 2rem;
       cursor: pointer;
