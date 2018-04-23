@@ -1,5 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import { TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI, MARKETPLACE_CONTRACT_ADDRESS } from '../utils/constants';
+import { logout } from './user';
 
 // Constants
 const DETECT = 'app/metamask/detect';
@@ -29,7 +30,7 @@ export const dmlApproveResponse = createAction(DML_APPROVE_RESPONSE);
 
 
 export const startPolling = () => async (dispatch, getState) => {
-  const { metamask: { isLocked } } = getState();
+  const { metamask: { isLocked, accounts } } = getState();
   const timeout = isLocked ? 1000 : 5000;
 
   if(typeof window.web3 === 'undefined') {
@@ -37,6 +38,11 @@ export const startPolling = () => async (dispatch, getState) => {
   } else {
     const web3 = window.web3;
     const account = web3.eth.accounts[0] || '';
+
+
+    if (typeof accounts[0] !== 'undefined' && accounts[0] !== account) {
+      dispatch(logout());
+    }
 
     dispatch(detect(web3));
 

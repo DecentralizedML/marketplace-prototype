@@ -26,6 +26,7 @@ class App extends Component {
     network: PropTypes.string,
     account: PropTypes.string.isRequired,
     hasSignedUp: PropTypes.bool.isRequired,
+    isFetchingUser: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -42,6 +43,10 @@ class App extends Component {
   }
 
   signup = e => {
+    if (this.props.isFetchingUser) {
+      return;
+    }
+
     e.preventDefault();
 
     const { firstName, lastName, emailAddress } = this.state;
@@ -62,14 +67,19 @@ class App extends Component {
     this.setState({ signupError: error });
 
     if (!error) {
-      this.props.signup({ firstName, lastName, emailAddress })
-        .then(d => console.log(d))
-        .catch(d => console.log(d));
+      this.props.signup({ firstName, lastName, emailAddress });
     }
   }
 
   renderContent() {
-    const { hasWeb3, isLocked, network, jwt, hasSignedUp, isFetchingUser } = this.props;
+    const {
+      hasWeb3,
+      isLocked,
+      network,
+      jwt,
+      hasSignedUp,
+      isFetchingUser,
+    } = this.props;
     const { hasClickedInstallMetamask } = this.state;
 
     if (!hasWeb3) {
@@ -182,6 +192,7 @@ class App extends Component {
             <button
               type="submit"
               className="app-content__signup__signup-btn"
+              disabled={isFetchingUser}
             >
               Sign Up
             </button>

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
-import CreateJob from './create-job';
+import { withRouter } from 'react-router';
+// import CreateJob from './create-job';
 import AlgoTabs from './algo-tabs';
-import JobsHistory from './jobs-history';
+// import JobsHistory from './jobs-history';
 import { imagenetClassesTopK } from '../../utils/imagenet';
 import { buyAlgo } from '../../ducks/algorithmns';
 
@@ -24,6 +25,7 @@ class ImageRecognition extends Component {
     downloads: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,
     isPurchased: PropTypes.bool.isRequired,
+    dmlAllowance: PropTypes.number.isRequired,
   };
 
   state = {
@@ -243,7 +245,7 @@ class ImageRecognition extends Component {
   }
 
   getBuyButtonText() {
-    const { isPurchased, isPurchasePending } = this.props;
+    const { isPurchased, isPurchasePending, cost, dmlAllowance } = this.props;
 
     if (isPurchasePending) {
       return 'Pending Purchase';
@@ -253,7 +255,11 @@ class ImageRecognition extends Component {
       return 'Purchased';
     }
 
-    return 'Buy';
+    if (dmlAllowance < cost/1000000000000000000) {
+      return 'Increase Debit Limit';
+    }
+
+    return `Buy for ${cost/1000000000000000000} DML`;
   }
 
 
@@ -318,7 +324,8 @@ class ImageRecognition extends Component {
       downloads,
       onClose,
       isPurchased,
-      isPurchasePending
+      isPurchasePending,
+      cost,
     } = this.props;
 
     return(
@@ -338,17 +345,19 @@ class ImageRecognition extends Component {
               className="algo-modal__buy-btn"
               disabled={isPurchased || isPurchasePending}
               onClick={() => {
-                const { id, buyAlgo } = this.props;
+                const { id, buyAlgo, dmlAllowance, cost, history } = this.props;
+
+                if (dmlAllowance < cost/1000000000000000000) {
+                  history.push('/account');
+                  return;
+                }
+
                 buyAlgo(id);
               }}
             >
               {this.getBuyButtonText()}
             </button>
           </div>
-          <div
-            className="algo-modal__close"
-            onClick={onClose}
-          />
         </div>
         <div className="algo-modal__content">
           <AlgoTabs onChange={activeTab => this.setState({ activeTab })} />
@@ -360,13 +369,14 @@ class ImageRecognition extends Component {
 }
 
 export default connect(
-  ({ algorithmns }, { id }) => ({
+  ({ algorithmns, metamask }, { id }) => ({
     isPurchased: typeof algorithmns.purchased[id] === 'string'
       ? false
       : Boolean(algorithmns.purchased[id]),
     isPurchasePending: typeof algorithmns.purchased[id] === 'string',
+    dmlAllowance: metamask.dmlAllowance,
   }),
   dispatch => ({
     buyAlgo: id => dispatch(buyAlgo(id)),
   }),
-)(ImageRecognition);
+)(withRouter(ImageRecognition));

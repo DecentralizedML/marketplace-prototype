@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import { connect } from 'react-redux';
-import CreateJob from './create-job';
+// import CreateJob from './create-job';
 import AlgoTabs from './algo-tabs';
-import JobsHistory from './jobs-history';
+import { withRouter } from 'react-router';
+// import JobsHistory from './jobs-history';
 import { buyAlgo } from '../../ducks/algorithmns';
 
 const KerasJS = window.KerasJS;
@@ -21,6 +22,7 @@ class TextAnalyzer extends Component {
     thumbnail: PropTypes.string.isRequired,
     stars: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     description: PropTypes.string.isRequired,
+    dmlAllowance: PropTypes.number.isRequired,
     downloads: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,
     isPurchased: PropTypes.bool.isRequired,
@@ -172,7 +174,7 @@ class TextAnalyzer extends Component {
   }
 
   getBuyButtonText() {
-    const { isPurchased, isPurchasePending } = this.props;
+    const { isPurchased, isPurchasePending, cost, dmlAllowance } = this.props;
 
     if (isPurchasePending) {
       return 'Pending Purchase';
@@ -182,7 +184,11 @@ class TextAnalyzer extends Component {
       return 'Purchased';
     }
 
-    return 'Buy';
+    if (dmlAllowance < cost/1000000000000000000) {
+      return 'Increase Debit Limit';
+    }
+
+    return `Buy for ${cost/1000000000000000000} DML`;
   }
 
   renderContent() {
@@ -257,17 +263,19 @@ class TextAnalyzer extends Component {
               className="algo-modal__buy-btn"
               disabled={isPurchased || isPurchasePending}
               onClick={() => {
-                const { id, buyAlgo } = this.props;
+                const { id, buyAlgo, dmlAllowance, cost, history } = this.props;
+
+                if (dmlAllowance < cost/1000000000000000000) {
+                  history.push('/account');
+                  return;
+                }
+
                 buyAlgo(id);
               }}
             >
               {this.getBuyButtonText()}
             </button>
           </div>
-          <div
-            className="algo-modal__close"
-            onClick={onClose}
-          />
         </div>
         <div className="algo-modal__content">
           <AlgoTabs onChange={activeTab => this.setState({ activeTab })} />
@@ -279,13 +287,14 @@ class TextAnalyzer extends Component {
 }
 
 export default connect(
-  ({ algorithmns }, { id }) => ({
+  ({ algorithmns, metamask }, { id }) => ({
     isPurchased: typeof algorithmns.purchased[id] === 'string'
       ? false
       : Boolean(algorithmns.purchased[id]),
     isPurchasePending: typeof algorithmns.purchased[id] === 'string',
+    dmlAllowance: metamask.dmlAllowance,
   }),
   dispatch => ({
     buyAlgo: id => dispatch(buyAlgo(id)),
   }),
-)(TextAnalyzer);
+)(withRouter(TextAnalyzer));

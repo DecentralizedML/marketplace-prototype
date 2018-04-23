@@ -10,6 +10,9 @@ class Account extends Component {
     account: PropTypes.string.isRequired,
     ethBalance: PropTypes.string.isRequired,
     dmlBalance: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    emailAddress: PropTypes.string.isRequired,
   };
 
   renderWarning() {
@@ -92,10 +95,43 @@ class Account extends Component {
   }
 
   render() {
-    const { account } = this.props;
+    const { account, firstName, lastName, emailAddress } = this.props;
 
     return (
       <div className="account">
+        <div className="wallet-card">
+          <div className="wallet-card__header">
+            <div className="wallet-card__title">Account Info</div>
+          </div>
+          <div className="wallet-card__content">
+            <div className="wallet-card__balances">
+              <div className="wallet-card__balance-row">
+                <div className="wallet-card__balance">
+                  <div className="wallet-card__balance-header-text">First Name</div>
+                  <div className="wallet-card__balance-wrapper">
+                    <span className="wallet-card__balance-text">{firstName}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="wallet-card__balance-row">
+                <div className="wallet-card__balance">
+                  <div className="wallet-card__balance-header-text">Last Name</div>
+                  <div className="wallet-card__balance-wrapper">
+                    <span className="wallet-card__balance-text">{lastName}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="wallet-card__balance-row">
+                <div className="wallet-card__balance">
+                  <div className="wallet-card__balance-header-text">Email Address</div>
+                  <div className="wallet-card__balance-wrapper">
+                    <span className="wallet-card__balance-text">{emailAddress}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="wallet-card">
           <div className="wallet-card__header">
             <div className="wallet-card__title">Balance</div>
@@ -127,5 +163,8 @@ export default connect(
     account: state.metamask.accounts[0] || '',
     ethBalance: state.metamask.ethBalance.toFixed(5),
     dmlBalance: state.metamask.dmlBalance.toFixed(0),
+    firstName: state.user.firstName,
+    lastName: state.user.lastName,
+    emailAddress: state.user.emailAddress,
   })
 )(Account);

@@ -51,6 +51,7 @@ class AlgoCard extends Component {
       downloads,
       type,
       model,
+      cost,
       isPurchased,
     } = this.props;
 
@@ -68,6 +69,7 @@ class AlgoCard extends Component {
               downloads={downloads}
               model={model}
               isPurchased={isPurchased}
+              cost={cost}
             />
           </Modal>
         );
@@ -84,6 +86,7 @@ class AlgoCard extends Component {
               downloads={downloads}
               model={model}
               isPurchased={isPurchased}
+              cost={cost}
             />
           </Modal>
         );

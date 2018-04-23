@@ -133,7 +133,7 @@ export const signup = ({ firstName, lastName, emailAddress }) => async (dispatch
       return json.payload;
     }
 
-    dispatch(signupResponse(json.payload))
+    dispatch(signupResponse(json.payload[0]))
     return json.payload;
   } catch (e) {
     dispatch(signupResponse(e));
