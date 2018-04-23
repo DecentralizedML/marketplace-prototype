@@ -265,19 +265,19 @@ class App extends Component {
               </Link>
               <Link
                 className={classnames('app-header__item', {
-                  'app-header__item--active': (/account/gi).test(pathname),
-                })}
-                to="/account"
-              >
-                Account
-              </Link>
-              <Link
-                className={classnames('app-header__item', {
                   'app-header__item--active': (/bounties/gi).test(pathname),
                 })}
                 to="/bounties"
               >
                 Bounties
+              </Link>
+              <Link
+                className={classnames('app-header__item', {
+                  'app-header__item--active': (/account/gi).test(pathname),
+                })}
+                to="/account"
+              >
+                Account
               </Link>
             </div>
             {this.renderLoginButton()}
