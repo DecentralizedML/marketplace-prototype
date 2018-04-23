@@ -305,6 +305,26 @@ const getSubmissions = address => {
     })
 }
 
+const getSubmission = id => {
+  return ready()
+    .then(client => {
+      const submissions = client.db('dml-proto').collection('submissions');
+      const query = { _id: ObjectId(id) };
+      return new Promise((resolve, reject) => {
+        submissions.findOne(query, (err, data) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to fetch.')
+            reject(err);
+          } else {
+            console.log('Successfuly fetched.');
+            resolve(data);
+          }
+        });
+      });
+    });
+}
+
 const getUser = address => {
   return ready()
     .then(client => {
@@ -358,4 +378,5 @@ module.exports = {
   getSubmissions,
   getUser,
   createUser,
+  getSubmission,
 };

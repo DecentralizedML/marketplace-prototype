@@ -43,7 +43,7 @@ class Submission extends Component {
       );
     }
 
-    return list.map(({ submittedBy = '', timestamp, link }, i) => (
+    return list.map(({ submittedBy = '', timestamp, link, _id, address }, i) => (
       <div key={link} className="submission__row">
         <div className="submission__cell submission__cell--sender">
           {`${submittedBy.slice(0, 4)}...${submittedBy.slice(-4)}`}
@@ -54,7 +54,7 @@ class Submission extends Component {
         <div className="submission__cell submission__cell--result">
           <button
             disabled={(submittedBy !== account && createdBy !== account) || isDownloadingSubmission}
-            onClick={() => downloadSubmissionResult(link)}
+            onClick={() => downloadSubmissionResult(link, _id, address)}
           >
             { isDownloadingSubmission ? 'Downloading' : 'Download Result' }
           </button>
@@ -117,6 +117,6 @@ export default connect(
   }),
   dispatch => ({
     getSubmission: address => dispatch(actions.getSubmission(address)),
-    downloadSubmissionResult: link => dispatch(actions.downloadSubmissionResult(link)),
+    downloadSubmissionResult: (link, _id, address) => dispatch(actions.downloadSubmissionResult(link, _id, address)),
   }),
 )(withRouter(Submission));

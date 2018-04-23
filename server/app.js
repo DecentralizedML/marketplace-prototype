@@ -21,6 +21,7 @@ const {
   getBountyDetail,
   insertSubmission,
   getSubmissions,
+  getSubmission,
 } = require('./mongo');
 
 const admin = require('firebase-admin');
@@ -276,10 +277,16 @@ app.post('/get_submission', jsonParser, async (req, res) => {
   if (!req.body) return res.status(400).send({ error: true, payload: 'Account not found' });
   
   try {
-    const { filename, account } = req.body;
+    const { filename, account, _id, address } = req.body;
     const user = await getUserFromAuth(req);
 
-    if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' })
+    if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' });
+
+    const entry = await getSubmission(_id);
+
+    if (entry.submittedBy !== user) {
+      return res.status(401).send({ error: true, payload: 'User not athenticated' });
+    }
 
     const file = bucket.file(decodeURIComponent(filename));
 

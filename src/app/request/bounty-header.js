@@ -47,16 +47,19 @@ class BountyHeader extends Component {
   }
 
   submit = e => {
-    if (this.props.isSubmittingBounty || !this.props.jwt) {
+    const { isSubmittingBounty, jwt, bountyData, account, submitBounty, address } = this.props;
+    const { participants } = bountyData;
+
+    if (isSubmittingBounty || !jwt || participants.indexOf(account) < 0) {
       return null;
     }
 
     const data = new FormData();
 
     data.append('file', e.target.files[0]);
-    data.append('account', this.props.account);
+    data.append('account', account);
 
-    this.props.submitBounty(data, this.props.address);
+    submitBounty(data, address);
   }
 
   renderStatus(status) {
@@ -166,10 +169,10 @@ class BountyHeader extends Component {
           <button
             className="bounty-page__secondary-data__action"
             onClick={this.submit}
-            disabled={this.props.isSubmittingBounty || !jwt}
+            disabled={this.props.isSubmittingBounty || !jwt || participants.indexOf(account) < 0}
           >
             { this.props.isSubmittingBounty ? 'Submitting Result' : 'Submit Result' }
-            {jwt && <input
+            {(jwt && participants.indexOf(account) > -1) && <input
               type="file"
               className="bounty-page__secondary-data__file-input"
               onChange={this.submit}

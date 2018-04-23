@@ -271,7 +271,7 @@ export const getSubmission = address => async dispatch => {
 
 const downloadSubmissionResultRequest = createAction(DOWNLOAD_SUBMISSION_RESULT_REQUEST);
 const downloadSubmissionResultResponse = createAction(DOWNLOAD_SUBMISSION_RESULT_RESPONSE);
-export const downloadSubmissionResult = link => async (dispatch, getState) => {
+export const downloadSubmissionResult = (link, _id, address) => async (dispatch, getState) => {
   const {
     metamask: { accounts: [ account ] },
     user: { jwt },
@@ -285,7 +285,7 @@ export const downloadSubmissionResult = link => async (dispatch, getState) => {
   const filename = link.replace('https://www.googleapis.com/storage/v1/b/bounty-submissions/o/', '');
 
   const res = await fetch(`${API_ADDRESS}/get_submission`, {
-    body: JSON.stringify({ filename, account }),
+    body: JSON.stringify({ filename, account, _id, address }),
     headers: {
       'content-type': 'application/json',
       Authorization: jwt,
