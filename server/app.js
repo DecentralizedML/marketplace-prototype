@@ -401,14 +401,14 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
     account,
   } = body;
 
-  if (!thumbnailUrl || typeof thumbnailUrl !== 'string') return res.state(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
-  if (!imageUrl || typeof imageUrl !== 'string') return res.state(400).send({ error: true, payload: 'Invalid imageUrl' });
-  if (!description || typeof description !== 'string') return res.state(400).send({ error: true, payload: 'Invalid description' });
-  if (!subtitle || typeof subtitle !== 'string') return res.state(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
-  if (!data || typeof data !== 'string') return res.state(400).send({ error: true, payload: 'Invalid data' });
-  if (!evaluation || typeof evaluation !== 'string') return res.state(400).send({ error: true, payload: 'Invalid evaluation' });
-  if (!rules || typeof rules !== 'string') return res.state(400).send({ error: true, payload: 'Invalid rules' });
-  if (!address || typeof address !== 'string') return res.state(400).send({ error: true, payload: 'Invalid address' });
+  if (!thumbnailUrl || typeof thumbnailUrl !== 'string') return res.status(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
+  if (!imageUrl || typeof imageUrl !== 'string') return res.status(400).send({ error: true, payload: 'Invalid imageUrl' });
+  if (!description || typeof description !== 'string') return res.status(400).send({ error: true, payload: 'Invalid description' });
+  if (!subtitle || typeof subtitle !== 'string') return res.status(400).send({ error: true, payload: 'Invalid thumbnailUrl' });
+  if (!data || typeof data !== 'string') return res.status(400).send({ error: true, payload: 'Invalid data' });
+  if (!evaluation || typeof evaluation !== 'string') return res.status(400).send({ error: true, payload: 'Invalid evaluation' });
+  if (!rules || typeof rules !== 'string') return res.status(400).send({ error: true, payload: 'Invalid rules' });
+  if (!address || typeof address !== 'string') return res.status(400).send({ error: true, payload: 'Invalid address' });
   
   try {
     const user = await getUserFromAuth(req);

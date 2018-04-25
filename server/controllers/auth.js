@@ -34,8 +34,8 @@ const authenticate = async (req, res) => {
 
   const { sig, account } = body;
 
-  if (!sig) return res.state(400).send({ error: true, payload: 'Signed secret is not found.' });
-  if (!account) return res.state(400).send({ error: true, payload: 'Account address is invalid.' });
+  if (!sig) return res.status(400).send({ error: true, payload: 'Signed secret is not found.' });
+  if (!account) return res.status(400).send({ error: true, payload: 'Account address is invalid.' });
 
   const pk = getPublicKeyFromSignedMessage(sig, account);
 
@@ -50,7 +50,7 @@ const authenticate = async (req, res) => {
       },
     });
   } else {
-    res.state(500).send({ error: true, payload: 'Error authenticating user' });
+    res.status(500).send({ error: true, payload: 'Error authenticating user' });
   }
 }
 
@@ -66,10 +66,10 @@ const signup = async (req, res) => {
   const userFromAuth = await getUserFromAuth(req);
 
   if (!userFromAuth || userFromAuth !== address) return res.status(401).send({ error: true, payload: 'User not athenticated' })
-  if (!firstName) return res.state(400).send({ error: true, payload: 'firstName is not found.' });
-  if (!lastName) return res.state(400).send({ error: true, payload: 'lastName is not found.' });
-  if (!emailAddress) return res.state(400).send({ error: true, payload: 'emailAddress is not found.' });
-  if (!address) return res.state(400).send({ error: true, payload: 'address is not found.' });
+  if (!firstName) return res.status(400).send({ error: true, payload: 'firstName is not found.' });
+  if (!lastName) return res.status(400).send({ error: true, payload: 'lastName is not found.' });
+  if (!emailAddress) return res.status(400).send({ error: true, payload: 'emailAddress is not found.' });
+  if (!address) return res.status(400).send({ error: true, payload: 'address is not found.' });
 
   try {
     const user = await createUser({ firstName, lastName, emailAddress, address });
