@@ -1,10 +1,38 @@
 {
-  "contractName": "ERC20Interface",
+  "contractName": "Algo",
   "abi": [
     {
       "constant": true,
       "inputs": [],
-      "name": "totalSupply",
+      "name": "creator",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "status",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "price",
       "outputs": [
         {
           "name": "",
@@ -17,17 +45,12 @@
     },
     {
       "constant": true,
-      "inputs": [
-        {
-          "name": "tokenOwner",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
+      "inputs": [],
+      "name": "marketplace",
       "outputs": [
         {
-          "name": "balance",
-          "type": "uint256"
+          "name": "",
+          "type": "address"
         }
       ],
       "payable": false,
@@ -36,21 +59,99 @@
     },
     {
       "constant": true,
-      "inputs": [
+      "inputs": [],
+      "name": "token",
+      "outputs": [
         {
-          "name": "tokenOwner",
-          "type": "address"
-        },
-        {
-          "name": "spender",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "allowance",
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_price",
+          "type": "uint256"
+        },
+        {
+          "name": "_creator",
+          "type": "address"
+        },
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_marketplace",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_price",
+          "type": "uint256"
+        }
+      ],
+      "name": "updatePrice",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "setActive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "setInactive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_creator",
+          "type": "address"
+        }
+      ],
+      "name": "changeCreator",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getData",
       "outputs": [
         {
-          "name": "remaining",
+          "name": "_price",
           "type": "uint256"
+        },
+        {
+          "name": "_status",
+          "type": "uint8"
         }
       ],
       "payable": false,
@@ -61,80 +162,25 @@
       "constant": false,
       "inputs": [
         {
-          "name": "to",
+          "name": "receiver",
           "type": "address"
         },
         {
-          "name": "tokens",
+          "name": "amount",
           "type": "uint256"
         }
       ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "name": "success",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "spender",
-          "type": "address"
-        },
-        {
-          "name": "tokens",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [
-        {
-          "name": "success",
-          "type": "bool"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "name": "tokens",
-          "type": "uint256"
-        }
-      ],
-      "name": "transferFrom",
-      "outputs": [
-        {
-          "name": "success",
-          "type": "bool"
-        }
-      ],
+      "name": "transferToken",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "bytecode": "0x",
-  "deployedBytecode": "0x",
-  "sourceMap": "",
-  "deployedSourceMap": "",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516080806109a7833981018060405281019080805190602001909291908051906020019092919080519060200190929190805190602001909291905050508360038190555080600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550826000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050505061087a8061012d6000396000f3006080604052600436106100af576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806302d05d3f146100b45780631072cbea1461010b578063200d2ed2146101585780633bc5de301461019157806374580e2f146101d1578063760a8c2a146102145780638d6cc56d1461022b578063a035b1fe14610258578063abc8c7af14610283578063f1b9ee24146102da578063fc0c546a146102f1575b600080fd5b3480156100c057600080fd5b506100c9610348565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561011757600080fd5b50610156600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061036d565b005b34801561016457600080fd5b5061016d610495565b6040518082600181111561017d57fe5b60ff16815260200191505060405180910390f35b34801561019d57600080fd5b506101a66104a8565b604051808381526020018260018111156101bc57fe5b60ff1681526020019250505060405180910390f35b3480156101dd57600080fd5b50610212600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506104c6565b005b34801561022057600080fd5b50610229610612565b005b34801561023757600080fd5b506102566004803603810190808035906020019092919050505061064b565b005b34801561026457600080fd5b5061026d610668565b6040518082815260200191505060405180910390f35b34801561028f57600080fd5b5061029861066e565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156102e657600080fd5b506102ef610694565b005b3480156102fd57600080fd5b506103066106cd565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60006103776106f3565b151561038257600080fd5b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663a9059cbb84846040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561044a57600080fd5b505af115801561045e573d6000803e3d6000fd5b505050506040513d602081101561047457600080fd5b8101908080519060200190929190505050151561049057600080fd5b505050565b600460009054906101000a900460ff1681565b600080600354600460009054906101000a900460ff16915091509091565b6000600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663fa6f3936336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b15801561058857600080fd5b505af115801561059c573d6000803e3d6000fd5b505050506040513d60208110156105b257600080fd5b810190808051906020019092919050505015156105ce57600080fd5b816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050565b61061a6106f3565b151561062557600080fd5b6001600460006101000a81548160ff0219169083600181111561064457fe5b0217905550565b6106536106f3565b151561065e57600080fd5b8060038190555050565b60035481565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b61069c6106f3565b15156106a757600080fd5b6000600460006101000a81548160ff021916908360018111156106c657fe5b0217905550565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600080600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663fa6f3936336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b1580156107b657600080fd5b505af11580156107ca573d6000803e3d6000fd5b505050506040513d60208110156107e057600080fd5b81019080805190602001909291905050508061084857506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b915050905600a165627a7a72305820e11fb40e9abcf1ec5676b234562c9050a55201c3fcf4f3ac8e33456f822c6fa10029",
+  "deployedBytecode": "0x6080604052600436106100af576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806302d05d3f146100b45780631072cbea1461010b578063200d2ed2146101585780633bc5de301461019157806374580e2f146101d1578063760a8c2a146102145780638d6cc56d1461022b578063a035b1fe14610258578063abc8c7af14610283578063f1b9ee24146102da578063fc0c546a146102f1575b600080fd5b3480156100c057600080fd5b506100c9610348565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561011757600080fd5b50610156600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019092919050505061036d565b005b34801561016457600080fd5b5061016d610495565b6040518082600181111561017d57fe5b60ff16815260200191505060405180910390f35b34801561019d57600080fd5b506101a66104a8565b604051808381526020018260018111156101bc57fe5b60ff1681526020019250505060405180910390f35b3480156101dd57600080fd5b50610212600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506104c6565b005b34801561022057600080fd5b50610229610612565b005b34801561023757600080fd5b506102566004803603810190808035906020019092919050505061064b565b005b34801561026457600080fd5b5061026d610668565b6040518082815260200191505060405180910390f35b34801561028f57600080fd5b5061029861066e565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156102e657600080fd5b506102ef610694565b005b3480156102fd57600080fd5b506103066106cd565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60006103776106f3565b151561038257600080fd5b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663a9059cbb84846040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b15801561044a57600080fd5b505af115801561045e573d6000803e3d6000fd5b505050506040513d602081101561047457600080fd5b8101908080519060200190929190505050151561049057600080fd5b505050565b600460009054906101000a900460ff1681565b600080600354600460009054906101000a900460ff16915091509091565b6000600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663fa6f3936336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b15801561058857600080fd5b505af115801561059c573d6000803e3d6000fd5b505050506040513d60208110156105b257600080fd5b810190808051906020019092919050505015156105ce57600080fd5b816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050565b61061a6106f3565b151561062557600080fd5b6001600460006101000a81548160ff0219169083600181111561064457fe5b0217905550565b6106536106f3565b151561065e57600080fd5b8060038190555050565b60035481565b600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b61069c6106f3565b15156106a757600080fd5b6000600460006101000a81548160ff021916908360018111156106c657fe5b0217905550565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600080600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690508073ffffffffffffffffffffffffffffffffffffffff1663fa6f3936336040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050602060405180830381600087803b1580156107b657600080fd5b505af11580156107ca573d6000803e3d6000fd5b505050506040513d60208110156107e057600080fd5b81019080805190602001909291905050508061084857506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b915050905600a165627a7a72305820e11fb40e9abcf1ec5676b234562c9050a55201c3fcf4f3ac8e33456f822c6fa10029",
+  "sourceMap": "10359:1538:0:-;;;10597:245;8:9:-1;5:2;;;30:1;27;20:12;5:2;10597:245:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10741:6;10733:5;:14;;;;10771:12;10757:11;;:26;;;;;;;;;;;;;;;;;;10801:6;10793:5;;:14;;;;;;;;;;;;;;;;;;10827:8;10817:7;;:18;;;;;;;;;;;;;;;;;;10597:245;;;;10359:1538;;;;;;",
+  "deployedSourceMap": "10359:1538:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10403:22;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10403:22:0;;;;;;;;;;;;;;;;;;;;;;;;;;;11694:201;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11694:201:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10512:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10512:20:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;11376:108;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11376:108:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;11182:187;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11182:187:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;10962:102;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10962:102:0;;;;;;10848:108;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10848:108:0;;;;;;;;;;;;;;;;;;;;;;;;;;10489:17;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10489:17:0;;;;;;;;;;;;;;;;;;;;;;;10457:26;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10457:26:0;;;;;;;;;;;;;;;;;;;;;;;;;;;11070:106;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11070:106:0;;;;;;10431:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;10431:20:0;;;;;;;;;;;;;;;;;;;;;;;;;;;10403:22;;;;;;;;;;;;;:::o;11694:201::-;11801:16;11774;:14;:16::i;:::-;11766:25;;;;;;;;11835:5;;;;;;;;;;;11801:40;;11859:1;:10;;;11870:8;11880:6;11859:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11859:28:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;11859:28:0;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;11859:28:0;;;;;;;;;;;;;;;;11851:37;;;;;;;;11694:201;;;:::o;10512:20::-;;;;;;;;;;;;;:::o;11376:108::-;11416:11;11429:14;11463:5;;11470:6;;;;;;;;;;;11455:22;;;;11376:108;;:::o;11182:187::-;11240:18;11276:11;;;;;;;;;;;11240:48;;11306:3;:15;;;11322:10;11306:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11306:27:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;11306:27:0;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;11306:27:0;;;;;;;;;;;;;;;;11298:36;;;;;;;;11354:8;11344:7;;:18;;;;;;;;;;;;;;;;;;11182:187;;:::o;10962:102::-;11008:16;:14;:16::i;:::-;11000:25;;;;;;;;11044:13;11035:6;;:22;;;;;;;;;;;;;;;;;;;;;;;;10962:102::o;10848:108::-;10907:16;:14;:16::i;:::-;10899:25;;;;;;;;10942:6;10934:5;:14;;;;10848:108;:::o;10489:17::-;;;;:::o;10457:26::-;;;;;;;;;;;;;:::o;11070:106::-;11118:16;:14;:16::i;:::-;11110:25;;;;;;;;11154:15;11145:6;;:24;;;;;;;;;;;;;;;;;;;;;;;;11070:106::o;10431:20::-;;;;;;;;;;;;;:::o;11490:198::-;11538:12;11562:18;11598:11;;;;;;;;;;;11562:48;;11628:3;:15;;;11644:10;11628:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;11628:27:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;11628:27:0;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;11628:27:0;;;;;;;;;;;;;;;;:52;;;;11673:7;;;;;;;;;;;11659:21;;:10;:21;;;11628:52;11620:61;;11490:198;;:::o",
   "source": "pragma solidity ^0.4.22;\n\ncontract DmlMarketplace {\n    // Public Variables\n    mapping(address => bool) public moderators;\n    address public token;\n    \n    // bountyFactory address\n    DmlBountyFactory public bountyFactory;\n    \n    \n    mapping(bytes32 => uint) public totals;\n    mapping(address => mapping(bytes32 => bool)) public hasPurchased;\n    address[] public algos;\n    mapping(address => address[]) public algosByCreator;\n    \n    constructor() public {\n        moderators[msg.sender] = true;\n    }\n    \n    function isReady() view public returns (bool success) {\n        if (token == address(0) || bountyFactory == address(0)) {\n            return false;\n        }\n\n        return true;\n    }\n\n    function isModerator(address modAddress) view public returns (bool success) {\n        return moderators[modAddress];\n    }\n\n    function addModerator(address newModerator) public {\n        require(isModerator(msg.sender));\n        moderators[newModerator] = true;\n    }\n\n    function removeModerator(address mod) public {\n        require(isModerator(msg.sender));\n        moderators[mod] = false;\n    }\n\n    function addAlgo(uint price) public {\n        require(isReady());\n        Algo a = new Algo(price, msg.sender, token, address(this));\n        algos.push(a);\n        algosByCreator[msg.sender].push(a);\n    }\n\n    function getAllAlgos() view public returns (address[] _algos) {\n        return algos;\n    }\n\n    function getAlgosByCreator(address creatorAddress) view public returns (address[] _algos) {\n        return algosByCreator[creatorAddress];\n    }\n\n    function init (address newTokenAddress) public returns (bool success) {\n        require(isModerator(msg.sender));\n        token = newTokenAddress;\n        DmlBountyFactory f = new DmlBountyFactory(token);\n        bountyFactory = f;\n        return true;\n    }\n\n    function setBountyFactory(address factoryAddress) public {\n        require(isModerator(msg.sender));\n        DmlBountyFactory f = DmlBountyFactory(factoryAddress);\n        bountyFactory = f;\n    }\n    \n    function buy(bytes32 algoId, uint value) public returns (bool success) {\n        address sender = msg.sender;\n        \n        require(!hasPurchased[msg.sender][algoId]);\n\n        ERC20Interface c = ERC20Interface(token);\n        \n        require(c.transferFrom(sender, address(this), value));\n\n        hasPurchased[sender][algoId] = true;\n        \n        if (totals[algoId] < 1) {\n            totals[algoId] = 1;\n        } else {\n            totals[algoId]++;\n        }\n        \n        return true;\n    }\n    \n    function transferToken (address receiver, uint amount) public {\n        require(isModerator(msg.sender));\n        \n        ERC20Interface c = ERC20Interface(token);\n        require(c.transfer(receiver, amount));\n    }\n}\n\ncontract DmlBountyFactory {\n    address public marketplace;\n    address public token;\n    address[] public allBountyAddresses;\n    mapping(address => address[]) public bountyAddressByCreator;\n    mapping(address => address[]) public bountyAddressByParticipant;\n    \n    constructor(address tokenAddress) public {\n        marketplace = msg.sender;\n        token = tokenAddress;\n    }\n\n    function getAllBounties() view public returns (address[] bounties) {\n        return allBountyAddresses;\n    }\n\n    function getBountiesByCreator(address creatorAddress) view public returns (address[] bounties) {\n        return bountyAddressByCreator[creatorAddress];\n    }\n\n    function getBountiesByParticipant(address participantAddress) view public returns (address[] bounties) {\n        return bountyAddressByParticipant[participantAddress];\n    }\n    \n    function createBounty(string name, uint[] prizes) public {\n        address creator = msg.sender;\n        address newBounty = new Bounty(token, creator, name, prizes, marketplace);\n        allBountyAddresses.push(newBounty);\n        bountyAddressByCreator[msg.sender].push(newBounty);\n    }\n    \n    function joinBounty(address bountyAddress) public {\n        Bounty b = Bounty(bountyAddress);\n        \n        require(b.join(msg.sender));\n        \n        bountyAddressByParticipant[msg.sender].push(bountyAddress);\n    }\n}\n\ncontract Bounty {\n    // contract addresses\n    address public factory;\n    \n    // public constants\n    address public creator;\n    address public token;\n    address public marketplace;\n\n    // state variables\n    string public name;\n    uint[] public prizes;\n    uint public createdAt;\n    address[] public winners;\n    address[] public participants;\n    Status public status;\n    mapping(address => bool) public participantsMap;\n\n    enum Status {\n        Initialized,\n        EnrollmentStart,\n        EnrollmentEnd,\n        BountyStart,\n        BountyEnd,\n        EvaluationEnd,\n        Completed,\n        Paused,\n        Cancelled\n    }\n    \n    constructor(\n        address tokenAddress,\n        address creatorAddress,\n        string initName,\n        uint[] initPrizes,\n        address mpAddress\n    ) public {\n        factory = msg.sender;\n        marketplace = mpAddress;\n        creator = creatorAddress;\n        token = tokenAddress;\n        prizes = initPrizes;\n        status = Status.Initialized;\n        name = initName;\n        createdAt = now;\n    }\n    \n    function isFunded() public view returns (bool success) {\n        ERC20Interface c = ERC20Interface(token);\n        require(getTotalPrize() <= c.balanceOf(address(this)));\n        return true;\n    }\n\n    function getData() public view returns (string retName, uint[] retPrizes, address[] retWinenrs, address[] retParticipants, Status retStatus, address retCreator, uint createdTime) {\n        return (name, prizes, winners, participants, status, creator, createdAt);\n    }\n    \n    function join(address participantAddress) public returns (bool success) {\n        require(msg.sender == factory);\n\n        if (status != Status.EnrollmentStart) {\n            return false;\n        }\n        \n        if (participantsMap[participantAddress] == true) {\n            return false;\n        }\n        \n        participants.push(participantAddress);\n        participantsMap[participantAddress] = true;\n        \n        return true;\n    }\n\n    function changeCreator(address _creator) public {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        creator = _creator;\n    } \n\n    function updateBounty(string newName, uint[] newPrizes) public {\n        require(updateName(newName));\n        require(updatePrizes(newPrizes));\n    }\n\n    function updateName(string newName) public returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender) || msg.sender == creator);\n        name = newName;\n        return true;\n    }\n\n    function forceUpdateName(string newName) public returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        name = newName;\n        return true;\n    }\n    \n    function updatePrizes(uint[] newPrizes) public returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender) || msg.sender == creator);\n        require(status == Status.Initialized);\n        prizes = newPrizes;\n        return true;\n    }\n\n    function forceUpdatePrizes(uint[] newPrizes) public returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        prizes = newPrizes;\n        return true;\n    }\n\n    function setStatus(Status newStatus) private returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender) || msg.sender == creator);\n        status = newStatus;\n        return true;\n    }\n\n    function forceSetStatus(Status newStatus) public returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        status = newStatus;\n        return true;\n    }\n    \n    function startEnrollment() public {\n        require(status == Status.Initialized);\n        require(prizes.length > 0);\n        require(isFunded());\n        setStatus(Status.EnrollmentStart);\n    }\n    \n    function stopEnrollment() public {\n        require(status == Status.EnrollmentStart);\n        setStatus(Status.EnrollmentEnd);\n    }\n    \n    function startBounty() public {\n        require(status == Status.EnrollmentEnd);\n        setStatus(Status.BountyStart);\n    }\n    \n    function stopBounty() public {\n        require(status == Status.BountyStart);\n        setStatus(Status.BountyEnd);\n    }\n\n    function updateWinners(address[] newWinners) public {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender) || msg.sender == creator);\n        require(status == Status.BountyEnd);\n        require(newWinners.length == prizes.length);\n\n        for (uint i = 0; i < newWinners.length; i++) {\n            require(participantsMap[newWinners[i]]);\n        }\n\n        winners = newWinners;\n        setStatus(Status.EvaluationEnd);\n    }\n\n    function forceUpdateWinners(address[] newWinners) public {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n\n        winners = newWinners;\n    }\n\n    function payoutWinners() public {\n        ERC20Interface c = ERC20Interface(token);\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n\n        require(dmp.isModerator(msg.sender) || msg.sender == creator);\n        require(isFunded());\n        require(winners.length == prizes.length);\n        require(status == Status.EvaluationEnd);\n\n        for (uint i = 0; i < prizes.length; i++) {\n            require(c.transfer(winners[i], prizes[i]));\n        }\n        \n        setStatus(Status.Completed);\n    }\n    \n    function getTotalPrize() public constant returns (uint total) {\n        uint t = 0;\n        for (uint i = 0; i < prizes.length; i++) {\n            t = t + prizes[i];\n        }\n        return t;\n    }\n\n    function transferToken (address receiver, uint amount) public {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        ERC20Interface c = ERC20Interface(token);\n        require(c.transfer(receiver, amount));\n    }\n}\n\ncontract Algo {\n    // public constants\n    address public creator;\n    address public token;\n    address public marketplace;\n    uint public price;\n    Status public status;\n\n    enum Status {\n        Inactive,\n        Active\n    }\n\n    constructor(\n        uint _price,\n        address _creator,\n        address _token,\n        address _marketplace\n    ) public {\n        price = _price;\n        marketplace = _marketplace;\n        token = _token;\n        creator = _creator;\n    }\n\n    function updatePrice(uint _price) public {\n        require(isModOrCreator());\n        price = _price;\n\n    }\n\n    function setActive() public {\n        require(isModOrCreator());\n        status = Status.Active;\n    }\n\n    function setInactive() public {\n        require(isModOrCreator());\n        status = Status.Inactive;\n    }\n\n    function changeCreator(address _creator) public {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        require(dmp.isModerator(msg.sender));\n        creator = _creator;\n    } \n\n    function getData() view public returns (uint _price, Status _status) {\n        return (price, status);\n    }\n\n    function isModOrCreator() view private returns (bool success) {\n        DmlMarketplace dmp = DmlMarketplace(marketplace);\n        return (dmp.isModerator(msg.sender) || msg.sender == creator);\n    }\n\n    function transferToken (address receiver, uint amount) public {\n        require(isModOrCreator());\n        ERC20Interface c = ERC20Interface(token);\n        require(c.transfer(receiver, amount));\n    }\n}\n\ncontract ERC20Interface {\n    function totalSupply() public constant returns (uint);\n    function balanceOf(address tokenOwner) public constant returns (uint balance);\n    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);\n    function transfer(address to, uint tokens) public returns (bool success);\n    function approve(address spender, uint tokens) public returns (bool success);\n    function transferFrom(address from, address to, uint tokens) public returns (bool success);\n}",
   "sourcePath": "/Users/chikeichan/Projects/dml/marketplace-prototype/src/solidity/contracts/DmlMarketplace.sol",
   "ast": {
@@ -37387,5 +37433,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-21T01:02:00.643Z"
+  "updatedAt": "2018-05-21T01:02:00.594Z"
 }

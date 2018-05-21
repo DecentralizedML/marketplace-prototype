@@ -1,0 +1,82 @@
+.upload-algo-modal {
+  top: 4rem;
+  left: 0;
+  right: 0;
+  position: fixed;
+  background-color: #FFF;
+  border-radius: 4px;
+  box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-flow: column nowrap;
+  width: 600px;
+  margin: 0 auto; }
+  .upload-algo-modal__header {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #FFF;
+    padding: 2rem;
+    text-transform: uppercase;
+    font-weight: 400; }
+  .upload-algo-modal__content {
+    flex: 1 1 auto;
+    padding: 1rem; }
+  .upload-algo-modal__instruction {
+    background-color: #fffcd2;
+    text-align: center;
+    padding: 1rem;
+    font-size: .8rem; }
+  .upload-algo-modal__input-wrapper {
+    width: 100%;
+    margin: 1rem 0; }
+    .upload-algo-modal__input-wrapper__label {
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 0 0 .5rem .5rem; }
+    .upload-algo-modal__input-wrapper__input {
+      font-size: 1rem;
+      padding: .5rem;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      outline: none;
+      width: 100%;
+      box-sizing: border-box; }
+      .upload-algo-modal__input-wrapper__input::placeholder {
+        font-size: .8rem;
+        color: rgba(0, 0, 0, 0.4); }
+  .upload-algo-modal__footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.2); }
+  .upload-algo-modal__instruction {
+    background-color: #fffcd2;
+    text-align: center;
+    padding: 1rem;
+    font-size: .8rem; }
+  .upload-algo-modal__success {
+    background-color: #D2FFE6;
+    text-align: center;
+    padding: 1rem;
+    font-size: .8rem; }
+  .upload-algo-modal__error {
+    color: #FF0000;
+    text-align: center;
+    font-size: .8rem;
+    padding-bottom: 1rem;
+    height: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden; }
+  .upload-algo-modal__create-btn {
+    width: 100%;
+    font-size: .8rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(0, 118, 163, 0.9);
+    color: #FFF;
+    padding: .8rem 2rem;
+    border-radius: 3px; }
+    .upload-algo-modal__create-btn:hover {
+      background-color: rgba(0, 118, 163, 0.8); }
+    .upload-algo-modal__create-btn:active {
+      background-color: #0076A3; }

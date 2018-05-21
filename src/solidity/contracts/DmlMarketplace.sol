@@ -11,6 +11,8 @@ contract DmlMarketplace {
     
     mapping(bytes32 => uint) public totals;
     mapping(address => mapping(bytes32 => bool)) public hasPurchased;
+    address[] public algos;
+    mapping(address => address[]) public algosByCreator;
     
     constructor() public {
         moderators[msg.sender] = true;
@@ -36,6 +38,21 @@ contract DmlMarketplace {
     function removeModerator(address mod) public {
         require(isModerator(msg.sender));
         moderators[mod] = false;
+    }
+
+    function addAlgo(uint price) public {
+        require(isReady());
+        Algo a = new Algo(price, msg.sender, token, address(this));
+        algos.push(a);
+        algosByCreator[msg.sender].push(a);
+    }
+
+    function getAllAlgos() view public returns (address[] _algos) {
+        return algos;
+    }
+
+    function getAlgosByCreator(address creatorAddress) view public returns (address[] _algos) {
+        return algosByCreator[creatorAddress];
     }
 
     function init (address newTokenAddress) public returns (bool success) {
@@ -147,7 +164,7 @@ contract Bounty {
         EvaluationEnd,
         Completed,
         Paused,
-        Cancelled,
+        Cancelled
     }
     
     constructor(
@@ -193,6 +210,12 @@ contract Bounty {
         
         return true;
     }
+
+    function changeCreator(address _creator) public {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
+        creator = _creator;
+    } 
 
     function updateBounty(string newName, uint[] newPrizes) public {
         require(updateName(newName));
@@ -315,7 +338,69 @@ contract Bounty {
         ERC20Interface c = ERC20Interface(token);
         require(c.transfer(receiver, amount));
     }
-    
+}
+
+contract Algo {
+    // public constants
+    address public creator;
+    address public token;
+    address public marketplace;
+    uint public price;
+    Status public status;
+
+    enum Status {
+        Inactive,
+        Active
+    }
+
+    constructor(
+        uint _price,
+        address _creator,
+        address _token,
+        address _marketplace
+    ) public {
+        price = _price;
+        marketplace = _marketplace;
+        token = _token;
+        creator = _creator;
+    }
+
+    function updatePrice(uint _price) public {
+        require(isModOrCreator());
+        price = _price;
+
+    }
+
+    function setActive() public {
+        require(isModOrCreator());
+        status = Status.Active;
+    }
+
+    function setInactive() public {
+        require(isModOrCreator());
+        status = Status.Inactive;
+    }
+
+    function changeCreator(address _creator) public {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        require(dmp.isModerator(msg.sender));
+        creator = _creator;
+    } 
+
+    function getData() view public returns (uint _price, Status _status) {
+        return (price, status);
+    }
+
+    function isModOrCreator() view private returns (bool success) {
+        DmlMarketplace dmp = DmlMarketplace(marketplace);
+        return (dmp.isModerator(msg.sender) || msg.sender == creator);
+    }
+
+    function transferToken (address receiver, uint amount) public {
+        require(isModOrCreator());
+        ERC20Interface c = ERC20Interface(token);
+        require(c.transfer(receiver, amount));
+    }
 }
 
 contract ERC20Interface {
