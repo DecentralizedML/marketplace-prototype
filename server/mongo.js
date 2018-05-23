@@ -366,7 +366,7 @@ const createUser = user => {
 
 const updateAlgo = async data => {
   const client = await ready();
-  const hasAlgo = await findOneAlgo(data.account);
+  const hasAlgo = await findOneAlgo(data.address);
   let result;
 
   if (!hasAlgo) {
