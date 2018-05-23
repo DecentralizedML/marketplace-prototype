@@ -105,7 +105,7 @@ function createJWT(publicKey) {
   // If the signature matches the owner supplied, create a
   // JSON web token for the owner that expires in 24 hours.
   try {
-    const token = jwt.sign({ user: publicKey }, getSecret(),  { expiresIn: '1d' });
+    const token = jwt.sign({ user: publicKey }, getSecret(),  { expiresIn: '7d' });
     return token;
   } catch (e) {
     throw new Error('Cannot create JWT');

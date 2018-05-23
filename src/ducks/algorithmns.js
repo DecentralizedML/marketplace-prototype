@@ -28,6 +28,9 @@ const CREATE_ALGO_RESPONSE = 'app/algorithmns/createAlgoResponse';
 const GET_ALGO_DATA_REQUEST = 'app/algorithmns/getAlgoDataRequest';
 const GET_ALGO_DATA_RESPONSE = 'app/algorithmns/getAlgoDataResponse';
 
+const UPDATE_ALGO_REQUEST = 'app/algorithmns/updateAlgoRequest';
+const UPDATE_ALGO_RESPONSE = 'app/algorithmns/updateAlgoResponse';
+
 const ALGO_STATUS = [
   'Inactive',
   'Active',
@@ -191,6 +194,49 @@ export const getAlgoData = address => async (dispatch, getState) => {
     }
   });
 };
+
+export const updateAlgoRequest = createAction(UPDATE_ALGO_REQUEST);
+export const updateAlgoResponse = createAction(UPDATE_ALGO_RESPONSE);
+export const updateAlgo = d => async (dispatch, getState) => {
+  const { metamask: { isLocked, hasWeb3, accounts } } = getState();
+
+  if (!hasWeb3 || isLocked) {
+    return null;
+  }
+
+  dispatch(updateAlgoRequest);
+
+  const data = new FormData();
+
+  data.append('file', d.file);
+  data.append('title', d.title);
+  data.append('description', d.description);
+  data.append('type', d.type);
+  data.append('outputProcessing', d.outputProcessing);
+  data.append('account', accounts[0]);
+  data.append('address', d.address);
+
+  const opts = {
+    method: 'POST',
+    body: data,
+    headers: {
+      Authorization: `${localStorage.getItem('jwt')}`,
+    },
+  };
+
+  try {
+    const res = await fetch(`${API_ADDRESS}/${d.address}`, opts);
+    const json = await res.json();
+
+    if (json.error) {
+      return dispatch(updateAlgoResponse(new Error(json.payload)));
+    }
+
+    dispatch(updateAlgoResponse({ address: data.address, data: json.payload }));
+  } catch (e) {
+    dispatch(updateAlgoResponse(e));
+  }
+}
 
 export default handleActions({
 

@@ -362,7 +362,83 @@ const createUser = user => {
         });
       });
     });
-  };
+};
+
+const updateAlgo = async data => {
+  const client = await ready();
+  const hasAlgo = await findOneAlgo(data.account);
+  let result;
+
+  if (!hasAlgo) {
+    result = await writeAlgo(data);
+  } else {
+    result = await replaceAlgo(data);
+  }
+
+  return result;
+};
+
+const findOneAlgo = address => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      const query = { address: { $eq: address } };
+      return new Promise((resolve, reject) => {
+        algos.findOne(query, (err, result) => {
+          if (err) {
+            return resolve(false);
+          }
+
+          resolve(!!result);
+        });
+      });
+    });
+};
+
+const writeAlgo = data => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      return new Promise((resolve, reject) => {
+        algos.insert(data, (err, doc) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to submit.')
+            reject(err);
+          } else {
+            console.log('Successfuly submitted.');
+            resolve(doc.ops[0]);
+          }
+        });
+      });
+    });
+};
+
+const replaceAlgo = data => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      const query = { address: { $eq: data.address } };
+      return new Promise((resolve, reject) => {
+        algos.findOneAndReplace(query, data, (replaceError, replaceResult) => {
+          if (replaceError) {
+            console.log(replaceError);
+            console.log('Failed to update algo.')
+            reject(replaceError);
+          } else {
+            if (!replaceResult.value) {
+              return reject(new Error('Failed to update algo'));
+            }
+            console.log('Successfuly updated algo.');
+            resolve({
+              ...data,
+              _id: replaceResult.value._id,
+            });
+          }
+        });
+      });
+    })
+}
 
 
 module.exports = {
@@ -379,4 +455,5 @@ module.exports = {
   getUser,
   createUser,
   getSubmission,
+  updateAlgo,
 };

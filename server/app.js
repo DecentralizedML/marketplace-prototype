@@ -8,6 +8,8 @@ const fileUpload = require('express-fileupload');
 const fs = require('fs');
 
 const AuthControllers = require('./controllers/auth');
+const AlgoControllers = require('./controllers/algo');
+
 const getUserFromAuth = AuthControllers.getUserFromAuth;
 
 const {
@@ -123,10 +125,14 @@ const algos = {
   },
 };
 
+// Auth Controllers
 app.post('/get_seed', jsonParser, AuthControllers.getSeed);
 app.post('/authenticate', jsonParser, AuthControllers.authenticate);
 app.post('/signup', jsonParser, AuthControllers.signup);
 app.get('/get_user', AuthControllers.fetchUser);
+
+// Algo Controllers
+app.post('/algorithmns/:algoAddress', AlgoControllers.updateAlgo);
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;
