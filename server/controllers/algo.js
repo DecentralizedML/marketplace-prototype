@@ -4,6 +4,8 @@ const getUserFromAuth = AuthControllers.getUserFromAuth;
 
 const {
   updateAlgo: updateAlgoInMongo,
+  getAlgo: getAlgoFromMongo,
+  uploadAlgoFile,
 } = require('../mongo');
 
 const updateAlgo = async (req, res) => {
@@ -18,7 +20,9 @@ const updateAlgo = async (req, res) => {
     account,
     address,
   } = req.body;
+  const { file } = req.files;
 
+  if (!file) return res.status(400).send({ error: true, payload: 'File not found' });
   if (!title || typeof title !== 'string') return res.status(400).send({ error: true, payload: 'Invalid title' });
   if (!description || typeof description !== 'string') return res.status(400).send({ error: true, payload: 'Invalid description' });
   if (!type || typeof type !== 'string') return res.status(400).send({ error: true, payload: 'Invalid type' });
@@ -30,12 +34,15 @@ const updateAlgo = async (req, res) => {
 
     if (!user || user !== account) return res.status(401).send({ error: true, payload: 'User not athenticated' });
 
+    const link = await uploadAlgoFile(file);
+
     const result = await updateAlgoInMongo({
       address,
       title,
       description,
       type,
       outputProcessing,
+      algoFileUrl: link,
       creator: account,
     });
 
@@ -45,6 +52,20 @@ const updateAlgo = async (req, res) => {
   }
 };
 
+const getAlgo = async (req, res) => {
+  const { algoAddress } = req.params;
+
+  if (!algoAddress || typeof algoAddress !== 'string') return res.status(400).send({ error: true, payload: 'Invalid address' });
+
+  try {
+    const algo = await getAlgoFromMongo(algoAddress);
+    res.send({ error: false, payload: algo });
+  } catch (err) {
+    res.status(500).send({ error: true, payload: err.message });
+  }
+}
+
 module.exports = {
   updateAlgo,
+  getAlgo,
 };

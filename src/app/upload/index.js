@@ -30,6 +30,21 @@ class Upload extends Component {
     }
   }
 
+  renderContent() {
+    const { myAlgos = [] } = this.props;
+
+    if (!myAlgos || !myAlgos.length) {
+      return (
+        <div className="upload__content__empty-text">
+          No Upload
+        </div>
+      );
+    }
+
+    return this.props.myAlgos
+      .map(address => <AlgoRow key={address} address={address} />);
+  }
+
   render() {
     return (
       <div className="upload">
@@ -43,7 +58,7 @@ class Upload extends Component {
           </button>
         </div>
         <div className="upload__content">
-          {this.props.myAlgos.map(address => <AlgoRow key={address} address={address} />)}
+          {this.renderContent()}
         </div>
         {this.renderModal()}
       </div>

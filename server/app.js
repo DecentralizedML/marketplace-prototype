@@ -26,14 +26,16 @@ const {
   getSubmission,
 } = require('./mongo');
 
-const admin = require('firebase-admin');
-const config = require('./cert.json');
-admin.initializeApp({
-  credential: admin.credential.cert(config),
-  databaseURL: "https://decentralizedml-e05c9.firebaseio.com",
-  storageBucket: "bounty-submissions.appspot.com",
-});
-const bucket = admin.storage().bucket('bounty-submissions');
+const bucket = require('./file-upload').bountyBucket;
+
+// const admin = require('firebase-admin');
+// const config = require('./cert.json');
+// admin.initializeApp({
+//   credential: admin.credential.cert(config),
+//   databaseURL: "https://decentralizedml-e05c9.firebaseio.com",
+//   storageBucket: "bounty-submissions.appspot.com",
+// });
+// const bucket = admin.storage().bucket('bounty-submissions');
 
 const jsonParser = bodyParser.json()
 
@@ -133,6 +135,7 @@ app.get('/get_user', AuthControllers.fetchUser);
 
 // Algo Controllers
 app.post('/algorithmns/:algoAddress', AlgoControllers.updateAlgo);
+app.get('/algorithmns/:algoAddress', AlgoControllers.getAlgo);
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;

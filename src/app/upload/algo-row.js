@@ -41,13 +41,67 @@ class AlgoRow extends Component {
     );
   }
 
+  /***
+  <div
+    className="upload__algo-row__hero-image"
+    style={{
+      backgroundImage: data.thumbnail && `url(${data.thumbnail})`,
+    }}
+  />
+  */
+
+  renderCost() {
+    const { algoData } = this.props;
+    const { cost } = algoData || {};
+
+    if (!cost) {
+      return null;
+    }
+
+    return (
+      <div className="upload__algo-row__cost">
+        <span className="upload__algo-row__cost__value">
+          {cost/(1000000000000000000)}
+        </span>
+        <span className="upload__algo-row__cost__unit">
+          DML
+        </span>
+      </div>
+    );
+  }
+
+  renderStatus() {
+    const { algoData } = this.props;
+    const {
+      isActive,
+      isPendingReview,
+    } = algoData || {};
+
+    return (
+      <div
+        className={classnames('upload__algo-row__status', {
+          'upload__algo-row__status--active': isActive,
+          'upload__algo-row__status--pending': isPendingReview,
+          'upload__algo-row__status--inactive': !isActive && !isPendingReview,
+        })}
+      >
+        {
+          isActive
+            ? 'Active'
+            : isPendingReview
+              ? 'Pending Review'
+              : 'Inactive'
+        }
+      </div>
+    );
+  }
+
   render() {
-    const { algoData, history } = this.props;
-    const data = algoData || {
-      thumbnail: '',
-      title: '',
-      description: '',
-    };
+    const { algoData } = this.props;
+    const {
+      title,
+      description,
+    } = algoData || {};
 
     return (
       <div
@@ -56,24 +110,20 @@ class AlgoRow extends Component {
         })}
         onClick={() => this.setState({ isShowingModal: true })}
       >
-        <div
-          className="upload__algo-row__hero-image"
-          style={{
-            backgroundImage: data.thumbnail && `url(${data.thumbnail})`,
-          }}
-        />
         <div className="upload__algo-row__content">
           <div className="upload__algo-row__title">
-            {algoData && (data.title || 'No title')}
+            {algoData && (title || 'No title')}
           </div>
           <div className="upload__algo-row__description">
-            {algoData && (data.description || 'No description')}
+            {algoData && (description || 'No description')}
+          </div>
+          <div className="upload__algo-row__content-bottom">
+            {this.renderStatus()}
+            {this.renderCost()}
           </div>
         </div>
         <div className="upload__algo-row__footer">
-          <div className="upload__algo-row__status">
-            Pending Review
-          </div>
+          Claim Earning
         </div>
         {this.renderModal()}
       </div>

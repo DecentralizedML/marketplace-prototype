@@ -46,7 +46,12 @@
 
   &__content {
     display: flex;
-    flex-flow: column nowrap; 
+    flex-flow: column nowrap;
+
+    &__empty-text {
+      padding: 2rem;
+      text-align: center;
+    }
   }
 
   &__algo-row {
@@ -56,10 +61,32 @@
     align-items: center;
     cursor: pointer;
     transition: 250ms ease-in-out;
+    position: relative;
 
     &:hover {
-      background-color: rgba($black, .1);
+      background-color: rgba($black, .25);
       box-shadow: 0 0 0px 1px rgba($dusty-gray, 0.25);
+
+      &:after {
+        content: 'Click to Edit';
+        color: $white;
+        font-size: 1rem;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    &__content-bottom {
+      margin-top: .4rem;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
     }
 
     &--loading {
@@ -114,17 +141,77 @@
       font-size: .8rem;
     }
 
+    &__cost {
+      font-size: .8rem;
+      font-weight: 400;
+      border: 2px solid rgba($allports-blue, .7);
+      display: inline-block;
+      align-self: flex-start;
+      border-radius: 3px;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+
+      &__value {
+        padding: .15rem .3rem;
+        color: rgba($allports-blue, .9);
+      }
+
+      &__unit {
+        color: $white;
+        font-weight: 500;
+        background-color: rgba($allports-blue, .7);
+        padding: .15rem .3rem;
+      }
+    }
+
     &__footer {
       flex: 0 0 auto;
     }
 
     &__status {
-      background-color: rgba($black, .3);
-      padding: .5rem 1rem;
-      font-size: .65rem;
-      font-weight: 500;
-      color: rgba($black, .6);
-      border-radius: 3px;
+      font-size: .7rem;
+      font-weight: 600;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      margin-right: 2rem;
+      color: rgba($black, .5);
+
+      &:before {
+        position: relative;
+        content: '';
+        width: .5rem;
+        height: .5rem;
+        border-radius: 50%;
+        background-color: rgba($black, .3);
+        margin-right: .5rem;
+      }
+
+      &--active {
+        color: rgba($green, 1);
+
+        &:before {
+          background-color: rgba($green, .8);
+        }
+      }
+
+      &--inactive {
+        color: rgba($red, 1);
+
+        &:before {
+          background-color: rgba($red, .8);
+        }
+      }
+
+      &--pending {
+        color: rgba(#e88f00, 1);
+
+        &:before {
+          background-color: rgba(#e88f00, .8);
+        }
+      }
     }
   }
 

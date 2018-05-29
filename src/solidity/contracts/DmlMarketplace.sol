@@ -349,6 +349,7 @@ contract Algo {
     Status public status;
 
     enum Status {
+        PendingReview,
         Inactive,
         Active
     }
@@ -373,12 +374,24 @@ contract Algo {
 
     function setActive() public {
         require(isModOrCreator());
+        require(status == Status.Inactive);
         status = Status.Active;
     }
 
     function setInactive() public {
         require(isModOrCreator());
+        require(status == Status.Active);
         status = Status.Inactive;
+    }
+
+    function approveAlgo() public {
+        require(isMod());
+        status = Status.Active;
+    }
+
+    function setPendingReview() public {
+        require(isMod());
+        status = Status.PendingReview; 
     }
 
     function changeCreator(address _creator) public {
@@ -391,9 +404,13 @@ contract Algo {
         return (price, status);
     }
 
-    function isModOrCreator() view private returns (bool success) {
+    function isMod() view private returns (bool success) {
         DmlMarketplace dmp = DmlMarketplace(marketplace);
-        return (dmp.isModerator(msg.sender) || msg.sender == creator);
+        return (dmp.isModerator(msg.sender));
+    }
+
+    function isModOrCreator() view private returns (bool success) {
+        return (isMod() || msg.sender == creator);
     }
 
     function transferToken (address receiver, uint amount) public {

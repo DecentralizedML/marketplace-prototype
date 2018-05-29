@@ -18,18 +18,25 @@ class UpdateAlgoModal extends Component {
     address: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     updateAlgo: PropTypes.func.isRequired,
+    // Redux
+    algoData: PropTypes.object,
   };
 
-  state = {
-    title: '',
-    description: '',
-    type: 'image_recognition',
-    algoFile: null,
-    isInitializingModel: false,
-    outputProcessing: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: props.algoData.title || '',
+      description: props.algoData.description || '',
+      type: props.algoData.type || 'image_recognition',
+      algoFile: props.algoData.algoFile || null,
+      isInitializingModel: false,
+      outputProcessing: props.algoData.outputProcessing || '',
+      isUpdating: false,
+    }
+  }
 
   updateAlgo = () => {
+    this.setState({ isUpdating: true });
     const { title, description, type, algoFile, outputProcessing } = this.state;
     let error = '';
 
@@ -52,17 +59,21 @@ class UpdateAlgoModal extends Component {
     if (error) {
       return this.setState({
         error,
+        isUpdating: false,
       });
     }
 
-    this.props.updateAlgo({
-      title,
-      description,
-      file: algoFile,
-      type,
-      outputProcessing,
-      address: this.props.address,
-    });
+    this.props
+      .updateAlgo({
+        title,
+        description,
+        file: algoFile,
+        type,
+        outputProcessing,
+        address: this.props.address,
+      })
+      .then(this.props.onClose)
+      .catch(e => this.setState({ isUpdating: e.message }))
   }
 
   analyzeImage = () => {
@@ -426,7 +437,9 @@ class UpdateAlgoModal extends Component {
 }
 
 export default connect(
-  null,
+  (state, { address }) => ({
+    algoData: state.algorithmns.map[address],
+  }),
   dispatch => ({
     updateAlgo: data => dispatch(actions.updateAlgo(data)),
   }),

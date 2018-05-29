@@ -184,10 +184,26 @@ export const getAlgoData = address => async (dispatch, getState) => {
   asyncQueue.add(async () => {
     try {
       const contractData = await promisify(contract.getData);
+      const res = await fetch(`${API_ADDRESS}/${address}`);
+      const mongoData = await res.json();
+      const {
+        creator = '',
+        description = '',
+        outputProcessing = '',
+        title = '',
+        type = '',
+      } = mongoData.payload || {};
+
       dispatch(getAlgoDataResponse({
         cost: contractData[0].toNumber(),
-        isActive: contractData[1].toNumber() === 1,
+        isActive: contractData[1].toNumber() === 2,
+        isPendingReview: contractData[1].toNumber() === 0,
         address,
+        creator,
+        description,
+        outputProcessing,
+        title,
+        type,
       }));
     } catch (e) {
       dispatch(getAlgoDataResponse(e));
@@ -231,7 +247,6 @@ export const updateAlgo = d => async (dispatch, getState) => {
     if (json.error) {
       return dispatch(updateAlgoResponse(new Error(json.payload)));
     }
-
     dispatch(updateAlgoResponse({ address: data.address, data: json.payload }));
   } catch (e) {
     dispatch(updateAlgoResponse(e));
