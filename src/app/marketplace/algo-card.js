@@ -5,22 +5,23 @@ import classnames from 'classnames';
 import Modal from '../ui/modal';
 import ImageRecognition from './image-recognition';
 import TextAnalyzer from './text-analyzer';
-import { getPurchasedState } from '../../ducks/algorithmns';
+import { getPurchasedState, getAlgoData } from '../../ducks/algorithmns';
 
 class AlgoCard extends Component {
 
   static propTypes = {
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    thumbnail: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    thumbnail: PropTypes.string,
     stars: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    model: PropTypes.string.isRequired,
-    downloads: PropTypes.number.isRequired,
-    isActive: PropTypes.bool.isRequired,
-    isPurchased: PropTypes.bool.isRequired,
+    description: PropTypes.string,
+    type: PropTypes.string,
+    model: PropTypes.string,
+    downloads: PropTypes.number,
+    isActive: PropTypes.bool,
+    isPurchased: PropTypes.bool,
     getPurchasedState: PropTypes.func.isRequired,
+    algoData: PropTypes.object,
   };
 
   state = {
@@ -28,8 +29,9 @@ class AlgoCard extends Component {
   };
 
   componentWillMount() {
-    const { getPurchasedState, id } = this.props;
-    getPurchasedState(id);
+    const { getPurchasedState, getAlgoData } = this.props;
+    getPurchasedState();
+    getAlgoData();
   }
 
   closeModal = e => {
@@ -43,7 +45,7 @@ class AlgoCard extends Component {
     }
 
     const {
-      id,
+      address,
       title,
       thumbnail,
       stars,
@@ -53,21 +55,24 @@ class AlgoCard extends Component {
       model,
       cost,
       isPurchased,
+      algoData,
     } = this.props;
+
+    const { algoFileUrl } = algoData || {};
 
     switch (type) {
       case 'image_recognition':
         return (
           <Modal onClose={this.closeModal}>
             <ImageRecognition
-              id={id}
+              address={address}
               onClose={this.closeModal}
               title={title}
               thumbnail={thumbnail}
               stars={stars}
               description={description}
               downloads={downloads}
-              model={model}
+              model={algoFileUrl}
               isPurchased={isPurchased}
               cost={cost}
             />
@@ -77,14 +82,14 @@ class AlgoCard extends Component {
         return (
           <Modal onClose={this.closeModal}>
             <TextAnalyzer
-              id={id}
+              address={address}
               onClose={this.closeModal}
               title={title}
               thumbnail={thumbnail}
               stars={stars}
               description={description}
               downloads={downloads}
-              model={model}
+              model={algoFileUrl}
               isPurchased={isPurchased}
               cost={cost}
             />
@@ -101,7 +106,19 @@ class AlgoCard extends Component {
   }
 
   render() {
-    const { title, thumbnail, stars, downloads, isActive } = this.props;
+    const { algoData } = this.props;
+    const {
+      title,
+      thumbnail,
+      stars = 0,
+      downloads = 0,
+      isActive,
+      isPendingReview,
+    } = algoData || {};
+
+    if (!isActive && !isPendingReview && !title && !thumbnail) {
+      return <noscript />;
+    }
 
     return (
       <div
@@ -111,7 +128,7 @@ class AlgoCard extends Component {
         onClick={() => this.setState({ isShowingModal: isActive })}
       >
         {
-          !isActive && (
+          isPendingReview && (
             <div className="marketplace__algo-card__disable-text">
               Coming Soon
             </div>
@@ -132,13 +149,15 @@ class AlgoCard extends Component {
 }
 
 export default connect(
-  ({ algorithmns }, { id }) => ({
-    isPurchased: typeof algorithmns.purchased[id] === 'string'
+  ({ algorithmns }, { address }) => ({
+    isPurchased: typeof algorithmns.purchased[address] === 'string'
       ? false
-      : Boolean(algorithmns.purchased[id]),
-    isPurchasePending: typeof algorithmns.purchased[id] === 'string',
+      : Boolean(algorithmns.purchased[address]),
+    algoData: algorithmns.map[address],
+    isPurchasePending: typeof algorithmns.purchased[address] === 'string',
   }),
-  dispatch => ({
-    getPurchasedState: id => dispatch(getPurchasedState(id)),
+  (dispatch, { address }) => ({
+    getPurchasedState: () => dispatch(getPurchasedState(address)),
+    getAlgoData: () => dispatch(getAlgoData(address)),
   }),
 )(AlgoCard);

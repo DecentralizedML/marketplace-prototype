@@ -18,12 +18,13 @@ const WORD_INDEX = JSON.parse(wordIndex);
 
 class TextAnalyzer extends Component {
   static propTypes = {
+    address: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
     stars: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     description: PropTypes.string.isRequired,
     dmlAllowance: PropTypes.number.isRequired,
-    downloads: PropTypes.number.isRequired,
+    downloads: PropTypes.number,
     onClose: PropTypes.func.isRequired,
     isPurchased: PropTypes.bool.isRequired,
     isPurchasePending: PropTypes.bool.isRequired,
@@ -192,7 +193,7 @@ class TextAnalyzer extends Component {
   }
 
   renderContent() {
-    const { isPurchased, id } = this.props;
+    const { isPurchased, address } = this.props;
 
     switch (this.state.activeTab) {
       case 0:
@@ -244,7 +245,16 @@ class TextAnalyzer extends Component {
   }
 
   render() {
-    const { title, thumbnail, stars, description, downloads, onClose, isPurchased, isPurchasePending } = this.props;
+    const {
+      title,
+      thumbnail,
+      stars,
+      description,
+      downloads,
+      onClose,
+      isPurchased,
+      isPurchasePending
+    } = this.props;
 
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
@@ -263,14 +273,14 @@ class TextAnalyzer extends Component {
               className="algo-modal__buy-btn"
               disabled={isPurchased || isPurchasePending}
               onClick={() => {
-                const { id, buyAlgo, dmlAllowance, cost, history } = this.props;
+                const { buyAlgo, dmlAllowance, cost, history } = this.props;
 
                 if (dmlAllowance < cost/1000000000000000000) {
                   history.push('/account');
                   return;
                 }
 
-                buyAlgo(id);
+                buyAlgo();
               }}
             >
               {this.getBuyButtonText()}
@@ -287,14 +297,14 @@ class TextAnalyzer extends Component {
 }
 
 export default connect(
-  ({ algorithmns, metamask }, { id }) => ({
-    isPurchased: typeof algorithmns.purchased[id] === 'string'
+  ({ algorithmns, metamask }, { address }) => ({
+    isPurchased: typeof algorithmns.purchased[address] === 'string'
       ? false
-      : Boolean(algorithmns.purchased[id]),
-    isPurchasePending: typeof algorithmns.purchased[id] === 'string',
+      : Boolean(algorithmns.purchased[address]),
+    isPurchasePending: typeof algorithmns.purchased[address] === 'string',
     dmlAllowance: metamask.dmlAllowance,
   }),
-  dispatch => ({
-    buyAlgo: id => dispatch(buyAlgo(id)),
+  (dispatch, { address }) => ({
+    buyAlgo: () => dispatch(buyAlgo(address)),
   }),
 )(withRouter(TextAnalyzer));

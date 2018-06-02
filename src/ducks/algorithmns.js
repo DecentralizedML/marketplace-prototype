@@ -108,16 +108,12 @@ export const fetchAllAlgos = () => async (dispatch, getState) => {
 
   const contract = window.web3.eth.contract(MARKETPLACE_CONTRACT_ABI).at(MARKETPLACE_CONTRACT_ADDRESS);
   contract.getAllAlgos((err, resp) => {
-    console.log(resp)
-  })
+    if (err) {
+      return dispatch(fetchAllAlgosResponse(err));
+    }
 
-  try {
-    const response = await fetch(API_ADDRESS);
-    const { algos } = await response.json();
-    return dispatch(fetchAllAlgosResponse(algos));
-  } catch (err) {
-    return dispatch(fetchAllAlgosResponse(err));
-  }
+    dispatch(fetchAllAlgosResponse(resp));
+  })
 }
 
 export const fetchMyAlgosRequest = createAction(FETCH_MY_ALGOS_REQUEST);
@@ -192,6 +188,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         outputProcessing = '',
         title = '',
         type = '',
+        thumbnail = '',
+        algoFileUrl = '',
       } = mongoData.payload || {};
 
       dispatch(getAlgoDataResponse({
@@ -204,6 +202,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         outputProcessing,
         title,
         type,
+        thumbnail,
+        algoFileUrl,
       }));
     } catch (e) {
       dispatch(getAlgoDataResponse(e));
@@ -297,13 +297,7 @@ export default handleActions({
     isFetchingAlgos: false,
     order: error
       ? state.order
-      : payload.map(({ algo_id }) => algo_id),
-    map: error
-      ? state.map
-      : payload.reduce((map, algo) => ({
-        ...map,
-        [algo.algo_id]: algo,
-      }), {}),
+      : payload,
   }),
 
   [FETCH_MY_ALGOS_REQUEST]: state => ({

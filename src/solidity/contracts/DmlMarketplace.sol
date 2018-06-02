@@ -9,8 +9,8 @@ contract DmlMarketplace {
     DmlBountyFactory public bountyFactory;
     
     
-    mapping(bytes32 => uint) public totals;
-    mapping(address => mapping(bytes32 => bool)) public hasPurchased;
+    mapping(address => uint) public totals;
+    mapping(address => mapping(address => bool)) public hasPurchased;
     address[] public algos;
     mapping(address => address[]) public algosByCreator;
     
@@ -69,21 +69,21 @@ contract DmlMarketplace {
         bountyFactory = f;
     }
     
-    function buy(bytes32 algoId, uint value) public returns (bool success) {
+    function buy(address algoAddress, uint value) public returns (bool success) {
         address sender = msg.sender;
         
-        require(!hasPurchased[msg.sender][algoId]);
+        require(!hasPurchased[msg.sender][algoAddress]);
 
         ERC20Interface c = ERC20Interface(token);
         
-        require(c.transferFrom(sender, address(this), value));
+        require(c.transferFrom(sender, algoAddress, value));
 
-        hasPurchased[sender][algoId] = true;
+        hasPurchased[sender][algoAddress] = true;
         
-        if (totals[algoId] < 1) {
-            totals[algoId] = 1;
+        if (totals[algoAddress] < 1) {
+            totals[algoAddress] = 1;
         } else {
-            totals[algoId]++;
+            totals[algoAddress]++;
         }
         
         return true;
@@ -369,7 +369,6 @@ contract Algo {
     function updatePrice(uint _price) public {
         require(isModOrCreator());
         price = _price;
-
     }
 
     function setActive() public {
