@@ -44,7 +44,7 @@
     flex: 0 0 auto;
     max-width: 16rem;
     margin: .25rem;
-    height: 12rem;
+    height: 8rem;
     padding: .75rem;
     background-color: #FFF;
     border-radius: 4px;
@@ -52,7 +52,7 @@
     flex-flow: column nowrap;
     transition: 250ms ease-in-out;
     cursor: pointer;
-    flex: 0 1 24%;
+    flex: 0 1 25%;
     box-sizing: border-box;
     position: relative; }
     .marketplace__algo-card:hover {
@@ -67,7 +67,7 @@
         top: 0;
         left: 0;
         border-radius: 4px;
-        background-color: rgba(0, 0, 0, 0.4); }
+        background-color: rgba(0, 0, 0, 0.2); }
       .marketplace__algo-card--disabled:hover {
         box-shadow: none; }
     .marketplace__algo-card__disable-text {
@@ -89,15 +89,19 @@
       flex: 1 0 auto;
       display: flex;
       flex-flow: column nowrap;
-      justify-content: center;
       padding-top: .75rem; }
     .marketplace__algo-card__title {
       font-weight: 600;
       font-size: 1rem;
       padding-bottom: .1rem; }
+    .marketplace__algo-card__description {
+      font-weight: 400;
+      font-size: .8rem;
+      padding-bottom: .1rem;
+      flex: 1 1 auto; }
     .marketplace__algo-card__stars {
       font-weight: 200;
-      font-size: .9rem;
+      font-size: .8rem;
       color: #9c9c9c; }
 
 .algo-modal {

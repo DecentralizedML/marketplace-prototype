@@ -59,7 +59,7 @@
     flex: 0 0 auto;
     max-width: 16rem;
     margin: .25rem;
-    height: 12rem;
+    height: 8rem;
     padding: .75rem;
     background-color: $white;
     border-radius: 4px;
@@ -67,7 +67,7 @@
     flex-flow: column nowrap;
     transition: 250ms ease-in-out;
     cursor: pointer;
-    flex: 0 1 24%;
+    flex: 0 1 25%;
     box-sizing: border-box;
     position: relative;
 
@@ -86,7 +86,7 @@
         top: 0;
         left: 0;
         border-radius: 4px;
-        background-color: rgba(0, 0, 0, .4);
+        background-color: rgba(0, 0, 0, .2);
       }
 
       &:hover {
@@ -117,7 +117,6 @@
       flex: 1 0 auto;
       display: flex;
       flex-flow: column nowrap;
-      justify-content: center;
       padding-top: .75rem;
     }
 
@@ -127,9 +126,16 @@
       padding-bottom: .1rem;
     }
 
+    &__description {
+      font-weight: 400;
+      font-size: .8rem;
+      padding-bottom: .1rem;
+      flex: 1 1 auto;
+    }
+
     &__stars {
       font-weight: 200;
-      font-size: .9rem;
+      font-size: .8rem;
       color: $dusty-gray;
     }
   }

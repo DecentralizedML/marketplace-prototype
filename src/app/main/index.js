@@ -128,15 +128,15 @@ class App extends Component {
     }
 
     // if (network !== '1') {
-    if (process.env.NODE_ENV !== 'development' && network !== '1') {
-      return (
-        <div className="app-content__message">
-          <h1>Oops, you’re on the wrong network.</h1>
-          <p>Simply open MetaMask and switch over to the Main Network.</p>
-          <img src={networkImg} className="metamask-network" alt="metamask-network" />
-        </div>
-      );
-    }
+    // if (process.env.NODE_ENV !== 'development' && network !== '1') {
+    //   return (
+    //     <div className="app-content__message">
+    //       <h1>Oops, you’re on the wrong network.</h1>
+    //       <p>Simply open MetaMask and switch over to the Main Network.</p>
+    //       <img src={networkImg} className="metamask-network" alt="metamask-network" />
+    //     </div>
+    //   );
+    // }
 
     if (!jwt) {
       return (

@@ -119,7 +119,8 @@
         background-color: rgba(0, 118, 163, 0.7);
         padding: .15rem .3rem; }
     .upload__algo-row__footer {
-      flex: 0 0 auto; }
+      flex: 0 0 auto;
+      font-size: .8rem; }
     .upload__algo-row__status {
       font-size: .7rem;
       font-weight: 600;

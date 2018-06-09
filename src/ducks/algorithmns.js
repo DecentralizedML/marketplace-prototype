@@ -3,6 +3,8 @@ import {
   MARKETPLACE_CONTRACT_ADDRESS,
   MARKETPLACE_CONTRACT_ABI,
   ALGO_ABI,
+  TOKEN_CONTRACT_ABI,
+  TOKEN_CONTRACT_ADDRESS,
 } from '../utils/constants';
 import asyncQueue from '../utils/async-queue';
 
@@ -176,10 +178,13 @@ export const getAlgoData = address => async (dispatch, getState) => {
   dispatch(getAlgoDataRequest());
 
   const contract = window.web3.eth.contract(ALGO_ABI).at(address);
+  const token = window.web3.eth.contract(TOKEN_CONTRACT_ABI).at(TOKEN_CONTRACT_ADDRESS);
 
   asyncQueue.add(async () => {
     try {
       const contractData = await promisify(contract.getData);
+      const balance = await promisify(token.balanceOf, address);
+      console.log(balance.dividedBy(1000000000000000000).toNumber())
       const res = await fetch(`${API_ADDRESS}/${address}`);
       const mongoData = await res.json();
       const {
@@ -204,6 +209,9 @@ export const getAlgoData = address => async (dispatch, getState) => {
         type,
         thumbnail,
         algoFileUrl,
+        earning: balance
+          ? balance.dividedBy(1000000000000000000).toNumber()
+          : 0,
       }));
     } catch (e) {
       dispatch(getAlgoDataResponse(e));

@@ -109,6 +109,7 @@ class AlgoCard extends Component {
     const { algoData } = this.props;
     const {
       title,
+      description,
       thumbnail,
       stars = 0,
       downloads = 0,
@@ -116,7 +117,7 @@ class AlgoCard extends Component {
       isPendingReview,
     } = algoData || {};
 
-    if (!isActive && !isPendingReview && !title && !thumbnail) {
+    if ((!isActive && !isPendingReview) || (!title && !thumbnail)) {
       return <noscript />;
     }
 
@@ -136,10 +137,13 @@ class AlgoCard extends Component {
         }
         <div
           className="marketplace__algo-card__hero-image"
-          style={{ backgroundImage: `url(${thumbnail})` }}
+          // Hiding hero image until there are more algorithmn in the marketplace (50+)
+
+          style={{ backgroundImage: `url(${thumbnail})`, display: 'none' }}
         />
         <div className="marketplace__algo-card__content">
           <div className="marketplace__algo-card__title">{title}</div>
+          <div className="marketplace__algo-card__description">{description}</div>
           <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
         </div>
         { this.renderModal() }

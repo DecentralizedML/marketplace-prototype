@@ -101,6 +101,7 @@ class AlgoRow extends Component {
     const {
       title,
       description,
+      earning,
     } = algoData || {};
 
     return (
@@ -123,7 +124,11 @@ class AlgoRow extends Component {
           </div>
         </div>
         <div className="upload__algo-row__footer">
-          Claim Earning
+          {
+            earning
+              ? `Earned ${earning} DML`
+              : `No Earning Yet`
+          }
         </div>
         {this.renderModal()}
       </div>
