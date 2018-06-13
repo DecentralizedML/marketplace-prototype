@@ -331,14 +331,16 @@ class ImageRecognition extends Component {
     return(
       <div className="algo-modal" onClick={e => e.stopPropagation()}>
         <div className="algo-modal__header">
+        {/*}
           <div
             style={{ backgroundImage: `url(${thumbnail})` }}
             className="algo-modal__image"
           />
+        {*/}
           <div className="algo-modal__header-content">
             <div className="algo-modal__header-title">{title}</div>
             <div className="algo-modal__header-description">{description}</div>
-            <div className="marketplace__algo-card__stars">{`${stars} (${downloads})`}</div>
+            <div className="marketplace__algo-card__stars">{`${stars || 0} (${downloads || 0})`}</div>
           </div>
           <div className="algo-modal__actions">
             <button

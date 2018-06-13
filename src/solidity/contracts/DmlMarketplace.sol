@@ -88,6 +88,12 @@ contract DmlMarketplace {
         
         return true;
     }
+
+    function forceBuy(address algoAddress, address purchaser) public returns (bool success) {
+        require(isModerator(msg.sender));
+        hasPurchased[purchaser][algoAddress] = true;
+        return true;
+    }
     
     function transferToken (address receiver, uint amount) public {
         require(isModerator(msg.sender));
