@@ -6,6 +6,8 @@ import * as actions from '../../ducks/algorithmns';
 import UploadAlgoModal from './upload-algo-modal';
 import AlgoRow from './algo-row';
 
+import CodeEditor from '../ui/code-editor';
+
 import './index.css';
 
 class Upload extends Component {
@@ -43,6 +45,20 @@ class Upload extends Component {
 
     return this.props.myAlgos
       .map(address => <AlgoRow key={address} address={address} />);
+  }
+
+  renderCodeEditor({ label, name, value = '' }) {
+    return (
+      <div className="upload__input-row">
+        <div className="upload__input-label">{label}</div>
+        <div className="upload__input-wrapper">
+          <CodeEditor
+            name={name}
+            value={value}
+          />
+        </div>
+      </div>
+    );
   }
 
   render() {
