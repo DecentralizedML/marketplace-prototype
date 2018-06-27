@@ -1,11 +1,20 @@
-const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const path = require('path');
-const port = process.env.PORT || 8881;
 const bodyParser = require('body-parser');
+const dotenv     = require('dotenv');
+const express    = require('express');
 const fileUpload = require('express-fileupload');
-const fs = require('fs');
+const fs         = require('fs');
+const path       = require('path');
+
+const app        = express();
+const port       = process.env.PORT || 8881;
+const server     = require('http').createServer(app);
+
+// Load env vars from .env files (default to production)
+let envFile = '.env.production';
+if (process.env.ENVIRONMENT === 'development') envFile = '.env.development';
+if (process.env.ENVIRONMENT === 'test')        envFile = '.env.test';
+
+dotenv.config({ path: path.resolve(__dirname, `../${envFile}`) });
 
 const AuthControllers = require('./controllers/auth');
 const AlgoControllers = require('./controllers/algo');

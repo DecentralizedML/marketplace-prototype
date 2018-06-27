@@ -1,11 +1,16 @@
-const MongoClient = require('mongodb').MongoClient;
-const ObjectId = require('mongodb').ObjectId;
+const { MongoClient, ObjectId } = require('mongodb');
 const fs = require('fs');
 const algoBucket = require('./file-upload').algoBucket;
 
 // @5#6&tZ63aX@
-const url = 'mongodb://dev2:wCcdAoaTD67G@ds059365.mlab.com:59365/dml-proto';
-// const dbName = 'dml-proto';
+
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPass = process.env.DB_PASS;
+
+const url = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`;
 
 const defer = new Promise((resolve, reject) => {
   MongoClient.connect(url, function(err, client) {
@@ -14,7 +19,7 @@ const defer = new Promise((resolve, reject) => {
       return reject(err);
     }
     console.log("Connected successfully to server");
-   
+
     resolve(client);
   });
 });
@@ -129,11 +134,11 @@ const getJobs = ({ job_id, requestor, algo_id }) => {
             data.forEach(async result => {
               const userResults = []
               const jobResults = await getJobResults(result._id);
-              
+
               jobResults.forEach(dataByUser => {
                 dataByUser.results.forEach(resultByuser => userResults.push(resultByuser))
               });
-              
+
               jobProcessed++;
               result.results = userResults;
 
@@ -200,7 +205,7 @@ const postJobResult = jobResult => {
           }
         });
       });
-      
+
     })
 }
 
@@ -496,7 +501,7 @@ function writeFile(file) {
   const filename = `${time}-${file.name}`;
   const filepath = process.cwd() + '/' + filename;
   return new Promise((resolve, reject) => {
-    fs.writeFile(filename, file.data, err => {  
+    fs.writeFile(filename, file.data, err => {
       if (err) {
         return reject(err);
       }
@@ -508,7 +513,7 @@ function writeFile(file) {
 
 function deleteFile(filepath) {
   return new Promise((resolve, reject) => {
-    fs.unlink(filepath, err => {  
+    fs.unlink(filepath, err => {
       if (err) {
         return reject(err);
       }

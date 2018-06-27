@@ -11,6 +11,7 @@
     "classnames": "^2.2.5",
     "concurrently": "^3.5.1",
     "country-list": "^1.1.0",
+    "dotenv": "^6.0.0",
     "ethereumjs-util": "^5.1.5",
     "ethjs": "^0.3.6",
     "ethjs-provider-http": "^0.1.6",
@@ -51,11 +52,12 @@
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
-    "server": "nodemon server/app.js",
+    "server": "ENVIRONMENT=development nodemon server/app.js",
+    "server-prod": "nodemon server/app.js",
     "start": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "test": "react-scripts test --env=jsdom",
+    "build": "ENVIRONMENT=production npm-run-all build-css build-js",
+    "test": "ENVIRONMENT=TEST react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:8881/"
