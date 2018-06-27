@@ -14,7 +14,7 @@ let envFile = '.env.production';
 if (process.env.ENVIRONMENT === 'development') envFile = '.env.development';
 if (process.env.ENVIRONMENT === 'test')        envFile = '.env.test';
 
-console.log(chalk.cyan.bold(`\nENVIRONMENT VARIABLES LOADED FROM '${envFile}'\n`));
+console.log(chalk.magenta.bold(`ENVIRONMENT VARIABLES LOADED FROM \`${envFile}\``));
 
 // Load env vars from .env files (default to production)
 dotenv.config({ path: path.resolve(__dirname, `../${envFile}`) });
