@@ -51,17 +51,21 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
+    "server": "ENVIRONMENT=development nodemon server/app.js",
+    "start": "ENVIRONMENT=development npm-run-all -p watch-css start-js",
+    "build": "ENVIRONMENT=development npm-run-all build-css build-js",
+
+    "server-prod": "ENVIRONMENT=production nodemon server/app.js",
+    "start-prod": "ENVIRONMENT=production npm-run-all -p watch-css start-js",
+    "build-prod": "ENVIRONMENT=production npm-run-all build-css build-js",
+
+    "test": "ENVIRONMENT=TEST react-scripts test --env=jsdom",
+
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-    "start-js": "react-scripts start",
-    "server": "ENVIRONMENT=development nodemon server/app.js",
-    "server-prod": "ENVIRONMENT=production nodemon server/app.js",
-    "start": "ENVIRONMENT=development npm-run-all -p watch-css start-js",
-    "start-prod": "ENVIRONMENT=production npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
-    "build": "ENVIRONMENT=development npm-run-all build-css build-js",
-    "build-prod": "ENVIRONMENT=production npm-run-all build-css build-js",
-    "test": "ENVIRONMENT=TEST react-scripts test --env=jsdom",
+    "start-js": "react-scripts start",
+
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:8881/"
