@@ -5,9 +5,9 @@ const fileUpload = require('express-fileupload');
 const fs         = require('fs');
 const path       = require('path');
 
-const app        = express();
-const port       = process.env.PORT || 8881;
-const server     = require('http').createServer(app);
+const app    = express();
+const port   = process.env.PORT || 8881;
+const server = require('http').createServer(app);
 
 // Load env vars from .env files (default to production)
 let envFile = '.env.production';
