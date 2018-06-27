@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import brace from 'brace';
 
-import 'brace/mode/python';
+// import 'brace/mode/python';
+import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
 const noop = () => {};
@@ -12,13 +13,15 @@ const CodeEditor = (props) => (
     <AceEditor
       fontSize={14}
       highlightActiveLine={true}
-      mode="python"
+      // mode="python"
+      mode="javascript"
       setOptions={{
         enableBasicAutocompletion : false,
         enableLiveAutocompletion  : false,
         enableSnippets            : false,
         showLineNumbers           : true,
-        tabSize                   : 4 // Python convention
+        // tabSize                   : 4 // Python convention
+        tabSize                   : 2 // Javascript convention
       }}
       showGutter={true}
       showPrintMargin={true}
