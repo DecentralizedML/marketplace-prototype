@@ -11,8 +11,8 @@ const port   = process.env.PORT || 8881;
 const server = require('http').createServer(app);
 
 let envFile = '.env.production';
-if (process.env.ENVIRONMENT === 'development') envFile = '.env.development';
-if (process.env.ENVIRONMENT === 'test')        envFile = '.env.test';
+if (process.env.NODE_ENV === 'development') envFile = '.env.development';
+if (process.env.NODE_ENV === 'test')        envFile = '.env.test';
 
 console.log(chalk.magenta.bold(`ENVIRONMENT VARIABLES LOADED FROM \`${envFile}\``));
 

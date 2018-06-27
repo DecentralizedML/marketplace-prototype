@@ -51,15 +51,15 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "server": "ENVIRONMENT=development nodemon server/app.js",
-    "start": "ENVIRONMENT=development npm-run-all -p watch-css start-js",
-    "build": "ENVIRONMENT=development npm-run-all build-css build-js",
+    "server": "NODE_ENV=development nodemon server/app.js",
+    "start": "NODE_ENV=development npm-run-all -p watch-css start-js",
+    "build": "NODE_ENV=development npm-run-all build-css build-js",
 
-    "server-prod": "ENVIRONMENT=production nodemon server/app.js",
-    "start-prod": "ENVIRONMENT=production npm-run-all -p watch-css start-js",
-    "build-prod": "ENVIRONMENT=production npm-run-all build-css build-js",
+    "server-prod": "NODE_ENV=production nodemon server/app.js",
+    "start-prod": "NODE_ENV=production npm-run-all -p watch-css start-js",
+    "build-prod": "NODE_ENV=production npm-run-all build-css build-js",
 
-    "test": "ENVIRONMENT=TEST react-scripts test --env=jsdom",
+    "test": "NODE_ENV=TEST react-scripts test --env=jsdom",
 
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
