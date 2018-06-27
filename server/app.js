@@ -10,13 +10,13 @@ const app    = express();
 const port   = process.env.PORT || 8881;
 const server = require('http').createServer(app);
 
-// Load env vars from .env files (default to production)
 let envFile = '.env.production';
 if (process.env.ENVIRONMENT === 'development') envFile = '.env.development';
 if (process.env.ENVIRONMENT === 'test')        envFile = '.env.test';
 
 console.log(chalk.cyan.bold(`\nENVIRONMENT VARIABLES LOADED FROM '${envFile}'\n`));
 
+// Load env vars from .env files (default to production)
 dotenv.config({ path: path.resolve(__dirname, `../${envFile}`) });
 
 const AuthControllers = require('./controllers/auth');
