@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser');
+const chalk      = require('chalk');
 const dotenv     = require('dotenv');
 const express    = require('express');
 const fileUpload = require('express-fileupload');
@@ -13,6 +14,8 @@ const server = require('http').createServer(app);
 let envFile = '.env.production';
 if (process.env.ENVIRONMENT === 'development') envFile = '.env.development';
 if (process.env.ENVIRONMENT === 'test')        envFile = '.env.test';
+
+console.log(chalk.cyan.bold(`\nENVIRONMENT VARIABLES LOADED FROM '${envFile}'\n`));
 
 dotenv.config({ path: path.resolve(__dirname, `../${envFile}`) });
 
