@@ -191,6 +191,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         creator = '',
         description = '',
         outputProcessing = '',
+        preprocessing = '',
+        postprocessing = '',
         title = '',
         type = '',
         thumbnail = '',
@@ -205,6 +207,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         creator,
         description,
         outputProcessing,
+        preprocessing,
+        postprocessing,
         title,
         type,
         thumbnail,
@@ -237,6 +241,8 @@ export const updateAlgo = d => async (dispatch, getState) => {
   data.append('description', d.description);
   data.append('type', d.type);
   data.append('outputProcessing', d.outputProcessing);
+  data.append('preprocessing', d.preprocessing);
+  data.append('postprocessing', d.postprocessing);
   data.append('account', accounts[0]);
   data.append('address', d.address);
 

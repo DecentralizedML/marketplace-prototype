@@ -7,6 +7,7 @@ import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
 import * as actions from '../../ducks/algorithms';
 import Modal from '../components/modal';
+import CodeEditor from '../components/code-editor';
 // import { imagenetClassesTopK } from '../../utils/imagenet';
 
 import './update-algo-modal.css';
@@ -29,6 +30,8 @@ class UpdateAlgoModal extends Component {
       description: props.algoData.description || '',
       type: props.algoData.type || 'image_recognition',
       algoFile: props.algoData.algoFile || null,
+      preprocessing: props.algoData.preprocessing || '',
+      postprocessing: props.algoData.postprocessing || '',
       isInitializingModel: false,
       outputProcessing: props.algoData.outputProcessing || '',
       isUpdating: false,
@@ -37,7 +40,7 @@ class UpdateAlgoModal extends Component {
 
   updateAlgo = () => {
     this.setState({ isUpdating: true });
-    const { title, description, type, algoFile, outputProcessing } = this.state;
+    const { title, description, type, algoFile, outputProcessing, preprocessing, postprocessing } = this.state;
     let error = '';
 
     if (!title) {
@@ -70,6 +73,8 @@ class UpdateAlgoModal extends Component {
         file: algoFile,
         type,
         outputProcessing,
+        preprocessing,
+        postprocessing,
         address: this.props.address,
       })
       .then(this.props.onClose)
@@ -369,6 +374,16 @@ class UpdateAlgoModal extends Component {
           </div>
           <div className="update-algo-modal__input-wrapper">
             <div className="update-algo-modal__input-wrapper__label">
+              Pre-processing
+            </div>
+            <CodeEditor
+              name='preprocessing'
+              value={this.state.preprocessing}
+              onChange={(newValue) => this.setState({ preprocessing: newValue })}
+            />
+          </div>
+          <div className="update-algo-modal__input-wrapper">
+            <div className="update-algo-modal__input-wrapper__label">
               {`File (*.bin)${this.state.isInitializingModel ? ' - Loading Model...' : ''}`}
             </div>
             <input
@@ -398,6 +413,16 @@ class UpdateAlgoModal extends Component {
 
                 reader.readAsDataURL(algoFile);
               }}
+            />
+          </div>
+          <div className="update-algo-modal__input-wrapper">
+            <div className="update-algo-modal__input-wrapper__label">
+              Post-processing
+            </div>
+            <CodeEditor
+              name='postprocessing'
+              value={this.state.postprocessing}
+              onChange={(newValue) => this.setState({ postprocessing: newValue })}
             />
           </div>
           <div className="update-algo-modal__input-wrapper">
