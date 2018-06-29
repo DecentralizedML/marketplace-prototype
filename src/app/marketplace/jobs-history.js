@@ -29,7 +29,7 @@ class JobsHistory extends Component {
   static propTypes = {
     algoId: PropTypes.string.isRequired,
     jobs: PropTypes.object.isRequired,
-    algorithmns: PropTypes.object.isRequired,
+    algorithms: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -44,7 +44,7 @@ class JobsHistory extends Component {
       selectedName: '',
       jobId: '',
     };
-    
+
     this.processDataForTimeSeries = _.memoize(this.processDataForTimeSeries);
     this.processDataForPie = _.memoize(this.processDataForPie);
   }
@@ -85,7 +85,7 @@ class JobsHistory extends Component {
   }
 
   renderJob = ([ jobId, job ], i) => {
-    const algo = this.props.algorithmns[job.algo_id] || {}
+    const algo = this.props.algorithms[job.algo_id] || {}
     return (
       <div
         key={jobId}
@@ -242,7 +242,7 @@ export default connect(
   (state, { algoId }) => {
     return {
       jobs: state.jobs.byAlgo[algoId],
-      algorithmns: state.algorithmns.map,
+      algorithms: state.algorithms.map,
     };
   },
   (dispatch, { algoId }) => ({

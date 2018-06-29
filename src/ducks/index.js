@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 import metamask from './metamask';
-import algorithmns from './algorithmns';
+import algorithms from './algorithms';
 import bounties from './bounties';
 import jobs from './jobs';
 import user from './user';
 
 export default combineReducers({
   metamask,
-  algorithmns,
+  algorithms,
   bounties,
   jobs,
   user,

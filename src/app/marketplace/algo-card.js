@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import Modal from '../components/modal';
 import ImageRecognition from './image-recognition';
 import TextAnalyzer from './text-analyzer';
-import { getPurchasedState, getAlgoData } from '../../ducks/algorithmns';
+import { getPurchasedState, getAlgoData } from '../../ducks/algorithms';
 
 class AlgoCard extends Component {
 
@@ -137,7 +137,7 @@ class AlgoCard extends Component {
         }
         <div
           className="marketplace__algo-card__hero-image"
-          // Hiding hero image until there are more algorithmn in the marketplace (50+)
+          // Hiding hero image until there are more algorithm in the marketplace (50+)
 
           style={{ backgroundImage: `url(${thumbnail})`, display: 'none' }}
         />
@@ -153,12 +153,12 @@ class AlgoCard extends Component {
 }
 
 export default connect(
-  ({ algorithmns }, { address }) => ({
-    isPurchased: typeof algorithmns.purchased[address] === 'string'
+  ({ algorithms }, { address }) => ({
+    isPurchased: typeof algorithms.purchased[address] === 'string'
       ? false
-      : Boolean(algorithmns.purchased[address]),
-    algoData: algorithmns.map[address],
-    isPurchasePending: typeof algorithmns.purchased[address] === 'string',
+      : Boolean(algorithms.purchased[address]),
+    algoData: algorithms.map[address],
+    isPurchasePending: typeof algorithms.purchased[address] === 'string',
   }),
   (dispatch, { address }) => ({
     getPurchasedState: () => dispatch(getPurchasedState(address)),

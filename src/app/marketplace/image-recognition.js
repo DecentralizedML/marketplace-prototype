@@ -10,7 +10,7 @@ import { withRouter } from 'react-router';
 import AlgoTabs from './algo-tabs';
 // import JobsHistory from './jobs-history';
 import { imagenetClassesTopK } from '../../utils/imagenet';
-import { buyAlgo } from '../../ducks/algorithmns';
+import { buyAlgo } from '../../ducks/algorithms';
 
 
 const KerasJS = window.KerasJS;
@@ -371,11 +371,11 @@ class ImageRecognition extends Component {
 }
 
 export default connect(
-  ({ algorithmns, metamask }, { address }) => ({
-    isPurchased: typeof algorithmns.purchased[address] === 'string'
+  ({ algorithms, metamask }, { address }) => ({
+    isPurchased: typeof algorithms.purchased[address] === 'string'
       ? false
-      : Boolean(algorithmns.purchased[address]),
-    isPurchasePending: typeof algorithmns.purchased[address] === 'string',
+      : Boolean(algorithms.purchased[address]),
+    isPurchasePending: typeof algorithms.purchased[address] === 'string',
     dmlAllowance: metamask.dmlAllowance,
   }),
   dispatch => ({

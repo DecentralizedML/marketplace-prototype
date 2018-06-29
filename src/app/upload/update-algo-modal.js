@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
-import * as actions from '../../ducks/algorithmns';
+import * as actions from '../../ducks/algorithms';
 import Modal from '../components/modal';
 // import { imagenetClassesTopK } from '../../utils/imagenet';
 
@@ -438,7 +438,7 @@ class UpdateAlgoModal extends Component {
 
 export default connect(
   (state, { address }) => ({
-    algoData: state.algorithmns.map[address],
+    algoData: state.algorithms.map[address],
   }),
   dispatch => ({
     updateAlgo: data => dispatch(actions.updateAlgo(data)),

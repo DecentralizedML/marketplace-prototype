@@ -147,8 +147,8 @@ app.post('/signup', jsonParser, AuthControllers.signup);
 app.get('/get_user', AuthControllers.fetchUser);
 
 // Algo Controllers
-app.post('/algorithmns/:algoAddress', AlgoControllers.updateAlgo);
-app.get('/algorithmns/:algoAddress', AlgoControllers.getAlgo);
+app.post('/algorithms/:algoAddress', AlgoControllers.updateAlgo);
+app.get('/algorithms/:algoAddress', AlgoControllers.getAlgo);
 
 app.post('/createJob', jsonParser, async (req, res) => {
   const { body } = req;
@@ -161,7 +161,7 @@ app.post('/createJob', jsonParser, async (req, res) => {
 
   const algo = algos[algo_id];
 
-  if (!algo) return res.status(400).send({ error: true, payload: `Cannot find algorithmn by id: ${algo_id}` });
+  if (!algo) return res.status(400).send({ error: true, payload: `Cannot find algorithm by id: ${algo_id}` });
   if (!requestor || typeof requestor !== 'string') return res.status(400).send({ error: true, payload: 'requestor must be string' });
   if (reward <= 0 || typeof reward !== 'number') return res.status(400).send({ error: true, payload: 'reward must be number' });
   if (!algo || !requestor || !reward || typeof requestor !== 'string' || typeof reward !== 'number') {
@@ -184,7 +184,7 @@ app.post('/createJob', jsonParser, async (req, res) => {
 
 });
 
-app.get('/algorithmns', (req, res) => {
+app.get('/algorithms', (req, res) => {
   res.send({
     algos: Object.entries(algos)
       .map(([ key, value ]) => ({
@@ -249,7 +249,7 @@ app.post('/job_result', jsonParser, async (req, res) => {
 
   if (!results || !results.length) return res.status(400).send({ error: true, payload: 'results must not be empty' });
   if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
-  
+
   try {
     const result = await postJobResult({ job_id, user_public_key, results })
     res.send({ error: false, payload: result })
@@ -297,7 +297,7 @@ app.get('/submissions/:address', async (req, res) => {
 
 app.post('/get_submission', jsonParser, async (req, res) => {
   if (!req.body) return res.status(400).send({ error: true, payload: 'Account not found' });
-  
+
   try {
     const { filename, account, _id, address } = req.body;
     const user = await getUserFromAuth(req);
@@ -315,7 +315,7 @@ app.post('/get_submission', jsonParser, async (req, res) => {
     await file.download({
       destination: filename,
     });
-    
+
     res.sendFile(process.cwd() + '/' + filename);
 
     setTimeout(() => deleteFile(process.cwd() + '/' + filename), 5000);
@@ -327,7 +327,7 @@ app.post('/get_submission', jsonParser, async (req, res) => {
 app.post('/bounty/:address/upload', async (req, res) => {
   if (!req.files) return res.status(400).send({ error: true, payload: 'File not found' });
   if (!req.body) return res.status(400).send({ error: true, payload: 'Account not found' });
-  
+
   const { file } = req.files;
   const { address } = req.params;
   const { account } = req.body;
@@ -364,7 +364,7 @@ function writeFile(file) {
   const filename = `${time}-${file.name}`;
   const filepath = process.cwd() + '/' + filename;
   return new Promise((resolve, reject) => {
-    fs.writeFile(filename, file.data, err => {  
+    fs.writeFile(filename, file.data, err => {
       if (err) {
         return reject(err);
       }
@@ -376,7 +376,7 @@ function writeFile(file) {
 
 function deleteFile(filepath) {
   return new Promise((resolve, reject) => {
-    fs.unlink(filepath, err => {  
+    fs.unlink(filepath, err => {
       if (err) {
         return reject(err);
       }
@@ -431,7 +431,7 @@ app.post('/update_bounty_detail/:address', jsonParser, async (req, res) => {
   if (!evaluation || typeof evaluation !== 'string') return res.status(400).send({ error: true, payload: 'Invalid evaluation' });
   if (!rules || typeof rules !== 'string') return res.status(400).send({ error: true, payload: 'Invalid rules' });
   if (!address || typeof address !== 'string') return res.status(400).send({ error: true, payload: 'Invalid address' });
-  
+
   try {
     const user = await getUserFromAuth(req);
 
