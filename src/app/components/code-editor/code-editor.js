@@ -5,7 +5,7 @@ import brace from 'brace'; // eslint-disable-line no-unused-vars
 
 // import 'brace/mode/python';
 import 'brace/mode/javascript';
-import 'brace/theme/monokai';
+import 'brace/theme/github';
 
 const noop = () => {};
 
@@ -25,7 +25,7 @@ const CodeEditor = (props) => (
       }}
       showGutter={true}
       showPrintMargin={true}
-      theme="monokai"
+      theme="github"
       width="100%"
       height="250px"
 
