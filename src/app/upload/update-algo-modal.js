@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
@@ -77,7 +77,10 @@ class UpdateAlgoModal extends Component {
   }
 
   analyzeImage = () => {
-    const { file, algoFile } = this.state;
+    const {
+      file,
+      // algoFile
+    } = this.state;
 
     if (!this.model) {
       return null;

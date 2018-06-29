@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import brace from 'brace';
+import brace from 'brace'; // eslint-disable-line no-unused-vars
 
 // import 'brace/mode/python';
 import 'brace/mode/javascript';

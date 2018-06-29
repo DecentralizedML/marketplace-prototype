@@ -264,7 +264,10 @@ class ImageRecognition extends Component {
 
 
   renderContent() {
-    const { isPurchased, address } = this.props;
+    const {
+      isPurchased,
+      // address,
+    } = this.props;
 
     switch (this.state.activeTab) {
       case 0:
@@ -318,14 +321,14 @@ class ImageRecognition extends Component {
   render() {
     const {
       title,
-      thumbnail,
+      // thumbnail,
       stars,
       description,
       downloads,
-      onClose,
+      // onClose,
       isPurchased,
       isPurchasePending,
-      cost,
+      // cost,
     } = this.props;
 
     return(

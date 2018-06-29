@@ -33,10 +33,10 @@ const GET_ALGO_DATA_RESPONSE = 'app/algorithms/getAlgoDataResponse';
 const UPDATE_ALGO_REQUEST = 'app/algorithms/updateAlgoRequest';
 const UPDATE_ALGO_RESPONSE = 'app/algorithms/updateAlgoResponse';
 
-const ALGO_STATUS = [
-  'Inactive',
-  'Active',
-];
+// const ALGO_STATUS = [
+//   'Inactive',
+//   'Active',
+// ];
 
 const initialState = {
   myAlgos: [],
@@ -100,7 +100,7 @@ export const buyAlgo = algoId => async (dispatch, getState) => {
 export const fetchAllAlgosRequest = createAction(FETCH_ALL_ALGOS_REQUEST);
 export const fetchAllAlgosResponse = createAction(FETCH_ALL_ALGOS_RESPONSE);
 export const fetchAllAlgos = () => async (dispatch, getState) => {
-  const { metamask: { isLocked, hasWeb3, accounts } } = getState();
+  const { metamask: { isLocked, hasWeb3, /* accounts */ } } = getState();
 
   if (!hasWeb3 || isLocked) {
     return null;

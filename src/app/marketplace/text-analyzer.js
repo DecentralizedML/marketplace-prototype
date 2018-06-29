@@ -193,7 +193,10 @@ class TextAnalyzer extends Component {
   }
 
   renderContent() {
-    const { isPurchased, address } = this.props;
+    const {
+      isPurchased,
+      // address,
+    } = this.props;
 
     switch (this.state.activeTab) {
       case 0:
@@ -247,11 +250,11 @@ class TextAnalyzer extends Component {
   render() {
     const {
       title,
-      thumbnail,
+      // thumbnail,
       stars,
       description,
       downloads,
-      onClose,
+      // onClose,
       isPurchased,
       isPurchasePending
     } = this.props;

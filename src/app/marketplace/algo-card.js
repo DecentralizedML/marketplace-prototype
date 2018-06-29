@@ -52,7 +52,7 @@ class AlgoCard extends Component {
       description,
       downloads,
       type,
-      model,
+      // model,
       cost,
       isPurchased,
       algoData,
