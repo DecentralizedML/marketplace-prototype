@@ -29,7 +29,7 @@ const ready = () => defer;
 const insertJob = job => {
   return ready()
     .then(client => {
-      const jobs = client.db('dml-proto').collection('jobs');
+      const jobs = client.db(dbName).collection('jobs');
       return new Promise((resolve, reject) => {
         jobs.insert(job, (err, doc) => {
           if (err) {
@@ -48,7 +48,7 @@ const insertJob = job => {
 const getActiveJob = user_public_key => {
   return ready()
     .then(client => {
-      const jobs = client.db('dml-proto').collection('jobs');
+      const jobs = client.db(dbName).collection('jobs');
       const query = {
         [`completed.${user_public_key}`]: { $ne: true },
       };
@@ -72,7 +72,7 @@ const getActiveJob = user_public_key => {
 const getCompletedJobs = user_public_key => {
   return ready()
     .then(client => {
-      const jobs = client.db('dml-proto').collection('jobs');
+      const jobs = client.db(dbName).collection('jobs');
       const query = {
         [`completed.${user_public_key}`]: { $eq: true },
       };
@@ -95,7 +95,7 @@ const getCompletedJobs = user_public_key => {
 const getJobResults = job_id => {
   return ready()
     .then(client => {
-      const results = client.db('dml-proto').collection('results');
+      const results = client.db(dbName).collection('results');
       const query = { job_id: job_id.toString() };
       return new Promise((resolve, reject) => {
         results.find(query).toArray((error, results) => {
@@ -113,8 +113,8 @@ const getJobResults = job_id => {
 const getJobs = ({ job_id, requestor, algo_id }) => {
   return ready()
     .then(client => {
-      const jobs = client.db('dml-proto').collection('jobs');
-      // const results = client.db('dml-proto').collection('results');
+      const jobs = client.db(dbName).collection('jobs');
+      // const results = client.db(dbName).collection('results');
       const query = { requestor, algo_id };
 
       if (job_id) {
@@ -156,8 +156,8 @@ const getJobs = ({ job_id, requestor, algo_id }) => {
 const postJobResult = jobResult => {
   return ready()
     .then(client => {
-      const jobs = client.db('dml-proto').collection('jobs');
-      const resultsCol = client.db('dml-proto').collection('results');
+      const jobs = client.db(dbName).collection('jobs');
+      const resultsCol = client.db(dbName).collection('results');
       const { job_id, user_public_key } = jobResult;
       const query = { _id: ObjectId(job_id) };
       const resultQuery = { job_id, user_public_key };
@@ -212,7 +212,7 @@ const postJobResult = jobResult => {
 const getBountyDetail = address => {
   return ready()
     .then(client => {
-      const bounties = client.db('dml-proto').collection('bounties');
+      const bounties = client.db(dbName).collection('bounties');
       const query = { address: { $eq: address } };
       return new Promise((resolve, reject) => {
         bounties.findOne(query, (err, result) => {
@@ -230,7 +230,7 @@ const getBountyDetail = address => {
 const updateBountyDetail = bounty => {
   return ready()
     .then(client => {
-      const bounties = client.db('dml-proto').collection('bounties');
+      const bounties = client.db(dbName).collection('bounties');
       const query = { address: { $eq: bounty.address } };
 
       return new Promise((resolve, reject) => {
@@ -276,7 +276,7 @@ const updateBountyDetail = bounty => {
 const insertSubmission = submission => {
   return ready()
     .then(client => {
-      const submissions = client.db('dml-proto').collection('submissions');
+      const submissions = client.db(dbName).collection('submissions');
       return new Promise((resolve, reject) => {
         submissions.insert(submission, (err, doc) => {
           if (err) {
@@ -295,7 +295,7 @@ const insertSubmission = submission => {
 const getSubmissions = address => {
   return ready()
     .then(client => {
-      const submissions = client.db('dml-proto').collection('submissions');
+      const submissions = client.db(dbName).collection('submissions');
       const query = { address: { $eq: address } }
       return new Promise((resolve, reject) => {
         submissions.find(query).toArray((err, data) => {
@@ -315,7 +315,7 @@ const getSubmissions = address => {
 const getSubmission = id => {
   return ready()
     .then(client => {
-      const submissions = client.db('dml-proto').collection('submissions');
+      const submissions = client.db(dbName).collection('submissions');
       const query = { _id: ObjectId(id) };
       return new Promise((resolve, reject) => {
         submissions.findOne(query, (err, data) => {
@@ -335,7 +335,7 @@ const getSubmission = id => {
 const getUser = address => {
   return ready()
     .then(client => {
-      const users = client.db('dml-proto').collection('users');
+      const users = client.db(dbName).collection('users');
       const query = { address: { $eq: address } }
       return new Promise((resolve, reject) => {
         users.findOne(query, (err, data) => {
@@ -355,7 +355,7 @@ const getUser = address => {
 const createUser = user => {
   return ready()
     .then(client => {
-      const users = client.db('dml-proto').collection('users');
+      const users = client.db(dbName).collection('users');
       return new Promise((resolve, reject) => {
         users.insert(user, (err, doc) => {
           if (err) {
@@ -388,7 +388,7 @@ const updateAlgo = async data => {
 const getAlgo = async address => {
   return ready()
     .then(client => {
-      const algos = client.db('dml-proto').collection('algorithms');
+      const algos = client.db(dbName).collection('algorithms');
       const query = { address: { $eq: address } };
       return new Promise((resolve, reject) => {
         algos.findOne(query, (err, result) => {
@@ -409,7 +409,7 @@ const getAlgo = async address => {
 const findOneAlgo = address => {
   return ready()
     .then(client => {
-      const algos = client.db('dml-proto').collection('algorithms');
+      const algos = client.db(dbName).collection('algorithms');
       const query = { address: { $eq: address } };
       return new Promise((resolve, reject) => {
         algos.findOne(query, (err, result) => {
@@ -426,7 +426,7 @@ const findOneAlgo = address => {
 const writeAlgo = data => {
   return ready()
     .then(client => {
-      const algos = client.db('dml-proto').collection('algorithms');
+      const algos = client.db(dbName).collection('algorithms');
       return new Promise((resolve, reject) => {
         algos.insert(data, (err, doc) => {
           if (err) {
@@ -445,7 +445,7 @@ const writeAlgo = data => {
 const replaceAlgo = data => {
   return ready()
     .then(client => {
-      const algos = client.db('dml-proto').collection('algorithms');
+      const algos = client.db(dbName).collection('algorithms');
       const query = { address: { $eq: data.address } };
       return new Promise((resolve, reject) => {
         algos.findOneAndReplace(query, data, (replaceError, replaceResult) => {
