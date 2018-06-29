@@ -203,7 +203,7 @@ app.post('/get_active_job', jsonParser, async (req, res) => {
 
   const { user_public_key } = body;
 
-  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid public key: ${user_public_key}`});
 
   try {
     const result = await getActiveJob(user_public_key)
@@ -223,7 +223,7 @@ app.post('/get_completed_jobs', jsonParser, async (req, res) => {
 
   const { user_public_key } = body;
 
-  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid public key: ${user_public_key}`});
 
   try {
     const result = await getCompletedJobs(user_public_key)
@@ -248,7 +248,7 @@ app.post('/job_result', jsonParser, async (req, res) => {
   } = body;
 
   if (!results || !results.length) return res.status(400).send({ error: true, payload: 'results must not be empty' });
-  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid publick key: ${user_public_key}`});
+  if (!user_public_key || typeof user_public_key !== 'string') return res.status(400).send({ error: true, payload: `Invalid public key: ${user_public_key}`});
 
   try {
     const result = await postJobResult({ job_id, user_public_key, results })
