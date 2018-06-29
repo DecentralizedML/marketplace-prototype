@@ -7,41 +7,32 @@ import brace from 'brace'; // eslint-disable-line no-unused-vars
 import 'brace/mode/javascript';
 import 'brace/theme/github';
 
-const noop = () => {};
-
 const CodeEditor = (props) => (
     <AceEditor
+      name={props.name}
+      height="250px"
+      width="100%"
       fontSize={14}
-      highlightActiveLine={true}
+      // tabSize={4} // Python convention
+      tabSize={2}
+      theme="github"
       // mode="python"
       mode="javascript"
-      setOptions={{
-        enableBasicAutocompletion : false,
-        enableLiveAutocompletion  : false,
-        enableSnippets            : false,
-        showLineNumbers           : true,
-        // tabSize                   : 4 // Python convention
-        tabSize                   : 2 // Javascript convention
-      }}
-      showGutter={true}
-      showPrintMargin={true}
-      theme="github"
-      width="100%"
-      height="250px"
 
-      name={props.name}
-      onLoad={props.onLoad}
+      enableBasicAutocompletion={false}
+      enableLiveAutocompletion={false}
+      highlightActiveLine
+      showGutter
+      showPrintMargin
+
+      onChange={props.onChange}
       value={props.value}
     />
 );
 
-CodeEditor.defaultProps = {
-  onLoad   : noop,
-};
-
 CodeEditor.propTypes = {
   name     : PropTypes.string.isRequired,
-  onLoad   : PropTypes.func,
+  onChange : PropTypes.func.isRequired,
   value    : PropTypes.string.isRequired,
 };
 
