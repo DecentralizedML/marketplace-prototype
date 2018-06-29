@@ -6,7 +6,7 @@ import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
 import * as actions from '../../ducks/algorithmns';
-import Modal from '../ui/modal';
+import Modal from '../components/modal';
 // import { imagenetClassesTopK } from '../../utils/imagenet';
 
 import './update-algo-modal.css';
@@ -54,7 +54,7 @@ class UpdateAlgoModal extends Component {
 
     if (!outputProcessing) {
       error = 'Please describe how the output should be processed.';
-    }    
+    }
 
     if (error) {
       return this.setState({

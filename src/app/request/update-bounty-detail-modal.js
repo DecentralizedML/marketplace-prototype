@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import * as actions from '../../ducks/bounties';
-import Modal from '../ui/modal';
+import Modal from '../components/modal';
 
 const bemify = block => (elem = '', modifier = '') => (
   `${block}${elem && '__' + elem}${modifier && '--' + modifier}`

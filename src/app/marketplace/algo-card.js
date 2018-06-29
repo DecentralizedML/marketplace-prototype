@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import Modal from '../ui/modal';
+import Modal from '../components/modal';
 import ImageRecognition from './image-recognition';
 import TextAnalyzer from './text-analyzer';
 import { getPurchasedState, getAlgoData } from '../../ducks/algorithmns';
@@ -101,7 +101,7 @@ class AlgoCard extends Component {
             <div>Coming soon!</div>
           </Modal>
         );
-        
+
     }
   }
 

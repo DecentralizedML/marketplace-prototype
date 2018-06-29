@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import * as actions from '../../ducks/algorithmns';
-import Modal from '../ui/modal';
+import Modal from '../components/modal';
 
 import './upload-algo-modal.css';
 

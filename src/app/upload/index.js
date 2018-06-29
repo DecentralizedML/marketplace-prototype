@@ -6,7 +6,7 @@ import * as actions from '../../ducks/algorithmns';
 import UploadAlgoModal from './upload-algo-modal';
 import AlgoRow from './algo-row';
 
-import CodeEditor from '../ui/code-editor';
+import CodeEditor from '../components/code-editor';
 
 import './index.css';
 
