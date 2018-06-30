@@ -16,14 +16,22 @@ class UploadAlgoModal extends Component {
     price: '',
     error: '',
     hasAddedAlgo: false,
+    hasAgreed: false,
   };
 
   createAlgo = () => {
-    const { price } = this.state;
+    const { price, hasAgreed } = this.state;
 
     if (!price || isNaN(Number(price))) {
       this.setState({
         error: 'Price must be a number',
+      });
+      return;
+    }
+
+    if (!hasAgreed) {
+      this.setState({
+        error: 'Please agree to the terms and conditions',
       });
       return;
     }
@@ -43,6 +51,10 @@ class UploadAlgoModal extends Component {
           this.setState({ error: e.message });
         }
       });
+  }
+
+  renderToc() {
+
   }
 
   renderContent() {
@@ -68,6 +80,7 @@ class UploadAlgoModal extends Component {
         </div>
       );
     }
+
     return (
       <div className="upload-algo-modal" onClick={e => e.stopPropagation()}>
         <div className="upload-algo-modal__header">
@@ -92,6 +105,22 @@ class UploadAlgoModal extends Component {
         <div className="upload-algo-modal__footer">
           <div className="upload-algo-modal__error">
             {this.state.error}
+          </div>
+          <div className="upload-algo-modal__checkbox-wrapper">
+            <input
+              className="upload-algo-modal__checkbox"
+              type="checkbox"
+              onChange={e => this.setState({ hasAgreed: e.target.checked})}
+            />
+            <div className="upload-algo-modal__checkbox-text">
+              I agree to the
+              <span
+                className="upload-algo-modal__link"
+                onClick={() => window.open('/developer-terms-and-conditions', '_blank')}
+              >
+                DML Developer Terms and Conditions
+              </span>
+            </div>
           </div>
           <button
             className="upload-algo-modal__create-btn"

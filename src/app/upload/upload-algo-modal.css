@@ -80,3 +80,18 @@
       background-color: rgba(0, 118, 163, 0.8); }
     .upload-algo-modal__create-btn:active {
       background-color: #0076A3; }
+  .upload-algo-modal__checkbox-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem; }
+  .upload-algo-modal__checkbox {
+    margin-right: 1rem; }
+  .upload-algo-modal__checkbox-text {
+    font-size: .8rem; }
+  .upload-algo-modal__link {
+    margin-left: .4rem;
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0076A3; }
