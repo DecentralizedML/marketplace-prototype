@@ -5,8 +5,9 @@ import { Switch, Route, Link, BrowserRouter as Router, } from 'react-router-dom'
 import classnames from 'classnames';
 import Account from '../account';
 import Marketplace from '../marketplace';
-// import Upload from '../upload';
+import Upload from '../upload';
 import Request from '../request';
+import DevToc from './dev-toc';
 import * as metamaskActions from '../../ducks/metamask';
 import * as userActions from '../../ducks/user';
 import logo from '../../logo.svg';
@@ -128,15 +129,15 @@ class App extends Component {
     }
 
     // if (network !== '1') {
-    if (process.env.NODE_ENV !== 'development' && network !== '1') {
-      return (
-        <div className="app-content__message">
-          <h1>Oops, you’re on the wrong network.</h1>
-          <p>Simply open MetaMask and switch over to the Main Network.</p>
-          <img src={networkImg} className="metamask-network" alt="metamask-network" />
-        </div>
-      );
-    }
+    // if (process.env.NODE_ENV !== 'development' && network !== '1') {
+    //   return (
+    //     <div className="app-content__message">
+    //       <h1>Oops, you’re on the wrong network.</h1>
+    //       <p>Simply open MetaMask and switch over to the Main Network.</p>
+    //       <img src={networkImg} className="metamask-network" alt="metamask-network" />
+    //     </div>
+    //   );
+    // }
 
     if (!jwt) {
       return (
@@ -207,6 +208,8 @@ class App extends Component {
           <Route path="/marketplace" component={Marketplace} />
           <Route path="/account" component={Account} />
           <Route path="/bounties" component={Request} />
+          <Route path="/upload" component={Upload} />
+          <Route path="/developer-terms-and-conditions" component={DevToc} />
           <Route component={Marketplace}/>
         </Switch>
       </div>
@@ -246,42 +249,58 @@ class App extends Component {
     // );
   }
 
-  render() {
+  renderHeader() {
     const pathname = window.location.pathname;
+
+    return !(/terms-and-conditions/gi).test(pathname) && (
+      <header className="app-header">
+        <img src={logo} className="app-logo" alt="logo" />
+        <div className="app-header__items">
+          <Link
+            className={classnames('app-header__item', {
+              'app-header__item--active': (/marketplace/gi).test(pathname),
+            })}
+            to="/marketplace"
+          >
+            Marketplace
+          </Link>
+          <Link
+            className={classnames('app-header__item', {
+              'app-header__item--active': (/bounties/gi).test(pathname),
+            })}
+            to="/bounties"
+          >
+            Bounties
+          </Link>
+          <Link
+            className={classnames('app-header__item', {
+              'app-header__item--active': (/upload/gi).test(pathname),
+            })}
+            to="/upload"
+          >
+            Upload
+          </Link>
+          <Link
+            className={classnames('app-header__item', {
+              'app-header__item--active': (/account/gi).test(pathname),
+            })}
+            to="/account"
+          >
+            Account
+          </Link>
+        </div>
+        {this.renderLoginButton()}
+      </header>
+    );
+  }
+
+  render() {
+    
 
     return (
       <Router>
         <div className="app">
-          <header className="app-header">
-            <img src={logo} className="app-logo" alt="logo" />
-            <div className="app-header__items">
-              <Link
-                className={classnames('app-header__item', {
-                  'app-header__item--active': (/marketplace/gi).test(pathname),
-                })}
-                to="/marketplace"
-              >
-                Marketplace
-              </Link>
-              <Link
-                className={classnames('app-header__item', {
-                  'app-header__item--active': (/bounties/gi).test(pathname),
-                })}
-                to="/bounties"
-              >
-                Bounties
-              </Link>
-              <Link
-                className={classnames('app-header__item', {
-                  'app-header__item--active': (/account/gi).test(pathname),
-                })}
-                to="/account"
-              >
-                Account
-              </Link>
-            </div>
-            {this.renderLoginButton()}
-          </header>
+          { this.renderHeader() }
           { this.renderContent() }
         </div>
       </Router>

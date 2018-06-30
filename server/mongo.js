@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+const fs = require('fs');
+const algoBucket = require('./file-upload').algoBucket;
 
 // @5#6&tZ63aX@
 const url = 'mongodb://dev2:wCcdAoaTD67G@ds059365.mlab.com:59365/dml-proto';
@@ -362,7 +364,112 @@ const createUser = user => {
         });
       });
     });
-  };
+};
+
+const updateAlgo = async data => {
+  const client = await ready();
+  const hasAlgo = await findOneAlgo(data.address);
+  let result;
+
+  if (!hasAlgo) {
+    result = await writeAlgo(data);
+  } else {
+    result = await replaceAlgo(data);
+  }
+
+  return result;
+};
+
+const getAlgo = async address => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      const query = { address: { $eq: address } };
+      return new Promise((resolve, reject) => {
+        algos.findOne(query, (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+
+          if (!result) {
+            return reject(new Error(`Cannot find data for algo - ${address}`))
+          }
+
+          resolve(result);
+        });
+      });
+    });
+}
+
+const findOneAlgo = address => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      const query = { address: { $eq: address } };
+      return new Promise((resolve, reject) => {
+        algos.findOne(query, (err, result) => {
+          if (err) {
+            return resolve(false);
+          }
+
+          resolve(!!result);
+        });
+      });
+    });
+};
+
+const writeAlgo = data => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      return new Promise((resolve, reject) => {
+        algos.insert(data, (err, doc) => {
+          if (err) {
+            console.log(err);
+            console.log('Failed to submit.')
+            reject(err);
+          } else {
+            console.log('Successfuly submitted.');
+            resolve(doc.ops[0]);
+          }
+        });
+      });
+    });
+};
+
+const replaceAlgo = data => {
+  return ready()
+    .then(client => {
+      const algos = client.db('dml-proto').collection('algorithms');
+      const query = { address: { $eq: data.address } };
+      return new Promise((resolve, reject) => {
+        algos.findOneAndReplace(query, data, (replaceError, replaceResult) => {
+          if (replaceError) {
+            console.log(replaceError);
+            console.log('Failed to update algo.')
+            reject(replaceError);
+          } else {
+            if (!replaceResult.value) {
+              return reject(new Error('Failed to update algo'));
+            }
+            console.log('Successfuly updated algo.');
+            resolve({
+              ...data,
+              _id: replaceResult.value._id,
+            });
+          }
+        });
+      });
+    })
+}
+
+const uploadAlgoFile = async file => {
+  const filepath = await writeFile(file);
+  const uploadResponse = await algoBucket.upload(filepath);
+  const link = uploadResponse[0].metadata.selfLink;
+  await deleteFile(filepath);
+  return link;
+}
 
 
 module.exports = {
@@ -379,4 +486,34 @@ module.exports = {
   getUser,
   createUser,
   getSubmission,
+  updateAlgo,
+  getAlgo,
+  uploadAlgoFile,
 };
+
+function writeFile(file) {
+  const time = new Date().getTime();
+  const filename = `${time}-${file.name}`;
+  const filepath = process.cwd() + '/' + filename;
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filename, file.data, err => {  
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(filepath);
+    });
+  });
+}
+
+function deleteFile(filepath) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(filepath, err => {  
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(filepath);
+    });
+  });
+}

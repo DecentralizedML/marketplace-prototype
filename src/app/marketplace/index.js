@@ -36,7 +36,13 @@ class Marketplace extends Component {
     return (
       <div className="marketplace">
         <div className="marketplace__algos-container">
-          {order.map(id => <AlgoCard key={id} id={id} { ...map[id] }/>)}
+          {order.map(address => (
+            <AlgoCard
+              key={address}
+              address={address}
+              { ...map[address] }
+            />
+          ))}
         </div>
       </div>
     );
