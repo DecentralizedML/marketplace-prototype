@@ -25,13 +25,17 @@ class UpdateAlgoModal extends Component {
 
   constructor(props) {
     super(props);
+
+    const defaultPreprocessing = 'function preprocessing (input) {\n  console.log(input);\n}';
+    const defaultPostprocessing = 'function postprocessing (input) {\n  console.log(input); \n}';
+
     this.state = {
       title: props.algoData.title || '',
       description: props.algoData.description || '',
       type: props.algoData.type || 'image_recognition',
       algoFile: props.algoData.algoFile || null,
-      preprocessing: props.algoData.preprocessing || '',
-      postprocessing: props.algoData.postprocessing || '',
+      preprocessing: props.algoData.preprocessing || defaultPreprocessing,
+      postprocessing: props.algoData.postprocessing || defaultPostprocessing,
       isInitializingModel: false,
       outputProcessing: props.algoData.outputProcessing || '',
       isUpdating: false,
