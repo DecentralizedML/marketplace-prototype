@@ -111,4 +111,27 @@
       background-color: $allports-blue;
     }
   }
+
+  &__checkbox-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  &__checkbox {
+    margin-right: 1rem;
+  }
+
+  &__checkbox-text {
+    font-size: .8rem;
+  }
+
+  &__link {
+    margin-left: .4rem;
+    cursor: pointer;
+    text-decoration: underline;
+    color: $allports-blue;
+  }
 }
