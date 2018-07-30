@@ -32,15 +32,15 @@
     "npm-run-all": "^4.1.2",
     "prop-types": "^15.6.0",
     "randomcolor": "^0.5.3",
-    "react": "^16.2.0",
-    "react-ace": "^6.1.1",
-    "react-dom": "^16.2.0",
+    "react": "^16.4.1",
+    "react-ace": "^6.1.4",
+    "react-dom": "^16.4.1",
     "react-markdown": "^3.3.0",
     "react-modal": "^3.1.11",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.0",
+    "react-scripts": "1.1.4",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
@@ -55,18 +55,14 @@
     "server": "NODE_ENV=development nodemon server/app.js",
     "start": "NODE_ENV=development npm-run-all -p watch-css start-js",
     "build": "NODE_ENV=development npm-run-all build-css build-js",
-
     "server-prod": "NODE_ENV=production nodemon server/app.js",
     "start-prod": "NODE_ENV=production npm-run-all -p watch-css start-js",
     "build-prod": "NODE_ENV=production npm-run-all build-css build-js",
-
     "test": "NODE_ENV=TEST react-scripts test --env=jsdom",
-
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "build-js": "react-scripts build",
     "start-js": "react-scripts start",
-
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:8881/",
