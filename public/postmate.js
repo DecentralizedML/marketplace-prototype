@@ -515,7 +515,7 @@ function () {
             type: messageType
           };
 
-          if (ports) {
+          if (ports.length) {
             var port = ports[0];
             port.postMessage(reply);
             _this5.source = port;
