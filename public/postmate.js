@@ -96,8 +96,7 @@ var sanitize = function sanitize(message, allowedOrigin) {
  */
 
 var postMessage = function postMessage(target, message, origin) {
-  var isNotDefined;
-  target.postMessage(message, supportsMessageChannel ? isNotDefined : origin);
+  target.postMessage(message, origin);
 };
 /**
  * Takes a model, and searches for a value by the property
