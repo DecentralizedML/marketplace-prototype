@@ -7,7 +7,7 @@ import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
 import * as actions from '../../ducks/algorithms';
 import Modal from '../components/modal';
-import CodeEditor from '../components/code-editor';
+import CodeBox from '../components/code-box';
 // import { imagenetClassesTopK } from '../../utils/imagenet';
 
 import './update-algo-modal.css';
@@ -26,8 +26,17 @@ class UpdateAlgoModal extends Component {
   constructor(props) {
     super(props);
 
-    const defaultPreprocessing = 'function preprocessing (input) {\n  console.log(input);\n}';
-    const defaultPostprocessing = 'function postprocessing (input) {\n  console.log(input); \n}';
+    const defaultPreprocessing = `.then(function preprocessing (input) {
+  return new Promise(function (resolve, reject) {
+    console.log('preprocessing');
+  });
+})`;
+
+    const defaultPostprocessing = `.then(function postprocessing (input) {
+  return new Promise(function (resolve, reject) {
+    console.log('postprocessing');
+  });
+})`;
 
     this.state = {
       title: props.algoData.title || '',
@@ -380,9 +389,9 @@ class UpdateAlgoModal extends Component {
             <div className="update-algo-modal__input-wrapper__label">
               Pre-processing
             </div>
-            <CodeEditor
+            <CodeBox
               name='preprocessing'
-              value={this.state.preprocessing}
+              code={this.state.preprocessing}
               onChange={(newValue) => this.setState({ preprocessing: newValue })}
             />
           </div>
@@ -423,9 +432,9 @@ class UpdateAlgoModal extends Component {
             <div className="update-algo-modal__input-wrapper__label">
               Post-processing
             </div>
-            <CodeEditor
+            <CodeBox
               name='postprocessing'
-              value={this.state.postprocessing}
+              code={this.state.postprocessing}
               onChange={(newValue) => this.setState({ postprocessing: newValue })}
             />
           </div>

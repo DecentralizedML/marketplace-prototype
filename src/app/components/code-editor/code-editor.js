@@ -3,20 +3,18 @@ import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
 import brace from 'brace'; // eslint-disable-line no-unused-vars
 
-// import 'brace/mode/python';
 import 'brace/mode/javascript';
-import 'brace/theme/github';
+import 'brace/theme/tomorrow';
 
-const CodeEditor = (props) => (
+const CodeEditor = (props) => {
+  return (
     <AceEditor
       name={props.name}
-      height="250px"
-      width="100%"
+      height={props.height}
+      width={props.width}
       fontSize={14}
-      // tabSize={4} // Python convention
       tabSize={2}
-      theme="github"
-      // mode="python"
+      theme="tomorrow"
       mode="javascript"
 
       enableBasicAutocompletion={false}
@@ -26,14 +24,22 @@ const CodeEditor = (props) => (
       showPrintMargin
 
       onChange={props.onChange}
-      value={props.value}
+      value={props.code}
     />
-);
+  );
+}
+
+CodeEditor.defaultProps = {
+  width   : '100%',
+  height  : '250px',
+};
 
 CodeEditor.propTypes = {
   name     : PropTypes.string.isRequired,
   onChange : PropTypes.func.isRequired,
-  value    : PropTypes.string.isRequired,
+  code     : PropTypes.string.isRequired,
+  width    : PropTypes.string,
+  height   : PropTypes.string,
 };
 
 export default CodeEditor;
