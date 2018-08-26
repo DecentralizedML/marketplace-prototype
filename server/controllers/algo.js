@@ -17,6 +17,8 @@ const updateAlgo = async (req, res) => {
     description,
     type,
     outputProcessing,
+    preprocessing,
+    postprocessing,
     account,
     address,
   } = req.body;
@@ -27,6 +29,8 @@ const updateAlgo = async (req, res) => {
   if (!description || typeof description !== 'string') return res.status(400).send({ error: true, payload: 'Invalid description' });
   if (!type || typeof type !== 'string') return res.status(400).send({ error: true, payload: 'Invalid type' });
   if (!outputProcessing || typeof outputProcessing !== 'string') return res.status(400).send({ error: true, payload: 'Invalid outputProcessing' });
+  if (!preprocessing || typeof preprocessing !== 'string') return res.status(400).send({ error: true, payload: 'Invalid preprocessing' });
+  if (!postprocessing || typeof postprocessing !== 'string') return res.status(400).send({ error: true, payload: 'Invalid postprocessing' });
   if (!address || typeof address !== 'string') return res.status(400).send({ error: true, payload: 'Invalid address' });
 
   try {
@@ -42,6 +46,8 @@ const updateAlgo = async (req, res) => {
       description,
       type,
       outputProcessing,
+      preprocessing,
+      postprocessing,
       algoFileUrl: link,
       creator: account,
     });

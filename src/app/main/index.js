@@ -12,7 +12,7 @@ import * as metamaskActions from '../../ducks/metamask';
 import * as userActions from '../../ducks/user';
 import logo from '../../logo.svg';
 import loginImg from './metamask-login.png';
-import networkImg from './metamask-network.png';
+// import networkImg from './metamask-network.png';
 import signImg from './metamask-sign-message.png';
 import './index.css';
 
@@ -76,7 +76,7 @@ class App extends Component {
     const {
       hasWeb3,
       isLocked,
-      network,
+      // network,
       jwt,
       hasSignedUp,
       isFetchingUser,

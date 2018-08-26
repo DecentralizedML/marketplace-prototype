@@ -9,34 +9,34 @@ import {
 import asyncQueue from '../utils/async-queue';
 
 const API_ADDRESS = process.env.NODE_ENV === 'development'
-  ? '/algorithmns'
-  : 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithmns';
+  ? '/algorithms'
+  : 'https://cors-anywhere.herokuapp.com/http://104.198.104.19:8881/algorithms';
 
-const GET_PURCHASED_STATE_REQUEST = 'app/algorithmns/getPurchasedStateRequest';
-const GET_PURCHASED_STATE_RESPONSE = 'app/algorithmns/getPurchasedStateResponse';
+const GET_PURCHASED_STATE_REQUEST = 'app/algorithms/getPurchasedStateRequest';
+const GET_PURCHASED_STATE_RESPONSE = 'app/algorithms/getPurchasedStateResponse';
 
-const BUY_ALGO_REQUEST = 'app/algorithmns/buyAlgoRequest';
-const BUY_ALGO_RESPONSE = 'app/algorithmns/buyAlgoResponse';
+const BUY_ALGO_REQUEST = 'app/algorithms/buyAlgoRequest';
+const BUY_ALGO_RESPONSE = 'app/algorithms/buyAlgoResponse';
 
-const FETCH_ALL_ALGOS_REQUEST = 'app/algorithmns/fetchAllAlgosRequest';
-const FETCH_ALL_ALGOS_RESPONSE = 'app/algorithmns/fetchAllAlgosResponse';
+const FETCH_ALL_ALGOS_REQUEST = 'app/algorithms/fetchAllAlgosRequest';
+const FETCH_ALL_ALGOS_RESPONSE = 'app/algorithms/fetchAllAlgosResponse';
 
-const FETCH_MY_ALGOS_REQUEST = 'app/algorithmns/fetchMyAlgosRequest';
-const FETCH_MY_ALGOS_RESPONSE = 'app/algorithmns/fetchMyAlgosResponse';
+const FETCH_MY_ALGOS_REQUEST = 'app/algorithms/fetchMyAlgosRequest';
+const FETCH_MY_ALGOS_RESPONSE = 'app/algorithms/fetchMyAlgosResponse';
 
-const CREATE_ALGO_REQUEST = 'app/algorithmns/createAlgoRequest';
-const CREATE_ALGO_RESPONSE = 'app/algorithmns/createAlgoResponse';
+const CREATE_ALGO_REQUEST = 'app/algorithms/createAlgoRequest';
+const CREATE_ALGO_RESPONSE = 'app/algorithms/createAlgoResponse';
 
-const GET_ALGO_DATA_REQUEST = 'app/algorithmns/getAlgoDataRequest';
-const GET_ALGO_DATA_RESPONSE = 'app/algorithmns/getAlgoDataResponse';
+const GET_ALGO_DATA_REQUEST = 'app/algorithms/getAlgoDataRequest';
+const GET_ALGO_DATA_RESPONSE = 'app/algorithms/getAlgoDataResponse';
 
-const UPDATE_ALGO_REQUEST = 'app/algorithmns/updateAlgoRequest';
-const UPDATE_ALGO_RESPONSE = 'app/algorithmns/updateAlgoResponse';
+const UPDATE_ALGO_REQUEST = 'app/algorithms/updateAlgoRequest';
+const UPDATE_ALGO_RESPONSE = 'app/algorithms/updateAlgoResponse';
 
-const ALGO_STATUS = [
-  'Inactive',
-  'Active',
-];
+// const ALGO_STATUS = [
+//   'Inactive',
+//   'Active',
+// ];
 
 const initialState = {
   myAlgos: [],
@@ -100,7 +100,7 @@ export const buyAlgo = algoId => async (dispatch, getState) => {
 export const fetchAllAlgosRequest = createAction(FETCH_ALL_ALGOS_REQUEST);
 export const fetchAllAlgosResponse = createAction(FETCH_ALL_ALGOS_RESPONSE);
 export const fetchAllAlgos = () => async (dispatch, getState) => {
-  const { metamask: { isLocked, hasWeb3, accounts } } = getState();
+  const { metamask: { isLocked, hasWeb3, /* accounts */ } } = getState();
 
   if (!hasWeb3 || isLocked) {
     return null;
@@ -191,6 +191,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         creator = '',
         description = '',
         outputProcessing = '',
+        preprocessing = '',
+        postprocessing = '',
         title = '',
         type = '',
         thumbnail = '',
@@ -205,6 +207,8 @@ export const getAlgoData = address => async (dispatch, getState) => {
         creator,
         description,
         outputProcessing,
+        preprocessing,
+        postprocessing,
         title,
         type,
         thumbnail,
@@ -237,6 +241,8 @@ export const updateAlgo = d => async (dispatch, getState) => {
   data.append('description', d.description);
   data.append('type', d.type);
   data.append('outputProcessing', d.outputProcessing);
+  data.append('preprocessing', d.preprocessing);
+  data.append('postprocessing', d.postprocessing);
   data.append('account', accounts[0]);
   data.append('address', d.address);
 

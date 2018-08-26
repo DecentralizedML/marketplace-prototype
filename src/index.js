@@ -4,6 +4,7 @@ import 'whatwg-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
+// import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
@@ -17,6 +18,7 @@ const middlewares = process.env.NODE_ENV === 'development'
   ? applyMiddleware(thunk, logger)
   : applyMiddleware(thunk);
 
+// const store = createStore(reducer, composeWithDevTools(middlewares));
 const store = createStore(reducer, middlewares);
 
 ReactDOM.render(

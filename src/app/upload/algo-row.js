@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import * as actions from '../../ducks/algorithmns';
+import * as actions from '../../ducks/algorithms';
 import { withRouter } from 'react-router';
 import UpdateAlgoModal from './update-algo-modal';
 
@@ -139,7 +139,7 @@ class AlgoRow extends Component {
 export default withRouter(
   connect(
     (state, { address }) => ({
-      algoData: state.algorithmns.map[address],
+      algoData: state.algorithms.map[address],
     }),
     (dispatch, ownProps) => ({
       getAlgoData: () => dispatch(actions.getAlgoData(ownProps.address)),

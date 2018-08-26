@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchAllAlgos } from '../../ducks/algorithmns';
+import { fetchAllAlgos } from '../../ducks/algorithms';
 import AlgoCard from './algo-card';
 
 import './index.css';
@@ -24,7 +24,7 @@ class Marketplace extends Component {
     //   <input
     //     className="marketplace__input"
     //     type="text"
-    //     placeholder="Search for algorithmns"
+    //     placeholder="Search for algorithms"
     //   />
     //   <select className="marketplace__selector marketplace__selector--category">
     //     <option>Category</option>
@@ -50,7 +50,7 @@ class Marketplace extends Component {
 }
 
 export default connect(
-  ({ algorithmns: { order, map } }) => ({
+  ({ algorithms: { order, map } }) => ({
     order, map,
   }),
   dispatch => ({

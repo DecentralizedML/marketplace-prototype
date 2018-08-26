@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import ndarray from 'ndarray';
 import ops from 'ndarray-ops';
 import loadImage from 'blueimp-load-image';
-import * as actions from '../../ducks/algorithmns';
-import Modal from '../ui/modal';
+import * as actions from '../../ducks/algorithms';
+import Modal from '../components/modal';
+import CodeBox from '../components/code-box';
 // import { imagenetClassesTopK } from '../../utils/imagenet';
 
 import './update-algo-modal.css';
@@ -24,11 +25,26 @@ class UpdateAlgoModal extends Component {
 
   constructor(props) {
     super(props);
+
+    const defaultPreprocessing = `.then(function preprocessing (input) {
+  return new Promise(function (resolve, reject) {
+    console.log('preprocessing');
+  });
+})`;
+
+    const defaultPostprocessing = `.then(function postprocessing (input) {
+  return new Promise(function (resolve, reject) {
+    console.log('postprocessing');
+  });
+})`;
+
     this.state = {
       title: props.algoData.title || '',
       description: props.algoData.description || '',
       type: props.algoData.type || 'image_recognition',
       algoFile: props.algoData.algoFile || null,
+      preprocessing: props.algoData.preprocessing || defaultPreprocessing,
+      postprocessing: props.algoData.postprocessing || defaultPostprocessing,
       isInitializingModel: false,
       outputProcessing: props.algoData.outputProcessing || '',
       isUpdating: false,
@@ -37,7 +53,7 @@ class UpdateAlgoModal extends Component {
 
   updateAlgo = () => {
     this.setState({ isUpdating: true });
-    const { title, description, type, algoFile, outputProcessing } = this.state;
+    const { title, description, type, algoFile, outputProcessing, preprocessing, postprocessing } = this.state;
     let error = '';
 
     if (!title) {
@@ -54,7 +70,7 @@ class UpdateAlgoModal extends Component {
 
     if (!outputProcessing) {
       error = 'Please describe how the output should be processed.';
-    }    
+    }
 
     if (error) {
       return this.setState({
@@ -70,6 +86,8 @@ class UpdateAlgoModal extends Component {
         file: algoFile,
         type,
         outputProcessing,
+        preprocessing,
+        postprocessing,
         address: this.props.address,
       })
       .then(this.props.onClose)
@@ -77,7 +95,10 @@ class UpdateAlgoModal extends Component {
   }
 
   analyzeImage = () => {
-    const { file, algoFile } = this.state;
+    const {
+      file,
+      // algoFile
+    } = this.state;
 
     if (!this.model) {
       return null;
@@ -366,6 +387,16 @@ class UpdateAlgoModal extends Component {
           </div>
           <div className="update-algo-modal__input-wrapper">
             <div className="update-algo-modal__input-wrapper__label">
+              Pre-processing
+            </div>
+            <CodeBox
+              name='preprocessing'
+              code={this.state.preprocessing}
+              onChange={(newValue) => this.setState({ preprocessing: newValue })}
+            />
+          </div>
+          <div className="update-algo-modal__input-wrapper">
+            <div className="update-algo-modal__input-wrapper__label">
               {`File (*.bin)${this.state.isInitializingModel ? ' - Loading Model...' : ''}`}
             </div>
             <input
@@ -395,6 +426,16 @@ class UpdateAlgoModal extends Component {
 
                 reader.readAsDataURL(algoFile);
               }}
+            />
+          </div>
+          <div className="update-algo-modal__input-wrapper">
+            <div className="update-algo-modal__input-wrapper__label">
+              Post-processing
+            </div>
+            <CodeBox
+              name='postprocessing'
+              code={this.state.postprocessing}
+              onChange={(newValue) => this.setState({ postprocessing: newValue })}
             />
           </div>
           <div className="update-algo-modal__input-wrapper">
@@ -438,7 +479,7 @@ class UpdateAlgoModal extends Component {
 
 export default connect(
   (state, { address }) => ({
-    algoData: state.algorithmns.map[address],
+    algoData: state.algorithms.map[address],
   }),
   dispatch => ({
     updateAlgo: data => dispatch(actions.updateAlgo(data)),

@@ -1,0 +1,28 @@
+$headerSidePadding: 10px;
+
+.code-box-header {
+  position: relative;
+  background-color: #C0C0C0;
+  padding: 5px $headerSidePadding;
+  text-transform: uppercase;
+  font-size: 80%;
+  font-weight: bold;
+}
+
+.code-box-run-button {
+  // positioned absolutely to avoid using `float: right;`
+  position: absolute;
+  right: $headerSidePadding;
+}
+
+.code-box-console {
+  height: 100px;
+  background-color: #5c5c5c;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
