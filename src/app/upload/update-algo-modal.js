@@ -48,22 +48,18 @@ class UpdateAlgoModal extends Component {
   }
 
   getDefaultPreprocessing = () => {
-    if (this.props.algoData.type === 'image_recognition') {
-      return `function preprocessing (imageData, width, height) {
-// data in the RGBA order (meaning pixels are groups of four values)
-console.log('preprocessing', imageData[0], width, height);
-return imageData;
+    return `function preprocessing (imageData, width, height) {
+  // data in the RGBA order (meaning pixels are groups of four values)
+  console.log('preprocessing', imageData[0], width, height);
+  return imageData;
 }`
-    }
   }
 
   getDefaultPostprocessing = () => {
-    if (this.props.algoData.type === 'image_recognition') {
-      return `function postprocessing (results) {
-console.log('results');
-return results;
+    return `function postprocessing (results) {
+  console.log('postprocessing', Object.keys(results));
+  return Object.keys(results);
 }`
-    }
   }
 
   updateAlgo = () => {
@@ -298,7 +294,7 @@ return results;
 
     reader.addEventListener('load', readerEvent => {
       this.model = new KerasJS.Model({
-        filepath: event.target.result,
+        filepath: readerEvent.target.result,
         gpu: this.state.type === 'image_recognition'
           ? KerasJS.GPU_SUPPORT
           : false,
@@ -308,8 +304,7 @@ return results;
         isInitializingModel : false,
         result              : null,
         resultData          : null,
-        file                : null,
-        fileData            : null,
+        // file                : null,
       });
     });
 
@@ -375,13 +370,13 @@ return results;
 
     return (
       <div className="update-algo-modal__algo-test__right">
+        {fileInfo()}
         <button
           className="algo-modal__btn-secondary"
-          onClick={() => this.setState({ file: '', fileData: {}, result: null, resultData: null })}
+          onClick={() => this.setState({ file: '', fileData: null, result: null, resultData: null })}
         >
           Upload New Image
         </button>
-        {fileInfo()}
       </div>
     );
   }
