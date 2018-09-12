@@ -1,6 +1,6 @@
 // https://stackoverflow.com/a/36607971 to explain escaping the closing script tag
 
-const generateSource = (code, iframeHeight) => (`
+const generateSource = ({beforeCode, code, afterCode, iframeHeight}) => (`
   <html>
     <head>
       <script src="/console.js"></script>
@@ -41,7 +41,9 @@ const generateSource = (code, iframeHeight) => (`
         <div id="log"></div>
       </div>
       <script>
+        ; ${beforeCode};
         ${code}
+        ; ${afterCode};
       </script>
     </body>
   </html>

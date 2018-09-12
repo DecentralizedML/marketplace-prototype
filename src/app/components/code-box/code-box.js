@@ -29,7 +29,12 @@ class CodeBox extends Component {
   }
 
   generateConsole = () => {
-    const source = generateSource(this.props.code, iframeHeight);
+    const source = generateSource({
+      beforeCode : this.props.beforeCode,
+      code       : this.props.code,
+      afterCode  : this.props.afterCode,
+      height     : iframeHeight
+    });
 
     return (
       <Iframe
@@ -82,12 +87,16 @@ class CodeBox extends Component {
 CodeBox.defaultProps = {
   editorHeight : '250px',
   editorWidth  : '100%',
+  beforeCode   : '',
+  afterCode    : '',
 };
 
 CodeBox.propTypes = {
   name         : PropTypes.string.isRequired,
   onChange     : PropTypes.func.isRequired,
+  beforeCode   : PropTypes.string,
   code         : PropTypes.string.isRequired,
+  afterCode    : PropTypes.string,
   editorHeight : PropTypes.string,
   editorWidth  : PropTypes.string,
 };
