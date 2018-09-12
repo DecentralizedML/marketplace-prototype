@@ -48,18 +48,18 @@ class UpdateAlgoModal extends Component {
   }
 
   getDefaultPreprocessing = () => {
-    return `function preprocessing (imageData, width, height) {
+    return `function preprocessing (imageData, width, height, callback) {
   // data in the RGBA order (meaning pixels are groups of four values)
   console.log('preprocessing', imageData[0], width, height);
-  return imageData;
-}`
+  callback(imageData);
+}`;
   }
 
   getDefaultPostprocessing = () => {
-    return `function postprocessing (results) {
+    return `function postprocessing (results, callback) {
   console.log('postprocessing', Object.keys(results));
-  return Object.keys(results);
-}`
+  callback(Object.keys(results));
+}`;
   }
 
   updateAlgo = () => {
@@ -441,9 +441,15 @@ class UpdateAlgoModal extends Component {
       if (this.state.fileData && this.state.fileData.imageData) {
         preprocessingBeforeCode = `
           const INPUT = {
-            data: ${JSON.stringify(this.state.fileData.imageData.data)},
-            height: ${this.state.fileData.imageData.height},
-            width: ${this.state.fileData.imageData.width},
+            data     : ${JSON.stringify(this.state.fileData.imageData.data)},
+            height   : ${this.state.fileData.imageData.height},
+            width    : ${this.state.fileData.imageData.width},
+            callback : (output) => {
+              window.parent.postMessage({
+                type    : 'postprocessingResults',
+                payload : output,
+              }, '*');
+            },
           };
         `;
       }
@@ -458,11 +464,7 @@ class UpdateAlgoModal extends Component {
     if (this.state.type === 'image_recognition') {
       preprocessingAfterCode = `
         if (INPUT && INPUT.data && INPUT.width && INPUT.height) {
-          const OUTPUT = preprocessing(INPUT.data, INPUT.width, INPUT.height);
-          window.parent.postMessage({
-            type    : 'preprocessingResults',
-            payload : OUTPUT,
-          }, '*');
+          const OUTPUT = preprocessing(INPUT.data, INPUT.width, INPUT.height, INPUT.callback);
         }
       `;
     }
@@ -477,7 +479,13 @@ class UpdateAlgoModal extends Component {
       if (this.state.result) {
         postprocessingBeforeCode = `
           const INPUT = {
-            data: ${JSON.stringify(this.state.resultData)},
+            data     : ${JSON.stringify(this.state.resultData)},
+            callback : (output) => {
+              window.parent.postMessage({
+                type    : 'postprocessingResults',
+                payload : output,
+              }, '*');
+            },
           };
         `;
       }
@@ -492,11 +500,7 @@ class UpdateAlgoModal extends Component {
     if (this.state.type === 'image_recognition') {
       postprocessingAfterCode = `
         if (INPUT && INPUT.data) {
-          const OUTPUT = postprocessing(INPUT.data);
-          window.parent.postMessage({
-            type    : 'postprocessingResults',
-            payload : OUTPUT,
-          }, '*');
+          const OUTPUT = postprocessing(INPUT.data, INPUT.callback);
         }
       `;
     }
